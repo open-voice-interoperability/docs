@@ -11,7 +11,7 @@ Architecture Work Group\
 ## TABLE OF CONTENTS
 ### CHAPTER 0. SCOPE AND INTRODUCTION
 #### &nbsp; 0.1 Document Scope
-#### &nbsp; 0.2 Dialog Envelopes
+#### &nbsp; 0.2 Conversation envelopes
 #### &nbsp; 0.3 Delegation, Channeling and Mediation
 #### &nbsp; 0.4 OVON Event Types
 ### CHAPTER 1. SPECIFICATION
@@ -19,7 +19,7 @@ Architecture Work Group\
 #### &nbsp; 1.2 Protocol
 #### &nbsp; 1.3 AAA & Security
 #### &nbsp; 1.4 Nomenclature
-#### &nbsp; 1.5 Dialog Envelope Object Structure
+#### &nbsp; 1.5 Conversation Envelope Object Structure
 #### &nbsp; 1.6 Schema Object
 #### &nbsp; 1.7 Conversation Object
 #### &nbsp; 1.8 Sender Object
@@ -44,10 +44,10 @@ Architecture Work Group\
 *****
 ### CHAPTER 0. SCOPE AND INTRODUCTION
 #### 0.1 Document Scope
-This document specifies the format for Open Voice Interoperability Initiative  - LF AI & Data Foundation (OVON) interoperable dialog envelope. The user stories upon which this specification is based can be found in the OVON white paper Interoperability of Conversational Assistants  [1].  
+This document specifies the format for Open Voice Interoperability Initiative  - LF AI & Data Foundation (OVON) interoperable conversation envelope. The user stories upon which this specification is based can be found in the OVON white paper Interoperability of Conversational Assistants  [1].  
 
-#### 0.2 Dialog Envelopes
-The OVON Dialog Envelope is a universal JSON structure whose purpose is to allow human or automatic agents (assistants) to interoperably participate in a conversation.  When coupled with a specific protocol, such as HTTPS (See section 1.2), a dialog agent that can generate and send Dialog Envelopes is capable of inter-operating with any other OVON-compliant agent, regardless of the technology or architecture on which that other agent is based..
+#### 0.2 Conversation Envelopes
+The OVON Conversation Envelope is a universal JSON structure whose purpose is to allow human or automatic agents (assistants) to interoperably participate in a conversation.  When coupled with a specific protocol, such as HTTPS (See section 1.2), a dialog agent that can generate and send Conversation Envelopes is capable of inter-operating with any other OVON-compliant agent, regardless of the technology or architecture on which that other agent is based.
 
 
 <img width="510" alt="Screenshot 2024-01-16 at 6 20 54 PM" src="https://github.com/open-voice-interoperability/docs/assets/101130471/6b909294-0d00-498e-9aee-ef0edcd916d9">
@@ -62,7 +62,7 @@ In this draft of the specification, we consider the case where the function of t
 \
 In its simplest configuration, the user proxy agent might present a text-based chat interface to the user.  For spoken interaction, the proxy agent will likely also contain speech-to-text and text-to-speech facilities but other configurations are anticipated.  The proxy agent may have conversational ability in its own right but in many cases, it may only provide rudimentary capabilities such as wake-word detection.\
 \
-Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single dialog envelope.   Each conversant can 'hear' things said to it or 'say' things.  Conversants may also invite other agents to join the conversation and take the conversational floor.
+Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single conversation envelope.   Each conversant can 'hear' things said to it or 'say' things.  Conversants may also invite other agents to join the conversation and take the conversational floor.
 
 
 #### 0.3 Delegation, Channeling and Mediation
@@ -83,7 +83,7 @@ It is envisaged that later extensions to this specification will also support si
 
 #### 0.4 OVON Event Types
 
-In order to facilitate the patterns described above each dialog envelope can carry one or more OVON Events.  OVON Events are broken into two categories.\
+In order to facilitate the patterns described above each conversation envelope can carry one or more OVON Events.  OVON Events are broken into two categories.\
 
 * utterance events - spoken or written natural language
   * utterance  - An utterance spoken in the conversation itself by a user or agent
@@ -94,11 +94,11 @@ In order to facilitate the patterns described above each dialog envelope can car
 ### CHAPTER 1. SPECIFICATION
 #### 1.1 Representation
 
-A dialog envelope will be represented as a JSON [1] object in a string format.  The JSON dialog envelope is expected to be a stand-alone document or object but there is no reason that it cannot be part of a larger JSON document.
+A conversation envelope will be represented as a JSON [1] object in a string format.  The JSON conversation envelope is expected to be a stand-alone document or object but there is no reason that it cannot be part of a larger JSON document.
 
 #### 1.2 Protocol
 
-JSON was chosen for the OVON dialog envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.  Supported protocols and the mechanisms by which two agents agree on a protocol to be used are currently outside the scope of this document.\
+JSON was chosen for the OVON conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.  Supported protocols and the mechanisms by which two agents agree on a protocol to be used are currently outside the scope of this document.\
 \
 For the sake of simplicity, it is anticipated that OVON implementations will initially use HTTPS as underlying communication protocol, but could include several other ones currently available (i.e. SIP, Websockets, WebRTC, etc) or any future available ones (i.e, HTTP/3, etc).
 
@@ -110,15 +110,15 @@ Authorization, Authentication, Accounting, and Security specifications are outsi
 
 This specification uses ‘camelCase’ (i.e. no spaces with new words being capitalized) for all nominal property names, for example, eventType and replyTo.  
 
-#### 1.5 Dialog Envelope Object Structure
+#### 1.5 Conversation Envelope Object Structure
 
 <img width="458" alt="Screenshot 2024-01-16 at 7 53 11 PM" src="https://github.com/open-voice-interoperability/docs/assets/101130471/1472e1d3-205c-4750-8e47-b556f291055b">
 
 ##### Figure 2. An example of a conversation envelope #####
 
-Figure 2 shows an example of a dialog envelope.  The envelope is wrapped in an ovon key.   This contains five sections:
+Figure 2 shows an example of a conversation envelope.  The envelope is wrapped in an ovon key.   This contains five sections:
 
-* schema - the version of the dialog envelope and a schema to validate it against
+* schema - the version of the conversation envelope and a schema to validate it against
 * conversation - persistent information related to the current dialog
 * sender - details of the sender
 * responseCode - a response code if this message is in response to another
@@ -248,7 +248,7 @@ It is possible to invite an agent to a conversation without giving it any other 
 
 ![Figure16](https://github.com/open-voice-interoperability/docs/assets/101130471/2bf57386-95d1-454c-b31e-561f6de3f0a0)
 
-Invite events will typically be accompanied by additional events.  Figure 16 shows a dialog envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it, and a bye message to indicate that the inviting agent is withdrawing from the conversation.
+Invite events will typically be accompanied by additional events.  Figure 16 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it, and a bye message to indicate that the inviting agent is withdrawing from the conversation.
 
 ### 1.16 Bye Event
 
@@ -293,7 +293,7 @@ The conversation floor manager retains ultimate responsibility for deciding whic
 
 ## Chapter 3. JSON Envelope Schema
 
-The structure of a JSON dialog envelope is defined below as a JSON Schema.    This file is located at [https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.0/conversation-envelope-schema.json]
+The structure of a JSON conversation envelope is defined below as a JSON Schema.    This file is located at [https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.0/conversation-envelope-schema.json]
 
 ![finalgraph](https://github.com/open-voice-interoperability/docs/assets/101130471/ac019dcd-6e0a-4eea-9a7e-64601f8b8045)
 
