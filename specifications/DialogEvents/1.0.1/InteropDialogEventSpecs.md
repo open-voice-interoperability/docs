@@ -10,27 +10,25 @@ Architecture Work Group <br>
 
 **20 February 2024**
 
-# TABLE OF CONTENTS
-## CHAPTER 0. SCOPE AND INTRODUCTION 
-### 0.1 Document Scope 
-### 0.2 Dialog Events
-### 0.3 A Foundation for Further Specialization 
-
-## CHAPTER 1. SPECIFICATION 
-### 1.1 Representation
-### 1.2 Dialog Event Object
-### 1.3 Span
-### 1.4 Feature Objects
-### 1.5 Confidence, Linking and Stand-off Annotation
-### 1.6 JSON Path and the substring() extension
-### 1.7 Alternates
-### 1.8 Nomenclature 
-
-## CHAPTER 2. SCHEMA
-## CHAPTER 3. REFERENCES
-## CHAPTER 4. GLOSSARY OF TERMS
-## CHAPTER 5. DECISION LOG 
-## CHAPTER 6. DOCUMENT CHANGE LOG
+## TABLE OF CONTENTS
+- CHAPTER 0. SCOPE AND INTRODUCTION 
+  - 0.1 Document Scope 
+  - 0.2 Dialog Events
+  - 0.3 A Foundation for Further Specialization 
+- CHAPTER 1. SPECIFICATION 
+  -  1.1 Representation
+  -  1.2 Dialog Event Object
+  -  1.3 Span
+  -  1.4 Feature Objects
+  -  1.5 Confidence, Linking and Stand-off Annotation
+  -  1.6 JSON Path and the substring() extension
+  -  1.7 Alternates
+  -  1.8 Nomenclature 
+-  CHAPTER 2. SCHEMA
+-  CHAPTER 3. REFERENCES
+-  CHAPTER 4. GLOSSARY OF TERMS
+-  CHAPTER 5. DECISION LOG 
+-  CHAPTER 6. DOCUMENT CHANGE LOG
 	
 ## Chapter 0. Scope and Introduction
 
