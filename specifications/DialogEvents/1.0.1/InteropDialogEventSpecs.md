@@ -567,7 +567,5 @@ Architecture Work Group <br>
 |-|-|-|
 |1.0.0|2023.06.09|Initial Published Draft|
 |1.0.1|2024.02.20|Reformatted and snake-case converted to camelCase
-|-|-|-|
-
 
 
