@@ -1,5 +1,6 @@
-# Interoperable Dialog Event Object Specification
+<img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
+# Interoperable Dialog Event Object Specification
 
 **Version 1.0.1**  
 
