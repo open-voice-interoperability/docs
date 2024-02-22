@@ -2,7 +2,7 @@
 
 
 **Version 1.0.1**  
-The Open Voice Network <br>
+
 Open Voice Interoperability Initiative - LF AI & Data Foundation <br>
 Architecture Work Group <br>
 *Editor-in-chief: David Attwater* <br>
