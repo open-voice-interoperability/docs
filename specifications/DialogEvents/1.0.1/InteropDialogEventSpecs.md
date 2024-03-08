@@ -7,7 +7,7 @@ Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
 20 February 2024 \
-Draft Version 0.9.0
+Draft Version 1.0.1
 
 *_Editor-in-Chief: David Attwater_*\
 *_Contributors: Emmett Coin,  Deborah Dahl,  Jim Larson_*
