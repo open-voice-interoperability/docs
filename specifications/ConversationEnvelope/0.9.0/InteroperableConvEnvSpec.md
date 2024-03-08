@@ -1,10 +1,14 @@
-# Interoperable Conversation Envelope Specification
+<img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
+
+# Interoperable Conversation Envelope Specification Version 0.9.0 
 
 The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
-Architecture Work Group\
-16 January 2024\
-\
+Architecture Work Group
+
+16 January 2024 \
+Draft Version 0.9.0
+
 *_Editor-in-Chief: David Attwater_*\
 *_Contributors: Emmett Coin,  Deborah Dahl,  Jim Larson, Allan Wylie,  Rainer Türner and Diego Gosmar_*
 

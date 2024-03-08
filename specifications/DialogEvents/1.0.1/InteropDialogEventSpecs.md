@@ -1,15 +1,17 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Interoperable Dialog Event Object Specification
+# Interoperable Dialog Event Object Specification Version 1.0.1
 
-**Version 1.0.1**  
+The Open Voice Network\
+Open Voice Interoperability Initiative - LF AI & Data Foundation\
+Architecture Work Group
 
-Open Voice Interoperability Initiative - LF AI & Data Foundation <br>
-Architecture Work Group <br>
-*Editor-in-chief: David Attwater* <br>
-*Contributors: Emmett Coin, Deborah Dahl, Jim Larson*
+20 February 2024 \
+Draft Version 0.9.0
 
-**20 February 2024**
+*_Editor-in-Chief: David Attwater_*\
+*_Contributors: Emmett Coin,  Deborah Dahl,  Jim Larson_*
+
 
 ## TABLE OF CONTENTS
 - CHAPTER 0. SCOPE AND INTRODUCTION 
