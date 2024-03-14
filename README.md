@@ -6,3 +6,5 @@ The **specifications** folder contains the current normative Open Voice Interope
 The **background** folder contains informative background information and educational material about Open Voice Interoperability and the specifications. 
 
 The **documentation** folder (to be added) will contain documentation for Open Voice Interoperability software. 
+
+The **webinar-slides** folder contains slides from recent webinars.
