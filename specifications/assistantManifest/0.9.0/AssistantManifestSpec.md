@@ -44,12 +44,12 @@ This document specifies the object format for Open Voice Interoperability Initia
 #### 0.2 Assistant Manifest Purpose
 The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceEndpoint.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used for example by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
 
-An Assistant Manifest is intended to be used as a component part of other specifications. It is not stand-alone document.
+The Assistant Manifest is intended to be used as a component part of other specifications. It is not a stand-alone document.
 
 ### CHAPTER 1. SPECIFICATION
 #### 1.1 Representation
 
-The Assistant Manifest will be represented as a JSON [[1]](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/) object in a string format.   This object will be embodied in other objects. It is not expected to stand-alone as a document in its own right.
+The Assistant Manifest will be represented as a JSON [[1]](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/) object in string format. This object will be embodied in other objects. It is not expected to stand alone as a document in its own right.
 
 #### 1.2 Protocol
 
@@ -102,18 +102,18 @@ Figure 1 shows an example of an assistant manifest object.  It has two mandatory
 
 #### 1.6 The `identification` object
 
-The `identification` object publishes key aspects of the conversational assistant's role and identity.  It should not contain specific information about specific services or capabilities that are offered.  This section allows others to know how the agent refers to itself, the organization that it represents and its role in serving its users.
+The `identification` object publishes key aspects of the conversational assistant's role and identity.  It should not contain specific information about specific services or capabilities that are offered.  This section allows others to know how the agent refers to itself, the organization that it represents, and its role in serving its users.
 
 |Key|Type|Description|Example|Mandatory|
 |--|--|--|--|--|
-|`serviceEndpoint`|URL|The endpoint of the conversational assistant.  This endpoint will be capapable of sending and receiving OVON Conversation Envelopes.|"https://dev.buerokratt.ee/ovonr/conversation"|Mandatory|
-|`organization`|string|The name of the organzation administering this assistant. If relevant, this is the organization that the agent will introduce itself as acting on behalf of. This will be searchable and vocalizable.|"Government of Estonia"|Mandatory|
+|`serviceEndpoint`|URL|The endpoint of the conversational assistant.  This endpoint will be capable of sending and receiving OVON Conversation Envelopes.|"https://dev.buerokratt.ee/ovonr/conversation"|Mandatory|
+|`organization`|string|The name of the organization administering this assistant. If relevant, this is the organization that the agent will introduce itself as acting on behalf of. This will be searchable and vocalizable.|"Government of Estonia"|Mandatory|
 |`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"buerokratt"|Mandatory|
 |`serviceName`|string|The 'job description' or 'role' of the assistant.  This will be how the agent would describe its role in the organization or its relationship to its users.  This will be searchable and vocalizable.   **!! I think there is confusion on this and we need to agree it!!**|"primary assistant"|Optional|
 
 #### 1.6 The `capabilities` object
 
-The `capabilities` object describes the capabilities offered by the agent. The manifest is keyed to a specific endpoint which in a large organization may support a large number of federated capabilities.  For this reason the capabilites object is expressed as an array of capability objects.  Each capability object stands-alone from the others.  It represents a set of characteristics that work together independently of the other capability objects. For example, if one capability supports the Welsh language for banking functions and another support the Inuit language for sports information.  This does not mean that the endpoint can provide banking services in the Inuit language.  
+The `capabilities` object describes the capabilities offered by the agent. The manifest is keyed to a specific endpoint which in a large organization may support a large number of federated capabilities.  For this reason, the capabilities object is expressed as an array of capability objects.  Each capability object stands alone from the others.  It represents a set of characteristics that work together independently of the other capability objects. For example, if one capability supports the Welsh language for banking functions and another supports the Inuit language for sports information.  This does not mean that the endpoint can provide banking services in the Inuit language.  
 
 The features of each capability object are shown below.
 
@@ -126,7 +126,7 @@ The features of each capability object are shown below.
 |`contentType`|string|The mime type of the HTTP packets.  **!!This should not be neccessary surely?Delete this????!!**| "application/json"|**!!!**|
 
 ### Chapter 2. Schema
-##### The structure of a JSON assistant manigest is defined below as a JSON Schema. #####
+##### The structure of a JSON assistant manifest is defined below as a JSON Schema. #####
 
 ### Chapter 3. References
 
