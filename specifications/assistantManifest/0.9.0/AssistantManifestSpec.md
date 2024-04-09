@@ -42,10 +42,10 @@ Draft Version 0.9.0
 This document specifies the object format for Open Voice Interoperability Initiative  - LF AI & Data Foundation (OVON) Assistant Manifest.  
 
 #### 0.2 Assistant Manifest Purpose
-The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceEndpoint.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used for examply by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
+The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceEndpoint.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used for example by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
 
 An Assistant Manifest is intended to be used as a component part of other specifications. It is not stand-alone document.
- 
+
 ### CHAPTER 1. SPECIFICATION
 #### 1.1 Representation
 
@@ -53,11 +53,11 @@ The Assistant Manifest will be represented as a JSON [[1]](https://www.ecma-inte
 
 #### 1.2 Protocol
 
-JSON was chosen for the OVON conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.   \
- 
+JSON was chosen for the OVON conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.
+
 #### 1.3 AAA & Security
 
-Authorization, Authentication, Accounting, and Security specifications are outside the scope of this document and will be defined in separate documents. 
+Authorization, Authentication, Accounting, and Security specifications are outside the scope of this document and will be defined in separate documents.
 
 #### 1.4 Nomenclature
 
@@ -66,14 +66,14 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
 #### 1.5 Assitant Manifest Object Structure
 
     {
-        "identification": 
+        "identification":
         {
             "serviceEndpoint": "https://dev.buerokratt.ee/ovonr/conversation",
             "organization": "Government of Estonia",
             "conversationalName": "buerokratt",
             "serviceName": "Estonia"
         },
-        
+
         "capabilities": [
             {
                 "keywords": [
@@ -95,7 +95,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
             }
         ]
     }
-	
+
 ##### _Figure 1. Example Assitant Manifest Object_ #####
 
 Figure 1 shows an example of an assistant manifest object.  It has two mandatory sections `identification` and `capabilities`.  These are described below.
@@ -133,7 +133,7 @@ The features of each capability object are shown below.
 * [1] https://www.ecma-international.org/publications-and-standards/standards/ecma-404/ ECMA-404 The JSON data interchange syntax
 * [2] https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0 Interoperable Dialog Event Specification (version 1.0.1)
 * [3] https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.0/InteroperableConvEnvSpec.md Interoperable Conversation Envelope Specification Version 0.9.0.
-* [4] https://www.rfc-editor.org/rfc/rfc5646.txt RFC 5646. BCP 47. Tags for Identifying Languages. 
+* [4] https://www.rfc-editor.org/rfc/rfc5646.txt RFC 5646. BCP 47. Tags for Identifying Languages.
 * [5] https://www.ietf.org/rfc/rfc4646.txt RFC 4646 Regarding Best Practice for Tags for Identifying Languages
 
 ### Chapter 4. Glossary of Terms
@@ -141,7 +141,7 @@ The features of each capability object are shown below.
 
 |Term|Definition|
 |-|-|
-|channeling|A conversational assistant acts as an intermediary between a user and another conversational assistant, passing through requests and returning responses. The intermediary assistant will often make no modifications to the requests or the responses but may do so, for example increasing the speed or volume or even translating between languages.  | 
+|channeling|A conversational assistant acts as an intermediary between a user and another conversational assistant, passing through requests and returning responses. The intermediary assistant will often make no modifications to the requests or the responses but may do so, for example increasing the speed or volume or even translating between languages.  |
 |confidence |A number representing a measure of the confidence that the information contained in the associated value is ‘correct’.|
 |conversational assistant|A conversant in a conversation (usually but not neccessarily a machine) that is performing the specific role of adotping and meeting the needs of another conversant (usually but not neccessasarily a human).|
 |conversant|A participant in a conversation which might be a human or a machine|
@@ -163,7 +163,7 @@ The features of each capability object are shown below.
 |language code|A code representing the language (e.g., American English, British English, New Norsk, etc.)
 mandatory elements|The mandatory elements that are required in the various elements of the envelope in order to be OVON compliant.  These elements are enough to allow basic no-frills interoperation between agents.|
 |mediation|A conversational assistant acting as a user, has a conversation with another conversational assistant behind the scenes using dialog – semantic or linguistic – interfaces to achieve a goal and return to the user.|
-|stand-off-annotation |A method of feature layering and cross-referencing that permits the different features of an utterance or linguistic event to be kept separate but also linked logically and temporally with each other. | 
+|stand-off-annotation |A method of feature layering and cross-referencing that permits the different features of an utterance or linguistic event to be kept separate but also linked logically and temporally with each other. |
 |token encoding|The specific encoding used to represent text in a token.|
 |token link|A link from one token in a feature to part or all of another token in a feature used to implement stand-off annotation.|
 |token object|A JSON object representing a feature token which defines the value of the feature and other associated information such as its span and how it links to other feature tokens.|
