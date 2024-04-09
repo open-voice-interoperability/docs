@@ -1,6 +1,6 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Assistant Manifest 0.9.0 
+# Assistant Manifest Specification Version 0.9.0
 
 The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
