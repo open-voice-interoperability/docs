@@ -61,7 +61,7 @@ Authorization, Authentication, Accounting, and Security specifications are outsi
 
 #### 1.4 Nomenclature
 
-This specification uses ‘camelCase’ (i.e. no spaces with new words being capitalized) for all nominal property names, for example, eventType and replyTo.  
+This specification uses `camelCase` (i.e. no spaces with new words being capitalized) for all nominal property names, for example, `serviceEndpoint` and `supportedLayers`.  
 
 #### 1.5 Assitant Manifest Object Structure
 
@@ -70,13 +70,14 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
         {
             "serviceEndpoint": "https://dev.buerokratt.ee/ovonr/conversation",
             "organization": "Government of Estonia",
-            "conversationalName": "buerokratt",
-            "serviceName": "Estonia"
+            "conversationalName": "Buerokratt",
+            "serviceName": "Passport Office",
+            "role" : "Immigration Specialist"
         },
 
         "capabilities": [
             {
-                "keywords": [
+                "keyphrases": [
                     "visa",
                     "immigration",
                     "passport",
@@ -85,13 +86,12 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
                 "languages": [
                     "en-us"
                 ],
-                "descriptiveTexts": [
+                "descriptions": [
                     "international travel to and from Estonia"
                 ],
-                "modalities": [
+                "supportedLayers": [
                     "text"
-                ],
-                "contentType": "application/json"
+                ]
             }
         ]
     }
@@ -108,8 +108,9 @@ The `identification` object publishes key aspects of the conversational assistan
 |--|--|--|--|--|
 |`serviceEndpoint`|URL|The endpoint of the conversational assistant.  This endpoint will be capable of sending and receiving OVON Conversation Envelopes.|"https://dev.buerokratt.ee/ovonr/conversation"|Mandatory|
 |`organization`|string|The name of the organization administering this assistant. If relevant, this is the organization that the agent will introduce itself as acting on behalf of. This will be searchable and vocalizable.|"Government of Estonia"|Mandatory|
-|`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"buerokratt"|Mandatory|
-|`serviceName`|string|The 'job description' or 'role' of the assistant.  This will be how the agent would describe its role in the organization or its relationship to its users.  This will be searchable and vocalizable.   **!! I think there is confusion on this and we need to agree it!!**|"primary assistant"|Optional|
+|`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"Buerokratt"|Mandatory|
+|`serviceName`|string|The organizational function of the assistant. This will be searchable and vocalizable.   |"Passport Office"|Optional|
+|`role`|string|The 'job title' or 'role' of the assistant.  This will be how the agent would describe its role in the organization or its relationship to its users.  This will be searchable and vocalizable.|"Immigration Specialist"|Optional|
 
 #### 1.6 The `capabilities` object
 
@@ -119,11 +120,10 @@ The features of each capability object are shown below.
 
 |Key|Type|Description|Example|Mandatory|
 |--|--|--|--|--|
-|`keywords`|string array|A list of searchable key phrases, in no particular order, that represent the key features of the service provided or topics about which questions can be answered by the assistant.  These can be words or phrases and will typically be simple noun or verb phrases, suitable for example for use in simple text searches.  There is no limit to the length of the list or the length of the phrases.|["visa",  "immigration", "passport","permanent resident" ],|Mandatory|
-|`languages`|string array|A list of the languages supported by this capability according to [IETF BCP 47 language Tag [4]](https://www.rfc-editor.org/rfc/rfc5646.txt).|["en-us"]|Default: Undefined|
-`descriptiveTexts`|string array|A set of searchable texts, in no particular order, describing the services and capabilities of the assistant. These are expressed in natural language suitable, for example, for inclusion into queries or searches using natural language technologies. There is no limit to the length of the list or the length of the phrases.|["international travel to and from Estonia","permanent and temporary visa requirements when visiting Estonia"]|Mandatory|
-`modalities`|string array|A list of the dialogEvent layers supported by this capability. See [[2] Interoperable Dialog Event Specification](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0) and [[3] Interoperable Conversation Envelope Specification Version 0.9.0.](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.0/InteroperableConvEnvSpec.md ) |["text"]|Mandatory  **!!Optional?**|
-|`contentType`|string|The mime type of the HTTP packets.  **!!This should not be neccessary surely?Delete this????!!**| "application/json"|**!!!**|
+|`keyphrases`|string array|A list of searchable key phrases, in no particular order, that represent the key features of the service provided or topics about which questions can be answered by the assistant.  These can be words or phrases and will typically be simple noun or verb phrases, suitable for example for use in simple text searches.  There is no limit to the length of the list or the length of the phrases.|["visa",  "immigration", "passport","permanent resident" ],|Mandatory|
+|`languages`|string array|A list of the languages supported by this capability according to [IETF BCP 47 language Tag [4]](https://www.rfc-editor.org/rfc/rfc5646.txt).|["en-us"]|*Default:* *Undefined*|
+`descriptions`|string array|A set of searchable texts, in no particular order, describing the services and capabilities of the assistant. These are expressed in natural language suitable, for example, for inclusion into queries or searches using natural language technologies. There is no limit to the length of the list or the length of the phrases.|["international travel to and from Estonia","permanent and temporary visa requirements when visiting Estonia"]|Mandatory|
+`supportedLayers`|string array|A list of the dialogEvent layers supported by this capability. See [[2] Interoperable Dialog Event Specification](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0) and [[3] Interoperable Conversation Envelope Specification Version 0.9.0.](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.0/InteroperableConvEnvSpec.md ) |["text","ssml","pronun","voice","html"]|*Default:* ["text"]|
 
 ### Chapter 2. Schema
 ##### The structure of a JSON assistant manifest is defined below as a JSON Schema. #####
