@@ -6,7 +6,7 @@ The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-08 April 2024 \
+16 April 2024 \
 Draft Version 0.9.0
 
 *_Editor-in-Chief: David Attwater_*\
@@ -259,10 +259,10 @@ mandatory elements|The mandatory elements that are required in the various eleme
 
 |Issue|Description|
 |--|--|
-|Conversant or Assistant Manifest|Question: Is the manifest only for conversants with the role of an 'assistant' or should it be named a 'Conversant Manifest' and be capable of representing the identity and capabilities of all participants of a conversation including a user? </br> Answer: XXXX |
+|Conversant or Assistant Manifest|Question: Is the manifest only for conversants with the role of an 'assistant' or should it be named a 'Conversant Manifest' and be capable of representing the identity and capabilities of all participants of a conversation including a user? </br> Answer: The manifest is intended to describe anything that can be a conversational endpoint. This could be an typical informational assistant, a discovery agent, or a user represented by a user proxy agent.  We decided to keep the term 'assistant' to cover all of these cases becuase it is sufficiently ambiguous and the dominant use case will not be to describe human users. |
 
 ### Chapter 6. Document Change Log
 
 |Version|Release Date|Description|
 |-|-|-|
-|0.9.0| | |
+|0.9.0|16 April 2024|Draft for comments to the community|
