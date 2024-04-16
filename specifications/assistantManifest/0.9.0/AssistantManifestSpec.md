@@ -10,7 +10,7 @@ Architecture Work Group
 Draft Version 0.9.0
 
 *_Editor-in-Chief: David Attwater_*\
-*_Contributors: Emmett Coin,  Deborah Dahl,  Allan Wylie and Diego Gosmar_*
+*_Contributors: Emmett Coin, Deborah Dahl, Leah Barnes, Allan Wylie and Diego Gosmar_*
 
 ## TABLE OF CONTENTS
 
