@@ -1,0 +1,198 @@
+{
+  "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.1/conversation-envelope-schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A representation of a 'dialogue envelope’ - the universal data exchange format for an OVON compliant interoperable agent.",
+  "type": "object",
+  "required":  [ "ovon" ],
+  "properties": {
+    "ovon": {
+      "required":  ["schema" , "conversation", "sender", "events" ],
+      "properties": {
+
+        "schema": {
+          "type": "object",
+          "required":  ["version" ],
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "The version of the dialog envelope specification matching this envelope."
+            },
+            "url": {
+              "$ref": "#/$defs/url"
+            }
+          }
+        },
+
+        "conversation": {
+          "required":  ["id" ],
+          "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the current conversation with the user."
+              },
+              "persistent_state": {
+                  "type": "object",
+                  "description": "Container for an arbitrary set of key value pairs to be persisted.",
+                  "additionalProperties" : {
+                      "type" : "object"
+                  }
+              }
+          }
+        },
+
+        "sender": {
+          "type": "object",
+          "required":  ["from"],
+          "properties" : {
+            "from": {
+              "$ref": "#/$defs/uri",
+              "description": "The URI of the sender of the envelope."
+            },
+            "replyTo": {
+              "$ref": "#/$defs/uri",
+              "description": "The URI to direct responses to the envelope."
+            }
+          }
+
+        },
+
+        "responseCode": {  
+          "type": "object",
+          "required":  ["code"],
+          "properties" : {
+            "code" : {
+              "type" : "integer"
+            },
+            "description" : {
+              "type" : "string"
+            }            
+          }
+
+        },
+
+        "events": {  
+          "type": "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "eventType": {
+                "type" : "string",
+                "enum": ["utterance", "whisper", "invite", "bye"]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "utterance" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": {
+                    "parameters": {
+                      "description": "Parameters for the utterance event.",
+                      "type" : "object",
+                      "properties" : {
+                        "dialogEvent": {
+                          "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.1/dialog-event-schema.json"
+                        }
+                      },  
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "whisper" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": {
+                    "parameters": {
+                      "description": "Parameters for the whisper event.",
+                      "type" : "object",
+                      "properties" : {
+                        "dialogEvent": {
+                          "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.1/dialog-event-schema.json"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "invite" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the invite event.",
+                      "type": "object",
+                      "properties": {      
+                        "to"  : {
+                          "type" : "object",
+                          "properties": {
+                            "url" : {
+                              "$ref": "#/$defs/url",
+                              "description": "The URL of the agent to be invited."
+                            }
+                          },
+                          "additionalProperties": false
+                        }        
+                      },
+                      "additionalProperties": false
+                    } 
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "bye" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the bye event.",
+                      "type": "object",
+                      "properties": { },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
+
+            ]
+          }
+        }
+
+      }
+    }
+  },
+
+  "$defs": {
+    "url": {
+      "type": "string",
+      "description": "Any valid URL"
+    },
+    "uri": {
+      "type": "string",
+      "description": "Any valid URI"
+    }
+
+  }
+}

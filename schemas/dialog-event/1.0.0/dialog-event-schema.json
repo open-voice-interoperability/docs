@@ -1,0 +1,124 @@
+{
+  "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/1.0.0/dialog-event-schema.json",
+  "$schema": "https://openvoicenetwork.org/schema",
+  "description": "A representation of a 'language event’ that is to say any information associated with a phrase, utterance or part of an utterance.",
+  "type": "object",
+  "required":  ["id" , "speaker-id", "span", "features" ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "previousId": {
+      "type": "string"
+    },
+    "speakerID": {
+      "type": "string"
+    },
+    "span": { "$ref": "#/$defs/span" },
+    "features": {
+      "type": "object",
+      "patternProperties": {
+        ".*": { "$ref": "#/$defs/features" }
+      }
+    }
+  },
+  "$defs": {
+    "features": {
+      "type": "object",
+      "required":  ["mime-type" , "tokens" ],
+      "properties": {
+        "encoding": {
+          "type": "string",
+          "description": "The text encoding of the token values"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "The Mime Type of the token values"
+        },
+        "lang": {
+          "type": "string",
+          "description": "The language of the token values"
+        },
+        "token-schema": {
+          "type": "string",
+          "description": "A schema restricting the token values"
+        },
+        "tokens" : {
+          "type": "array",
+          "items":  { 
+              "$ref": "#/$defs/token" 
+          },
+        "alternates": {
+          "type": "array", 
+          "items": {
+            "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "#/$defs/token" 
+              }
+            }
+          }
+        }
+      }
+    },
+    "token": {
+      "type": "object",
+      "anyOf": [
+        { "required": ["value"] },
+        { "required": ["value-url"] }
+      ],
+      "properties": {
+          "value": {
+            "type": ["number","string","object","array","boolean"]
+          },
+          "valueUrl": {
+            "$ref": "#/$defs/url"
+          },          
+          "confidence": {
+            "type": "number"
+          },
+          "span": { "$ref": "#/$defs/span" },
+          "links" : {
+              "type": "array",
+              "items":  { 
+                "$ref": "#/$defs/jsonpath" 
+              }
+          }
+      }
+    },
+    "url": {
+      "type": "string",
+      "description": "Any valid URL"
+    },
+    "jsonpath": {
+      "type": "string",
+      "description": "an expression in JSON Path syntax"
+    },
+    "span": {
+      "anyOf": [
+        { "required": ["start-time"] },
+        { "required": ["start-offset"] }
+      ],
+      "properties": {
+        "start-time": { 
+            "$ref": "#/$defs/isoTime" 
+        },
+        "end-time": { 
+            "$ref": "#/$defs/isoTime" 
+        },
+        "start-offset": {
+            "$ref": "#/$defs/isoDuration" 
+        },
+        "end-offset": {
+            "$ref": "#/$defs/isoDuration" 
+        }
+      }
+    },
+    "isoTime": {        
+      "description": "A string in ISO 8601 absolute format."
+    },
+    "isoDuration": {        
+      "description": "A string in ISO 8601 duration format."
+    }
+  }
+}
