@@ -1,0 +1,84 @@
+{
+  "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/0.9.0/assistant-manifest-schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A representation of an 'assistant manifest’ - a standard format for publishing the identity and capability of an OVON agent.",
+  "type": "object",
+  "required":  [ "identification","capabilities" ],
+  "properties": {
+    "identification": {
+      "required":  ["serviceEndpoint" , "organization", "conversationalName" ],
+      "properties": {
+        "serviceEndpoint": {
+          "$ref": "#/$defs/url",
+          "description": "The endpoint of the conversational assistant."
+        },
+        "organization": {
+          "type": "string",
+          "description": "The name of the organization administering this assistant."
+        },
+        "conversationalName": {
+          "type": "string",
+          "description": "The 'given name' of the conversational agent."
+        },
+        "serviceName": {
+          "type": "string",
+          "description": "The organizational function of the assistant."
+        },
+        "role": {
+          "type": "string",
+          "description": "The 'job title', or 'role' of the assistant."
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "A list of capabilities supported by this endpoint.",
+      "items" : {
+        "type" : "object",
+        "description": "One of the capabilities supported by this endpoint.",
+        "required":  ["keyphrases" , "descriptions", "" ],
+        "properties" : {
+          "keyphrases": {
+            "type": "array",
+            "description": "A list of searchable key phrases.",
+            "items" : {
+              "type": "string",
+              "description": "A searchable key phrase"
+            }
+          },
+          "languages": {
+            "type": "array",
+            "description": "A list of the languages supported by this capability.",
+            "items" : {
+              "type": "string",
+              "description": "A language supported by this capability"
+            }
+          },
+          "descriptions": {
+            "type": "array",
+            "description": "A set of searchable texts, in no particular order, describing the services and capabilities of the assistant.",
+            "items" : {
+              "type": "string",
+              "description": "A searchable text describing one of the services or capabilities of the assistant."
+            }
+          },
+          "supportedLayers": {
+            "type": "array",
+            "description": "A list of the dialogEvent layers supported by this capability.",
+            "items" : {
+              "type": "string",
+              "description": "A dialogEvent layer supported by this capability"
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "url": {
+      "type": "string",
+      "description": "Any valid URL"
+    }
+  }
+}
