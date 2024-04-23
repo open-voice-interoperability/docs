@@ -6,7 +6,7 @@ The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-16 April 2024 \
+23 April 2024 \
 Draft Version 0.9.0
 
 *_Editor-in-Chief: David Attwater_*\
@@ -63,7 +63,7 @@ Authorization, Authentication, Accounting, and Security specifications are outsi
 
 This specification uses `camelCase` (i.e., no spaces with new words capitalized) for all nominal property names, such as `serviceEndpoint` and `supportedLayers`.  
 
-#### 1.5 Assitant Manifest Object Structure
+#### 1.5 Assistant Manifest Object Structure
 
     {
         "identification":
@@ -166,7 +166,7 @@ The features of each capability object are shown below.
             "items": {
                 "type": "object",
                 "description": "One of the capabilities supported by this endpoint.",
-                "required":  ["keyphrases" , "descriptions", "" ],
+                "required":  ["keyphrases" , "descriptions"],
                 "properties" : {
                 "keyphrases": {
                     "type": "array",
@@ -265,4 +265,4 @@ mandatory elements|The mandatory elements that are required in the various eleme
 
 |Version|Release Date|Description|
 |-|-|-|
-|0.9.0|16 April 2024|Draft for comments to the community|
+|0.9.0|23 April 2024|Draft for comments to the community|
