@@ -6,7 +6,7 @@ The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-23 April 2024 \
+30 April 2024 \
 Draft Version 0.9.0
 
 *_Editor-in-Chief: David Attwater_*\
@@ -72,7 +72,8 @@ This specification uses `camelCase` (i.e., no spaces with new words capitalized)
             "organization": "Government of Estonia",
             "conversationalName": "Buerokratt",
             "serviceName": "Passport Office",
-            "role": "Immigration Specialist"
+            "role": "Immigration Specialist",
+            "synopsis" : "Immigration specialist as part of the Beurocrat system."
         },
 
         "capabilities": [
@@ -111,6 +112,7 @@ The `identification` object publishes key aspects of the conversational assistan
 |`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"Buerokratt"|Mandatory|
 |`serviceName`|string|The organizational function of the assistant. This will be searchable and vocalizable.   |"Passport Office"|Optional|
 |`role`|string|The 'job title' or 'role' of the assistant.  This will be how the agent would describe its role in the organization or its relationship to its users.  This will be searchable and vocalizable.|"Immigration Specialist"|Optional|
+|`synopsis`|string|A sentence describing the function of the assistant.  This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. |"Immigration specialist as part of the Buerokratt system."|Mandatory|
 
 #### 1.6 The `capabilities` object
 
@@ -157,6 +159,10 @@ The features of each capability object are shown below.
                 "role": {
                 "type": "string",
                 "description": "The 'job title', or 'role' of the assistant."
+                },
+                "synopsis": {
+                    "type": "string",
+                    "description": "A sentence summarizing the function of the assistant."
                 }
             }
             },
