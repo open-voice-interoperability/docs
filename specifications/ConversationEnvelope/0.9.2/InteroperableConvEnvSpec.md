@@ -1,6 +1,6 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Interoperable Conversation Envelope Specification Version 0.9.1
+# Interoperable Conversation Envelope Specification Version 0.9.2
 
 The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
@@ -42,7 +42,7 @@ Draft Version 0.9.2
 #### 1.17 requestManifest Event
 #### 1.18 publishManifest Event
 #### 1.19 findAssistant Event
-#### 1.20 candidateAssistent Event
+#### 1.20 candidateAssistant Event
 
 ### CHAPTER 2. MINIMAL BEHAVIORS
 #### &nbsp; 2.1 Minimal Agent Behavior
@@ -682,7 +682,7 @@ Figure 17B. A _bye_ event with a voiced farewell.
                             "conversationalName": "Buerokratt",
                             "serviceName": "Passport Office",
                             "role": "Immigration Specialist",
-                            "synopsis" : "Immigration specialist as part of the Beurocrat system."
+                            "synopsis" : "Immigration specialist as part of the Buerokratt system."
                         },               
                         "capabilities": [
                             {
@@ -761,8 +761,8 @@ Figure 17B. A _bye_ event with a voiced farewell.
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "from": "https://someBotThatOfferedTheInvite.com",
-          "to": "https://myFavoriteDiscoveryBot.com"
+          "from": "https://myFavoriteDiscoveryBot.com ",
+          "to": "https://someBotThatOfferedTheInvite.com"
         },
         "events": [
           { 
