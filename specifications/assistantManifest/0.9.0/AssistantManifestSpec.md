@@ -2,11 +2,10 @@
 
 # Assistant Manifest Specification Version 0.9.0
 
-The Open Voice Network\
-Open Voice Interoperability Initiative - LF AI & Data Foundation\
+The Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-30 April 2024 \
+2 May 2024 \
 Draft Version 0.9.0
 
 *_Editor-in-Chief: David Attwater_*\
@@ -73,7 +72,7 @@ This specification uses `camelCase` (i.e., no spaces with new words capitalized)
             "conversationalName": "Buerokratt",
             "serviceName": "Passport Office",
             "role": "Immigration Specialist",
-            "synopsis" : "Immigration specialist as part of the Beurocrat system."
+            "synopsis": "Immigration specialist as part of the Beurocrat system."
         },
 
         "capabilities": [
