@@ -865,7 +865,7 @@ The conversation floor manager retains ultimate responsibility for deciding whic
 
 ## Chapter 3. JSON Envelope Schema
 
-The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json]
+The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json]
 
 ## Chapter 4. References
 
@@ -934,4 +934,4 @@ This section documents some of the key design decisions that were made by the te
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.04.30|- Added findAssistant event</br> - Added candidateAssistants event</br> - Added requestManifest event</br>| - Added publishManifest event | Removed "to" from Invite|  
+|0.9.2|2024.04.30|- Added findAssistant event</br> - Added candidateAssistants event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Removed "to" from Invite</br>- Removed inline schema and kept a link instead.|  

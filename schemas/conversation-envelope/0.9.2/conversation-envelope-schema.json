@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.1/conversation-envelope-schema.json",
+  "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A representation of a 'dialogue envelope’ - the universal data exchange format for an OVON compliant interoperable agent.",
   "type": "object",
@@ -244,12 +244,50 @@
                     }
                   }
                 }
-              }
+              },
 
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "candidateAssistants" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the candidateAssistants event.",
+                      "type": "object",
+                      "properties" : {
+                        "endpoints": {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "url" : {
+                                "$ref": "#/$defs/url",
+                                "description": "The endpoint URL of the assistant."
+                              },
+                              "synopsis" : {
+                                "type" : "string",
+                                "description": "A synopsis of the capabilities of the assistant."
+                              },
+                              "score" : {
+                                "type" : "integer",
+                                "description": "A score for the recommendation."
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              }
             ]
           }
         }
-
       }
     }
   },
