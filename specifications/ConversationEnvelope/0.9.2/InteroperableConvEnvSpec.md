@@ -22,7 +22,7 @@ Draft Version 0.9.2
 #### &nbsp; 0.4 OVON Event Types
 ### CHAPTER 1. SPECIFICATION
 #### &nbsp; 1.1 Representation
-#### &nbsp; 1.2 Protocol
+#### &nbsp; 1.2 Syntax and Protocol
 #### &nbsp; 1.3 AAA & Security
 #### &nbsp; 1.4 Nomenclature
 #### &nbsp; 1.5 Conversation Envelope Object Structure
@@ -93,22 +93,11 @@ The patterns described above allow for conversation between one user and multipl
 \
 It is envisaged that later extensions to this specification will also support simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another.
 
-#### 0.4 OVON Event Types
-
-In order to facilitate the patterns described above each conversation envelope can carry one or more OVON Events.  OVON Events are broken into two categories.\
-
-* utterance events - spoken or written natural language
-  * utterance  - An utterance spoken in the conversation itself by a user or agent
-  * whisper - An out-of-band linguistic instruction from one agent to another
-* agent control events  - structure control messages
-  * invite - A user-agent or assistant is invited to join the conversation.
-  * bye -  A user-agent or assistant is leaving the conversation
 ### CHAPTER 1. SPECIFICATION
 #### 1.1 Representation
 
-A conversation envelope will be represented as a JSON [1] object in a string format.  The JSON conversation envelope is expected to be a stand-alone document or object but there is no reason that it cannot be part of a larger JSON document.
 
-#### 1.2 Protocol
+#### 1.2 Syntax and Protocol
 
 JSON was chosen for the OVON conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.  Supported protocols and the mechanisms by which two agents agree on a protocol to be used are currently outside the scope of this document.\
 \
@@ -152,15 +141,15 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
                   "parameters": {
                     "parameter 1" : { parameter 1 values }  
                     … 
-                    "parameter n" : { parameter 1 values }  
+                    "parameter n" : { parameter n values }  
                   }
               },
               {
                   "eventType": "event type B",
                   "parameters": {
-                    "parameter 1" : { parameter N values }
+                    "parameter 1" : { parameter 1 values }
                     … 
-                    "parameter n" : { parameter N values }   
+                    "parameter n" : { parameter n values }   
                   }
               },
           ]
@@ -317,15 +306,15 @@ Figure 10 shows Other supported elements in the _responseCode_ object.  An optio
             "parameters": {
               "parameter 1" : { parameter 1 values }  
               … 
-              "parameter n" : { parameter 1 values } 
+              "parameter n" : { parameter n values } 
             } 
           },
           {
             "eventType": "event type B",
             "parameters": {
-              "parameter 1" : { parameter N values }
+              "parameter 1" : { parameter 1 values }
               … 
-              "parameter n" : { parameter N values }   
+              "parameter n" : { parameter n values }   
             }
           },
         ]
@@ -340,12 +329,19 @@ Each event object must have an _eventType_, which is a string, and a parameters 
 
 #### 1.11 Event-Types
 
-The event-type string can be one of the following:\
+The following are valid values for _eventTypes_.
 
-* _utterance_  -  A natural language utterance as a dialog event.
-* _whisper_ - An inter-assistant communication as a dialog event.
-* _invite_ - A control message to invite another agent-browser or assistant to join the conversation. 
-* _bye_  - A control message to indicate that a user-agent or assistant is leaving the conversation.
+* utterance events - spoken or written natural language
+  * _utterance_  - An utterance spoken in the conversation itself by a user or agent
+  * _whisper_ - An out-of-band linguistic instruction from one agent to another
+
+* agent control events  - structure control messages
+  * _invite_ - A user-agent or assistant is invited to join the conversation.
+  * _bye_ -  A user-agent or assistant is leaving the conversation
+  * _requestManifest_ - Ask another agent for information about their identity and capabilties.
+  * _publishManifest_ - Publish information about an agents' identity and capabilties.
+  * _findAssistant_ - Ask an agent to recommend themself or another agent for a task.
+  * _candidateAssistant_ - Return a list of recommended agents for a task.
 
 The following sections define these event objects in more detail.
 
@@ -770,9 +766,11 @@ In use case 1, the recipient assistant is acting as a discovery agent for the cl
 
 In use case 2, the recipient assistant is acting as a servicing agent for the client agent.  If the recipient assistant is willing to service the request then it returns a _candidateAssistant_ event containing its own URL.   Otherwise it returns an empty _candiateAssistant_ event.   
 
-In both cases 2 the _findAssistant_ event does is not required to have an associated _whisper_ event.  This is not very meaningful for use case 1 but the recipient assistant could simply return the address of their favorite general purpose assistant. For use case 2, this could be interpreted as a request to see whether that assistant is willing and able to recieve requests.
+In both cases the _findAssistant_ event does is not required to have an associated _whisper_ event.  This is not very meaningful for use case 1 but if a discovery agent does receive an _findAssistant_ event with no _whisper_ then recipient assistant could simply return the address of their favorite general purpose assistant. 
 
-Note that there is no requirement in the OVON framework for an assistant to be either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared for use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.
+For use case 2, a missing _whisper_ event could be interpreted as a request to see whether that assistant is willing and able to recieve requests in general under the assumption that the client already knows the capabilities of the recipient.
+
+Note that there is no requirement in the OVON framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.
 
 ### 1.20 candidateAssistant Event
 
@@ -817,9 +815,9 @@ Note that there is no requirement in the OVON framework for an assistant to be e
 
 ##### Figure 22. A typical candidateAssistants event 
 
-The _candidateAssistant| event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   See the _findAssistant_ event above for a description of its use cases.
+The _candidateAssistant_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event (see above for a description of its use cases).
 
-The _candidateAssistant_ message has one mandatory parameter _endpoints_.  This is a list of potential service endpoints.  Each item in the list contains three possible parameters:
+The _candidateAssistant_ event has one mandatory parameter named _endpoints_.  This is a list of potential service endpoints.  Each item in the list contains some or all of the following key/value pairs:
 
 - _url_ - The service endpoint of the assistant. (mandatory)
 - _synopsis_ - A brief synopsis of the capabilities of this endpoint. (optional) 
@@ -833,7 +831,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
 
 #### 2.1 Minimal Agent Behaviors
 
-OVON-compliant dialog agents must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog agent.  
+OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant.  
 
 * utterance events - spoken or written natural language
   * _utterance_  -  Answer the speaker with an utterance in return.
@@ -841,14 +839,14 @@ OVON-compliant dialog agents must support all event types in order to be conside
 
 * agent control events  - structure control messages
   * _invite_ - Say 'hello' and respond to any whisper utterances. 
-  * _bye_ - Ignore this event. It is intended for the conversation floor manager.
+  * _bye_ - Ignore this event from another assistant.
   * _requestManifest_ - Return a minimal manifest that meets the manifest schema.
   * _publishManifest_ - Ignore this event if you did not ask for a manifest.
   * _findAssistant_ - Return your own URL as a candidate in a _candidateAssistant_ event.
   * _candidateAssistant_ - Ignore this event if you did not ask for a recommendation.
 
 #### 2.2 Minimal Conversation Floor Manager Behaviors
-OVON-compliant conversation floor managers (including host browsers) agents must support each of the following event types in order to be considered fully compliant.\
+OVON-compliant conversation floor managers (including host browsers) agents must support all types in order to be considered fully compliant.\
 \
 The minimal behavior expected from an OVON-compliant conversation floor manager in response to these event types is as follows:
 
@@ -868,7 +866,7 @@ The conversation floor manager retains ultimate responsibility for deciding whic
 
 ## Chapter 3. JSON Envelope Schema
 
-The structure of a JSON conversation envelope is defined below as a JSON Schema located at [https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json]
+The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json]
 
 ## Chapter 4. References
 
