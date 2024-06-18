@@ -1,0 +1,40 @@
+{
+    "ovon": {
+      "schema": {
+        "version": "0.9.2"      
+      },
+      "conversation": {
+        "id": "31050879662407560061859425913208"
+      },
+      "sender": {
+        "from": "https://myFavoriteDiscoveryBot.com ",
+        "to": "https://someBotThatOfferedTheInvite.com"
+      },
+      "events": [
+        { 
+          "eventType": "candidateAssistants",
+          "parameters": {
+              "endpoints" : [
+                  {
+                      "url": "https://libraryMagic.com",
+                      "synopsis" : "A bot for those who love reading.",
+                      "score": 100
+                  },
+                  {
+                      "url": "https://nationalLibraryArchive.org",
+                      "synopsis" : "A government catalog of every book published in the USA.",
+                      "score": 25
+                  },
+                  {
+                      "url": "https://booksRUs.com",
+                      "synopsis" : "Browse, sample and buy any book you desire.",
+                      "score": 14
+                  }
+              ]
+          }
+        }     
+      ]
+    }
+}
+
+  
