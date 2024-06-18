@@ -8,7 +8,7 @@ Architecture Work Group
 
 STATUS : UNPUBLISHED WORK IN PROGRESS
 
-09 April 2024 \
+18 June 2024 \
 Draft Version 0.9.2
 
 *_Editor-in-Chief: David Attwater_*\
@@ -589,11 +589,9 @@ Invite events will typically be accompanied by additional events.  Figure 16 sho
       }
     }
 
-Figure 17A. A minimal _bye_ envelope detaching an agent from a conversation.
+Figure 17. A minimal _bye_ envelope detaching an agent from a conversation.
 
-When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   
-
-As with the _invite_ event, the _bye_ event can be accompanied by other events.  The _bye_ event has no parameters.
+When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in figure 17. It has no _parameters_.
 
     "ovon": {
       "schema": {
@@ -603,7 +601,7 @@ As with the _invite_ event, the _bye_ event can be accompanied by other events. 
         "id": "31050879662407560061859425913208"
       },
       "sender": {
-        "from": "https://someBotThatOfferedTheBye.com"
+        "from": "https://someBot.com"
       },
       "responseCode" : 200,
       "events": [
@@ -630,7 +628,9 @@ As with the _invite_ event, the _bye_ event can be accompanied by other events. 
       ]
     }
 
-Figure 17B. A _bye_ event with a voiced farewell.
+Figure 18. A _bye_ event with a voiced farewell.
+
+As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
 
 ### 1.17 requestManifest Event
 
@@ -654,7 +654,11 @@ Figure 17B. A _bye_ event with a voiced farewell.
       }
     }
 
-##### Figure XX. A typical dialog envelope for a requestManifest event
+##### Figure 19. A typical dialog envelope for a requestManifest event
+
+All participants in a conversation are expected to maintain a manifest of their capabilities and core attributes.  They should publish this on request. The _requestManifest_ event is used for this.  This is a bare event with no _parameters_. 
+
+Figure 19 shows an example of a _requestManifest_ event. On receipt of this event, the target assistant should return a _publishManifest_ event.
 
 ### 1.18 publishManifest Event
 
@@ -710,7 +714,11 @@ Figure 17B. A _bye_ event with a voiced farewell.
       }
     }
 
-##### Figure XX. A typical dialog envelope for a publishManifest event
+##### Figure 20. A typical dialog envelope for a publishManifest event
+
+The _publishManifest_ event can be used to publish information about the capabilities and identity of a participant in a conversation.   
+ 
+This event can be sent at any time but should always be sent in response to a _requestManifest_ event.  Figure 20 shows an example of a _publishManifest_ event.  The event has one mandatory parameter _manfest_.  This parameter must be in the format specified in [3]
 
 ### 1.19 findAssistant Event
 
@@ -723,7 +731,7 @@ Figure 17B. A _bye_ event with a voiced farewell.
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "from": "https://someBotThatOfferedTheInvite.com",
+          "from": "https://someBot.com",
           "to": "https://myFavoriteDiscoveryBot.com"
         },
         "events": [
@@ -749,9 +757,25 @@ Figure 17B. A _bye_ event with a voiced farewell.
       }
     }
 
-##### Figure XX. A typical dialog envelope for a findAssistant event
+##### Figure 21. A typical dialog envelope for a findAssistant event
 
-### 1.20 candidateAssistant Event
+The _findAssistant_ event can be used to ask any other assistant to recommend one or more assistants.    There are a two primary use-cases for this event.
+
+1. Asking an assistant to recommend one or more assistants that can help with a certain task.
+2. Asking an assistant (or human agent) if they are willing and able to support a certain task.
+
+A _findAssistant_ event will normally be accompanied by a _whisper_ event containing a natural language description of the task to be performed.   
+
+In use case 1, the recipient assistant is acting as a discovery agent for the client agent.  The recipient assistant returns a _candidateAssistant_ event with recommendations.  If it does not have any recommendations to make it returns an empty _candidateAssistant_ event.
+
+In use case 2, the recipient assistant is acting as a servicing agent for the client agent.  If the recipient assistant is willing to service the request then it returns a _candidateAssistant_ event containing its own URL.   Otherwise it returns an empty _candiateAssistant_ event.   
+
+In both cases 2 the _findAssistant_ event does is not required to have an associated _whisper_ event.  This is not very meaningful for use case 1 but the recipient assistant could simply return the address of their favorite general purpose assistant. For use case 2, this could be interpreted as a request to see whether that assistant is willing and able to recieve requests.
+
+Note that there is no requirement in the OVON framework for an assistant to be either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared for use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.
+
+### 1.19 candidateAssistant Event
+
     {
       "ovon": {
         "schema": {
@@ -762,7 +786,7 @@ Figure 17B. A _bye_ event with a voiced farewell.
         },
         "sender": {
           "from": "https://myFavoriteDiscoveryBot.com ",
-          "to": "https://someBotThatOfferedTheInvite.com"
+          "to": "https://someBot.com"
         },
         "events": [
           { 
@@ -770,17 +794,17 @@ Figure 17B. A _bye_ event with a voiced farewell.
             "parameters": {
                 "endpoints" : [
                     {
-                        "url": ""https://libraryMagic.com",
+                        "url": "https://libraryMagic.com",
                         "synopsis" : "A bot for those who love reading.",
                         "score": 100
                     },
                     {
-                        "url": ""https://nationalLibraryArchive.org",
+                        "url": "https://nationalLibraryArchive.org",
                         "synopsis" : "A government catalog of every book published in the USA.",
                         "score": 25
                     },
                     {
-                        "url": ""https://booksRUs.com",
+                        "url": "https://booksRUs.com",
                         "synopsis" : "Browse, sample and buy any book you desire.",
                         "score": 14
                     }
@@ -791,16 +815,25 @@ Figure 17B. A _bye_ event with a voiced farewell.
       }
     }
 
-##### Figure XX. A typical candidateAssistants event 
+##### Figure 22. A typical candidateAssistants event 
 
+The _candidateAssistant| event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   See the _findAssistant_ event above for a description of its use cases.
+
+The _candidateAssistant_ message has one mandatory parameter _endpoints_.  This is a list of potential service endpoints.  Each item in the list contains three possible parameters:
+
+- _url_ - The service endpoint of the assistant. (mandatory)
+- _synopsis_ - A brief synopsis of the capabilities of this endpoint. (optional) 
+- _score_ - A recommendation score between 0 and 100 (optional)
+
+The _synopsis_ will typically be the same text as that returned by the _requestManifest_ event on the endpoint located at the _url_ but this is not a mandatory requirement.
+
+The recommending agent is free to use any mechanism it wants to generate the _score_.   
 
 ## Chapter 2. Minimal Behaviors
 
 #### 2.1 Minimal Agent Behaviors
 
-OVON-compliant dialog agents must support each of the following event types in order to be considered fully compliant.\
-\
-The minimal behavior expected from an OVON-compliant dialog agent in response to these event types is as follows:
+OVON-compliant dialog agents must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog agent.  
 
 * utterance events - spoken or written natural language
   * _utterance_  -  Answer the speaker with an utterance in return.
@@ -808,7 +841,11 @@ The minimal behavior expected from an OVON-compliant dialog agent in response to
 
 * agent control events  - structure control messages
   * _invite_ - Say 'hello' and respond to any whisper utterances. 
-  * _bye_ - Ignore this message. It is intended for the conversation floor manager.
+  * _bye_ - Ignore this event. It is intended for the conversation floor manager.
+  * _requestManifest_ - Return a minimal manifest that meets the manifest schema.
+  * _publishManifest_ - Ignore this event if you did not ask for a manifest.
+  * _findAssistant_ - Return your own URL as a candidate in a _candidateAssistant_ event.
+  * _candidateAssistant_ - Ignore this event if you did not ask for a recommendation.
 
 #### 2.2 Minimal Conversation Floor Manager Behaviors
 OVON-compliant conversation floor managers (including host browsers) agents must support each of the following event types in order to be considered fully compliant.\
@@ -822,230 +859,23 @@ The minimal behavior expected from an OVON-compliant conversation floor manager 
 * _agent control events_  - structured control messages
   * _invite_ -  Forward the _invite_ to the designated agent and set this agent to be the current focal agent.    
   * _bye_ - Remove this agent from the current register of active conversants.
+  * _requestManifest_ - Send this event to all active conversants.
+  * _publishManifest_ - Send this event to all active conversants.
+  * _findAssistant_ - Send this event to all active conversants.
+  * _candidateAssistant_ - Send this event to all active conversants.
 
 The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can for example include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation to deal with exceptions, and deciding when to terminate a conversation with the user.  
 
 ## Chapter 3. JSON Envelope Schema
 
-The structure of a JSON conversation envelope is defined below as a JSON Schema.    This file is located at [https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json]
-
-    {
-      "$id": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json",
-      "$schema": "https://openvoicenetwork.org/schema",
-      "description": "A representation of a 'dialogue envelope’ - the universal data exchange format for an OVON compliant interoperable agent.",
-      "type": "object",
-      "required":  [ "ovon" ],
-      "properties": {
-        "ovon": {
-          "required":  ["schema" , "conversation", "sender", "events" ],
-          "properties": {
-
-
-            "schema": {
-              "type": "object",
-              "required":  ["version" ],
-              "properties": {
-                "version": {
-                  "type": "string",
-                  "description": "The version of the dialog envelope specification matching this envelope."
-                },
-                "url": {
-                  "$ref": "#/$defs/url"
-                }
-              }
-            },
-
-
-            "conversation": {
-              "required":  ["id" ],
-              "properties": {
-                  "id": {
-                    "type": "string",
-                    "description": "Unique identifier for the current conversation with the user."
-                  },
-                  "persistentState": {
-                      "type": "object",
-                      "description": "Container for an arbitrary set of key value pairs to be persisted.",
-                      "additionalProperties" : {
-                          "type" : "object"
-                      }
-                  }
-              }
-            },
-
-
-            "sender": {
-              "type": "object",
-              "required":  ["from"],
-              "properties" : {
-                "from": {
-                  "$ref": "#/$defs/uri",
-                  "description": "The URI of the sender of the envelope."
-                },
-                "replyTo": {
-                  "$ref": "#/$defs/uri",
-                  "description": "The URI to direct responses to the envelope."
-                }
-              }
-
-
-            },
-
-
-            "responseCode": {  
-              "type": "object",
-              "required":  ["code"],
-              "properties" : {
-                "code" : {
-                  "type" : "integer"
-                },
-                "description" : {
-                  "type" : "string"
-                }            
-              }
-
-
-            },
-
-
-            "events": {  
-              "type": "array",
-              "items" : {
-                "type" : "object",
-                "properties" : {
-                  "eventType": {
-                    "type" : "string",
-                    "enum": ["utterance", "whisper", "invite", "bye"]
-                  }
-                },
-                "allOf": [
-                  {
-                    "if": {
-                      "properties": {
-                        "eventType": { "const": "utterance" }
-                      },
-                      "required": ["eventType"]
-                    },
-                    "then" : {
-                      "properties": {
-                        "parameters": {
-                          "description": "Parameters for the utterance event.",
-                          "type" : "object",
-                          "properties" : {
-                            "dialogEvent": {
-                              "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.1/dialog-event-schema.json"
-                            }
-                          },  
-                          "additionalProperties": false
-                        }
-                      }
-                    }
-                  },
-
-
-                  {
-                    "if": {
-                      "properties": {
-                        "eventType": { "const": "whisper" }
-                      },
-                      "required": ["eventType"]
-                    },
-                    "then" : {
-                      "properties": {
-                        "parameters": {
-                          "description": "Parameters for the whisper event.",
-                          "type" : "object",
-                          "properties" : {
-                            "dialogEvent": {
-                              "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.1/dialog-event-schema.json"
-                            }
-                          },
-                          "additionalProperties": false
-                        }
-                      }
-                    }
-                  },
-
-
-                  {
-                    "if": {
-                      "properties": {
-                        "eventType": { "const": "invite" }
-                      },
-                      "required": ["eventType"]
-                    },
-                    "then" : {
-                      "properties": {
-                        "parameters" : {
-                          "description": "Parameters for the invite event.",
-                          "type": "object",
-                          "properties": {      
-                            "to"  : {
-                              "type" : "object",
-                              "properties": {
-                                "url" : {
-                                  "$ref": "#/$defs/url",
-                                  "description": "The URL of the agent to be invited."
-                                }
-                              },
-                              "additionalProperties": false
-                            }        
-                          },
-                          "additionalProperties": false
-                        }
-                      }
-                    }
-                  },
-
-
-                  {
-                    "if": {
-                      "properties": {
-                        "eventType": { "const": "bye" }
-                      },
-                      "required": ["eventType"]
-                    },
-                    "then" : {
-                      "properties": {
-                        "parameters" : {
-                          "description": "Parameters for the bye event.",
-                          "type": "object",
-                          "properties": { },
-                          "additionalProperties": false
-                        }
-                      }
-                    }
-                  }
-
-
-                ]
-              }
-            }
-
-
-          }
-        }
-      },
-
-
-      "$defs": {
-        "url": {
-          "type": "string",
-          "description": "Any valid URL"
-        },
-        "uri": {
-          "type": "string",
-          "description": "Any valid URI"
-        }
-      }
-    }
-
+The structure of a JSON conversation envelope is defined below as a JSON Schema located at [https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json]
 
 ## Chapter 4. References
 
-[1] [https://openvoicenetwork.org/docs/interoperability-of-conversational-assistants/] **Interoperability of Conversational Assistants**\
-[2] [https://openvoicenetwork.org/docs/interoperable-dialog-event-object-specification-version-1-0/] **Interoperable Dialog Event Object Specification Version 1.0**\
-[3] [https://datatracker.ietf.org/doc/html/rfc9110/] **IETF RFC 9110 HTTP Semantics.**
+[1] **Interoperability of Conversational Assistants** [https://openvoicenetwork.org/docs/interoperability-of-conversational-assistants/] \
+[2] **Interoperable Dialog Event Object Specification Version 1.0.1** [https://github.com/open-voice-interoperability/docs/blob/main/specifications/DialogEvents/1.0.1/InteropDialogEventSpecs.md] \
+[3] **IETF RFC 9110 HTTP Semantics.** [https://datatracker.ietf.org/doc/html/rfc9110/] \
+[4] **Assistant Manifest Specification Version 0.9.0** [https://github.com/open-voice-interoperability/docs/blob/main/specifications/AssistantManifest/0.9.0/AssistantManifestSpec.md] 
 
 ## Chapter 5. Glossary of Terms
 
@@ -1096,6 +926,10 @@ This section documents some of the key design decisions that were made by the te
 |How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
 |Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
 |Multi-conversant support|_Question:_ How might this specification be extended to support multiple conversant support?   The most pressing need for this is to enable a 'favored' agent to be able to respond to interruption messages from the user.   After that, use cases could include having multiple users on a single conversation and multiple agents competing for the floor - i.e. a conference call involving multiple users and/or agents.</br>_Answer:_  This specification fully anticipates that the conversation floor manager could support multiple conversants.   The group has identified the following features that will probably be needed to support this.</br> - Uninviting conversants (See above)</br> - Adding targetSpeakerID to dialog events (to allow one conversant to specifically address another specific conversant).</br> - Adding a speakers section to the conversation object to keep track of the speakers in the conversation including their speakerIDs, URLs, displayNames, and spokenNames.
+|candidateAssistant|_Question_: should we rename this to be _recommendAssistants_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: TBD|
+|sender.to|Question: There is an urgent need to add support for sender.to and discuss exactly how the addressing of events is managed.  This spec does not include this parameter yet but it is creeping into common usage with users.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: TBD|
+|responseCode|Question: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: TBD|
+
 
 ### Chapter 7. Document Change Log
 
