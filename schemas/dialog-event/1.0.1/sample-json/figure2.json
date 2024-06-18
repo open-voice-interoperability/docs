@@ -1,0 +1,42 @@
+{
+    "id": "user-utterance-30",
+    "speakerId": "b5y09lky5KU5",
+    "previousId": "user-utterance-28",
+    "span": {
+      "startTime": "2022-12-20 15:59:01.246500+00:00",
+      "endOffset": "PT0.1045"
+    },
+  
+    "features": {
+      "my-audio-feature": {
+        "mimeType": "audio/wav",
+        "tokens": [
+          {
+            "valueUrl": "http://localhost/xyz1234.wav"
+          }            
+        ]
+      },
+  
+  
+      "my-text-token-feature": {
+        "mimeType": "text/plain",
+        "lang": "en",
+        "encoding": "UTF-8",
+        "tokenSchema": "",
+        "tokens": [
+          {"value": "what"},
+          {"value": "is"},
+          {"value": "the"},
+          {"value": "weather"},
+          {"value": "forecast"},
+          {"value": "for"},
+          {"value": "tomorrow"}
+        ],
+        "span": {
+          "startTime": "PT0.0210",
+          "endOffset": "PT0.1045"
+        }
+      }
+    }
+  }
+  

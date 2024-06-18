@@ -1,0 +1,49 @@
+{
+    "id": "user-utterance-30",
+    "speakerId": "b5y09lky5KU5",
+    "previousId": "user-utterance-28",
+    "span": {
+        "startTime": "2022-12-20 15:59:01.246500+00:00",
+        "endOffset": "PT0.1045"
+    },
+  
+  
+    "features": {
+  
+  
+      "my-text-feature": {
+        "mimeType": "text/plain",
+        "lang": "en",
+        "encoding": "UTF-8",
+        "tokens": [
+          {
+            "value": "what is the weather forecast for tomorrow",
+            "confidence": 0.99
+          }  
+        ]
+      },
+      
+      "my-semantic-feature": {
+        "mimeType": "text/x.my-semantic-mimeType",
+        "tokens": [
+          {
+            "value": {
+              "name": "intent",
+              "label": "WeatherForecast"
+            },
+            "links": ["$.my-text-feature.tokens[0].value"],
+            "confidence": 1.0
+          },
+          {
+            "value": {
+              "name": "date",
+              "label": "02-14-2023"
+            },
+            "links": [ "$.my-text-feature.tokens[0].value.substring(34,41)" ],
+            "confidence": 0.87
+          }
+        ]
+      }
+    }
+  }
+  

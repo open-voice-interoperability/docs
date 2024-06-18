@@ -1,0 +1,45 @@
+{
+    "id": "user-utterance-45",
+    "speakerId": "user1234",
+    "previousId": "user-utterance-44",
+    "span": {
+        "startTime": "2023-06-22T23:20:44.250759",
+        "endOffset": "PT1.045"
+    },
+    "features": {
+        "user-request-audio": {
+            "mimeType": "audio/wav",
+            "tokens": [
+                {
+                    "valueUrl": "http://localhost:8080/ab78h50ef.wav"
+                }
+            ]
+        },
+        "user-request-text": {
+            "mimeType": "text/plain",
+            "lang": "en",
+            "encoding": "utf-8",
+            "tokens": [
+                {
+                    "value": "what is the weather forecast for tomorrow?",
+                    "links": [
+                        "$.user-request-audio.tokens[0].value-url"
+                    ],
+                    "confidence": 0.99,
+                    "span": {
+                        "startOffset": "PT8.79",
+                        "endOffset": "PT8.845"
+                    }
+                },
+                {
+                    "value": "what is the weather forecast for tuesday?",
+                    "confidence": 0.87,
+                    "span": {
+                        "startOffset": "PT8.79",
+                        "endOffset": "PT8.845"
+                    }
+                }
+            ]
+        }
+    }
+}

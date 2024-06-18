@@ -1,0 +1,29 @@
+{
+    "id": "user-utterance-30",
+    "speakerId": "b5y09lky5KU5",
+    "span": {
+        "startTime": "2022-12-20 15:59:01.246500+00:00"
+    },
+  
+  
+    "features": {
+      "my-text-feature": {
+        "mimeType": "text/plain",
+        "tokens": [
+          {
+            "value": "what is the weather forecast for tomorrow",
+            "confidence": 0.96
+          }  
+        ],
+        "alternates": [
+          [
+            {
+              "value": "what is the weather forecast for thursday",
+              "confidence": 0.73
+            }
+          ]
+        ]
+      }
+    }
+  }
+  

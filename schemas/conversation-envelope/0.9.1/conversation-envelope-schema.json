@@ -77,7 +77,16 @@
             "properties" : {
               "eventType": {
                 "type" : "string",
-                "enum": ["utterance", "whisper", "invite", "bye"]
+                "enum": [
+                  "utterance", 
+                  "whisper", 
+                  "invite", 
+                  "bye", 
+                  "requestManifest", 
+                  "publishManifest", 
+                  "findAssistant", 
+                  "candidateAssistants"
+              ]
               }
             },
             "allOf": [
@@ -170,6 +179,67 @@
                       "description": "Parameters for the bye event.",
                       "type": "object",
                       "properties": { },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "requestManifest" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the requestManifest event.",
+                      "type": "object",
+                      "properties": { },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "publishManifest" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the publishManifest event.",
+                      "type": "object",
+                      "properties" : {
+                        "manifest": {
+                          "ref": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/0.9.0/assistant-manifest-schema.json"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "findAssistant" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the findAssistant event.",
+                      "type": "object",
+                      "properties" : { },
                       "additionalProperties": false
                     }
                   }

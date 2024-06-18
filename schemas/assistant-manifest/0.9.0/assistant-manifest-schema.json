@@ -36,7 +36,7 @@
       "items" : {
         "type" : "object",
         "description": "One of the capabilities supported by this endpoint.",
-        "required":  ["keyphrases" , "descriptions", "" ],
+        "required":  ["keyphrases" , "descriptions" ],
         "properties" : {
           "keyphrases": {
             "type": "array",

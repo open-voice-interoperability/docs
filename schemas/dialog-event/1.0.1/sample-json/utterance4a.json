@@ -1,0 +1,61 @@
+{
+    "speakerId": "b5y09lky5KU5",
+    "id": "user-utterance-30",
+    "previousId": "user-utterance-28",
+    "span": {
+        "startTime": "2022-12-20 15:59:01.246500+00:00",
+        "endOffset": "PT0.1045"
+    },
+    "features": {
+        "audio": {
+            "mimeType": "audio/wav",
+            "tokens": [ 
+                { 
+                    "valueUrl": "http://localhost/xyz1234.wav" 
+                }            
+            ]
+        },
+        "user-request-text": {
+            "mimeType": "text/plain",
+            "lang": "en",
+            "encoding": "UTF-8",
+            "tokens": [ 
+                { 
+                    "value": "what is the weather forecast for tomorrow",
+                    "links": ["audio/tokens[0]/value"],
+                    "confidence": 0.99
+                }            
+            ],
+            "alternates": [
+                [
+                    {
+                        "value": "what is the weather forecast for thursday",
+                        "links": ["audio/tokens[0]/value"],
+                        "confidence": 0.89
+                    }
+                ]
+            ]
+        },
+        "semantic-result": {
+            "mimeType": "text/x.ovn-semantic-1.0",
+            "tokens": [
+                {
+                    "value": {
+                        "Name": "intent",
+                        "Label": "WeatherForecast"
+                    },
+                    "links": ["user-request-text/tokens[0]/value"],
+                    "confidence": 1.0
+                },
+                {
+                    "value": {
+                        "Name": "date",
+                        "Label": "02-14-2023"
+                    },
+                    "links": [ "user-request-text/tokens[0]/value[34 to 41]" ],
+                    "confidence": 0.99
+                }
+            ]
+        }
+    }    
+}

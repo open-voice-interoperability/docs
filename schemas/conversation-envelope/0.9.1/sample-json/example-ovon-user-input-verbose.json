@@ -1,0 +1,56 @@
+{
+    "ovon": {
+        "schema": {
+            "url": "https://ovon/conversation/pre-alpha-1.0.1",
+            "version": "1.0"      
+        },
+ 
+        "sender": {
+            "from": "https://example.com/message-from",
+            "replyTo": "https://example.com/reply-message-to"
+        },
+
+
+        "conversation": {
+            "id": "31050879662407560061859425913208",
+            "persistentState": {
+                "www.cassandra.com:457ns654y" : "49kwu698dkw75hfks943jglsesjrforr94j489f62whdkd948rjfleo29378hgndoir03487543iuhrefiuodf087riu8435huoj43do0e987g0er84u35n34-0-f9-f8jiertoppe9t53"
+            }
+        }, 
+
+        "events": [
+            {
+                "eventType": "utterance",
+                "parameters": {
+                    "dialogEvent": {
+                        "speakerID": "b5y09lky5KU5",
+
+                        "span": {
+                        "startTime": "2023-06-14 02:06:07+00:00",
+                        "endOffset": "PT0.2493"
+                        },
+                    
+                        "features": {
+                            "text": {
+                                "mimeType": "text/plain",
+                                "lang": "en",
+                                "encoding": "UTF-8",
+                                "tokens": [
+                                {
+                                    "value": "I need my repeat medication",
+                                    "confidence": 0.702
+                                }  
+                                ]
+                            }
+                        },
+
+                        "custom-id": "1",
+                        "custom-mode": "input/voice",
+                        "custom-originPointType": "chromium based edge",
+                        "custom-asrType": "webkitSpeechRecognition"
+                    }
+                }
+            }
+        ]
+    }
+}
