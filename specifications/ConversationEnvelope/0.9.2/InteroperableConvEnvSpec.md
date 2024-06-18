@@ -774,7 +774,7 @@ In both cases 2 the _findAssistant_ event does is not required to have an associ
 
 Note that there is no requirement in the OVON framework for an assistant to be either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared for use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.
 
-### 1.19 candidateAssistant Event
+### 1.20 candidateAssistant Event
 
     {
       "ovon": {
