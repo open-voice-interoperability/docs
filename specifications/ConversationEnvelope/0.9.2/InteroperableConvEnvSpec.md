@@ -41,7 +41,7 @@ Draft Version 0.9.2
 #### 1.17 requestManifest Event
 #### 1.18 publishManifest Event
 #### 1.19 findAssistant Event
-#### 1.20 candidateAssistant Event
+#### 1.20 candidateAssistants Event
 
 ### CHAPTER 2. MINIMAL BEHAVIORS
 #### &nbsp; 2.1 Minimal Agent Behavior
@@ -340,7 +340,7 @@ The following are valid values for _eventTypes_.
   * _requestManifest_ - Ask another agent for information about their identity and capabilties.
   * _publishManifest_ - Publish information about an agents' identity and capabilties.
   * _findAssistant_ - Ask an agent to recommend themself or another agent for a task.
-  * _candidateAssistant_ - Return a list of recommended agents for a task.
+  * _candidateAssistants_ - Return a list of recommended agents for a task.
 
 The following sections define these event objects in more detail.
 
@@ -482,7 +482,6 @@ There are no limitations on the features that are added to a dialog event.  This
         "sender": {
             "from": "https://someBotThatOfferedTheInvite.com"
         },
-        "responseCode" : { "code": 200 },
         "events": [
             {
                 "eventType": "invite",
@@ -759,19 +758,15 @@ The _findAssistant_ event can be used to ask any other assistant to recommend on
 1. Asking an assistant to recommend one or more assistants that can help with a certain task.
 2. Asking an assistant (or human agent) if they are willing and able to support a certain task.
 
-A _findAssistant_ event will normally be accompanied by a _whisper_ event containing a natural language description of the task to be performed.   
+A _findAssistant_ event will normally be accompanied by a _whisper_ event containing a natural language description of the task to be performed.  A _candidateAssistant_ event will be returned in response to this event.
 
-In use case 1, the recipient assistant is acting as a discovery agent for the client agent.  The recipient assistant returns a _candidateAssistant_ event with recommendations.  If it does not have any recommendations to make it returns an empty _candidateAssistant_ event.
-
-In use case 2, the recipient assistant is acting as a servicing agent for the client agent.  If the recipient assistant is willing to service the request then it returns a _candidateAssistant_ event containing its own URL.   Otherwise it returns an empty _candiateAssistant_ event.   
-
-In both cases the _findAssistant_ event does is not required to have an associated _whisper_ event.  This is not very meaningful for use case 1 but if a discovery agent does receive an _findAssistant_ event with no _whisper_ then recipient assistant could simply return the address of their favorite general purpose assistant. 
+_findAssistant_ events can be sent without an associated _whisper_ event.  This is not very meaningful for use case 1 but if a discovery agent does receive an _findAssistant_ event with no _whisper_ then recipient assistant could simply return the address of their favorite general purpose assistant. 
 
 For use case 2, a missing _whisper_ event could be interpreted as a request to see whether that assistant is willing and able to recieve requests in general under the assumption that the client already knows the capabilities of the recipient.
 
-Note that there is no requirement in the OVON framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.
+See section 1.20 for more information on _candidateAssistants_ event behaviors.
 
-### 1.20 candidateAssistant Event
+### 1.20 candidateAssistants Event
 
     {
       "ovon": {
@@ -789,22 +784,37 @@ Note that there is no requirement in the OVON framework for an assistant to be e
           { 
             "eventType": "candidateAssistants",
             "parameters": {
-                "endpoints" : [
-                    {
-                        "url": "https://libraryMagic.com",
-                        "synopsis" : "A bot for those who love reading.",
-                        "score": 100
+              "servicingManifests" : [
+                  {
+                    "identification": {
+                      "serviceEndpoint": "https://findMyAIAssistant.com",
+                      "synopsis" : "A bot for those who love reading."
                     },
-                    {
-                        "url": "https://nationalLibraryArchive.org",
-                        "synopsis" : "A government catalog of every book published in the USA.",
-                        "score": 25
+                    "score": 100
+                  },
+                  {
+                    "identification": {
+                      "url": "https://nationalLibraryArchive.org",
+                      "synopsis" : "A government catalog of every book published in the USA."
                     },
-                    {
-                        "url": "https://booksRUs.com",
-                        "synopsis" : "Browse, sample and buy any book you desire.",
-                        "score": 14
-                    }
+                    "score": 25
+                  },
+                  {
+                    "identification": {
+                      "url": "https://booksRUs.com",
+                      "synopsis" : "Browse, sample and buy any book you desire."
+                    },
+                    "score": 14
+                  }
+                ],
+                "discoveryManifests": [
+                  {
+                    "identification": {
+                      "serviceEndpoint": "https://findMyAIAssistant.com",
+                      "synopsis" : "Finds assistants anywhere in the world"
+                    },
+                    "score": 100
+                  }
                 ]
             }
           }     
@@ -814,15 +824,32 @@ Note that there is no requirement in the OVON framework for an assistant to be e
 
 ##### Figure 22. A typical candidateAssistants event 
 
-The _candidateAssistant_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event (see above for a description of its use cases).
+The _candidateAssistants_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event.
 
-The _candidateAssistant_ event has one mandatory parameter named _endpoints_.  This is a list of potential service endpoints.  Each item in the list contains some or all of the following key/value pairs:
+Once an agent receives a _findAssistant_ event it can do a combination of the following:
 
-- _url_ - The service endpoint of the assistant. (mandatory)
-- _synopsis_ - A brief synopsis of the capabilities of this endpoint. (optional) 
-- _score_ - A recommendation score between 0 and 100 (optional)
+- Recommend one or more agents (including itself) to service this request.
+- Recommend one or more agents to help find who can service this request.
 
-The _synopsis_ will typically be the same text as that returned by the _requestManifest_ event on the endpoint located at the _url_ but this is not a mandatory requirement.
+In order to support this the _candidateAssistants_ event has two mandatory parameters:
+
+- _servicingManifests_ - A list of agents that can service this request.
+- _discoveryManifests_ - A list of agents that can recommend other agents to service this request.
+
+Each list item in the recommendation is the manifest format as specified in [4] with two notable exceptions:
+
+1. It is permissible to return only a subset of the manifest. The only mandatory manifest items are:
+  - _identification_/_serviceEndpoint_ - The service endpoint of the assistant. (mandatory)
+  - _identification_/_synopsis_ - A brief synopsis of the capabilities of this endpoint. (optional) 
+
+2. The manifest object can contain one additional optional key that is not present in the manifest specification:
+  - _score_ - A recommendation score between 0 and 100  
+
+Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversatoin and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssitant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to intiting it to do so. 
+
+Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be sent a _findAssistant_ event with the same _whisper_.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
+
+Note that there is no requirement in the OVON framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.  There is also nothing to stop an agent recommending servicing agents and discovery agents in its response.
 
 The recommending agent is free to use any mechanism it wants to generate the _score_.   
 
@@ -841,8 +868,8 @@ OVON-compliant dialog assistants must support all event types in order to be con
   * _bye_ - Ignore this event from another assistant.
   * _requestManifest_ - Return a minimal manifest that meets the manifest schema.
   * _publishManifest_ - Ignore this event if you did not ask for a manifest.
-  * _findAssistant_ - Return your own URL as a candidate in a _candidateAssistant_ event.
-  * _candidateAssistant_ - Ignore this event if you did not ask for a recommendation.
+  * _findAssistant_ - Return your own URL as a candidate servicingManifest in a _candidateAssistants_ event.
+  * _candidateAssistants_ - Ignore this event if you did not ask for a recommendation.
 
 #### 2.2 Minimal Conversation Floor Manager Behaviors
 OVON-compliant conversation floor managers (including host browsers) agents must support all types in order to be considered fully compliant.\
@@ -859,7 +886,7 @@ The minimal behavior expected from an OVON-compliant conversation floor manager 
   * _requestManifest_ - Send this event to all active conversants.
   * _publishManifest_ - Send this event to all active conversants.
   * _findAssistant_ - Send this event to all active conversants.
-  * _candidateAssistant_ - Send this event to all active conversants.
+  * _candidateAssistants_ - Send this event to all active conversants.
 
 The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can for example include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation to deal with exceptions, and deciding when to terminate a conversation with the user.  
 
@@ -916,16 +943,16 @@ This section documents some of the key design decisions that were made by the te
 |Control flow and exceptions|_Question:_ How do we handle timeouts and what is responsible for them?</br>_Answer:_ There is no mandated behavior regarding timeouts and exceptions.   Each conversation floor manager can choose the behavior in this regard.  Later incarnations of this specification are likely to address common exception conditions where standardization of behavior becomes important for interoperability.
 |Host Browsers and User Proxies|_Question:_ Is the host browser a user proxy or does it have unique responsibilities for control?</br>_Answer:_ The host browser is a close coupling of a user proxy and a conversation floor manager.  It is anticipated that user proxies and floor managers can be implemented separately and communicate using dialog envelopes.  This has not been fully proven yet and there are likely to be additional control structures needed to fully support the separation.  We anticipate that early adoption of this standard will require a unified host browser.
 |responseCodes|_Question:_ Are responseCodes optional or mandatory</br>_Answer:_ It was agreed that this section is optional in the envelope.|
-|Dialog Status Codes|_Question_: Do we need more specific dialog status codes that are tied to the discourse. Examples include adding a discourse status to a 'bye' event. e.g. "discourseStatus" : "closed|failed|open|paused|uncategorized"</br>_Answer:_ Parked for future versions
 |location of schemas|_Question:_ Where should we publish the schema?</br>_Answer:_ Let's use https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas, but add a new subfolder for each version (e.g. "0.9.2" for the current schemas).
 |replyTo Optional|_Question_: Should replyTo be optional or mandatory?</br>_Answer:_ We agreed that it would be optional and if not present then replies would be addressed to the sender.  In the HTTPS model, even the sender is redundant and may only be useful for logging.   
 |Returning Control|_Question_:Have we fully addressed what happens on handing back control? Need to discuss control on 'bye' and 'invite'.</br>_Answer:_ Minimal behaviors for 'bye' and 'invite' are defined in this specification with the introduction of a 'focal agent'.  Subsequent incarnations of this specification are likely to formalize these further in order to support multi-participant conversations.
 |How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
 |Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
 |Multi-conversant support|_Question:_ How might this specification be extended to support multiple conversant support?   The most pressing need for this is to enable a 'favored' agent to be able to respond to interruption messages from the user.   After that, use cases could include having multiple users on a single conversation and multiple agents competing for the floor - i.e. a conference call involving multiple users and/or agents.</br>_Answer:_  This specification fully anticipates that the conversation floor manager could support multiple conversants.   The group has identified the following features that will probably be needed to support this.</br> - Uninviting conversants (See above)</br> - Adding targetSpeakerID to dialog events (to allow one conversant to specifically address another specific conversant).</br> - Adding a speakers section to the conversation object to keep track of the speakers in the conversation including their speakerIDs, URLs, displayNames, and spokenNames.
-|candidateAssistant|_Question_: should we rename this to be _recommendAssistants_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: TBD|
+|candidateAssistants|_Question_: should we rename this to be _candidateAssistants_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: TBD|
 |sender.to|Question: There is an urgent need to add support for sender.to and discuss exactly how the addressing of events is managed.  This spec does not include this parameter yet but it is creeping into common usage with users.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: TBD|
 |responseCode|Question: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: TBD|
+|discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberarately left this out for now but if we need it will consider additional flags on the manifest in some form.|
 
 
 ### Chapter 7. Document Change Log

@@ -259,18 +259,48 @@
                       "description": "Parameters for the candidateAssistants event.",
                       "type": "object",
                       "properties" : {
-                        "endpoints": {
+                        "discoveryManifests": {
                           "type" : "array",
                           "items" : {
                             "type" : "object",
                             "properties" : {
-                              "url" : {
-                                "$ref": "#/$defs/url",
-                                "description": "The endpoint URL of the assistant."
+                              "identification": {
+                                "type": "object",
+                                "properties" : {
+                                  "serviceEndpoint" : {
+                                    "$ref": "#/$defs/url",
+                                    "description": "The endpoint URL of the assistant."
+                                  },
+                                  "synopsis" : {
+                                    "type" : "string",
+                                    "description": "A synopsis of the capabilities of the assistant."
+                                  }
+                                }
                               },
-                              "synopsis" : {
-                                "type" : "string",
-                                "description": "A synopsis of the capabilities of the assistant."
+                              "score" : {
+                                "type" : "integer",
+                                "description": "A score for the recommendation."
+                              }
+                            }
+                          }
+                        },
+                        "servicingManifests": {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "identification": {
+                                "type": "object",
+                                "properties" : {
+                                  "serviceEndpoint" : {
+                                    "$ref": "#/$defs/url",
+                                    "description": "The endpoint URL of the assistant."
+                                  },
+                                  "synopsis" : {
+                                    "type" : "string",
+                                    "description": "A synopsis of the capabilities of the assistant."
+                                  }
+                                }
                               },
                               "score" : {
                                 "type" : "integer",
