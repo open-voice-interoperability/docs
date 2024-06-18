@@ -19,7 +19,6 @@ Draft Version 0.9.2
 #### &nbsp; 0.1 Document Scope
 #### &nbsp; 0.2 Conversation envelopes
 #### &nbsp; 0.3 Delegation, Channeling and Mediation
-#### &nbsp; 0.4 OVON Event Types
 ### CHAPTER 1. SPECIFICATION
 #### &nbsp; 1.1 Representation
 #### &nbsp; 1.2 Syntax and Protocol
