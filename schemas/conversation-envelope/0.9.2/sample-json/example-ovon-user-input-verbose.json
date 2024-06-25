@@ -20,6 +20,7 @@
         "events": [
             {
                 "eventType": "utterance",
+                "to" : "someBotOrPerson.com",
                 "parameters": {
                     "dialogEvent": {
                         "speakerID": "b5y09lky5KU5",

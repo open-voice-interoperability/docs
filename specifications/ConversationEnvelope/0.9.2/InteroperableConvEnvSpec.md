@@ -6,9 +6,7 @@ The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-STATUS : UNPUBLISHED WORK IN PROGRESS
-
-18 June 2024 \
+25 June 2024 \
 Draft Version 0.9.2
 
 *_Editor-in-Chief: David Attwater_*\
@@ -28,20 +26,19 @@ Draft Version 0.9.2
 #### &nbsp; 1.6 Schema Object
 #### &nbsp; 1.7 Conversation Object
 #### &nbsp; 1.8 Sender Object
-#### &nbsp; 1.9 Response Code Object
-#### 1.10 Events Object
-#### 1.11 Event-Types
-#### 1.12 Utterance Events
+#### &nbsp; 1.9 Events Object
+#### &nbsp; 1.10 Event-Types
+#### &nbsp; 1.11 Utterance Events
 ##### &nbsp; &nbsp; &nbsp;  1.12.1 Utterance Text Feature
-#### 1.13 Whisper Events
+#### 1.12 Whisper Events
 ##### &nbsp; &nbsp; &nbsp;  1.13.1 Whisper Text Feature
-#### 1.14 Extensible Dialog Event Features (Informative)
-#### 1.15 Invite Event
-#### 1.16 Bye Event
-#### 1.17 requestManifest Event
-#### 1.18 publishManifest Event
-#### 1.19 findAssistant Event
-#### 1.20 candidateAssistants Event
+#### 1.13 Extensible Dialog Event Features (Informative)
+#### 1.14 Invite Event
+#### 1.15 Bye Event
+#### 1.16 requestManifest Event
+#### 1.17 publishManifest Event
+#### 1.18 findAssistant Event
+#### 1.19 proposeAssistant Event
 
 ### CHAPTER 2. MINIMAL BEHAVIORS
 #### &nbsp; 2.1 Minimal Agent Behavior
@@ -117,7 +114,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
 
           "schema": {
               "version": "0.9.2"      
-              "url": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json"
+              "url": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json"
           },
 
           "conversation": {
@@ -128,14 +125,10 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
               "from": "https://example.com/message-from",
               "reply-to": "https://example.com/reply-message-to"
           },
-
-          "responseCode" : {
-              "code": 200
-              "description": "Invite request accepted."
-          }  
     
           "events": [
               {
+                  "to" : "intended recipient A",
                   "eventType": "event type A",
                   "parameters": {
                     "parameter 1" : { parameter 1 values }  
@@ -144,6 +137,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
                   }
               },
               {
+                  "to" : "intended recipient B",
                   "eventType": "event type B",
                   "parameters": {
                     "parameter 1" : { parameter 1 values }
@@ -162,7 +156,6 @@ Figure 2 shows an example of a conversation envelope.  The envelope is wrapped i
 * schema - the version of the conversation envelope and a schema to validate it against
 * conversation - persistent information related to the current dialog
 * sender - details of the sender
-* responseCode - a response code if this message is in response to another
 * events - a list of OVON 'events'
 
 The responseCode section is optional.  All other sections are mandatory.
@@ -186,7 +179,7 @@ The _schema_ object specifies the format of the message in this OVON envelope.  
         ..
         "schema": {
           "version": "0.9.2"      
-          "url": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/0.9.2/conversation-envelope-schema.json"
+          "url": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json"
         }
         ..
       }
@@ -263,44 +256,14 @@ Figure 7 shows the mandatory elements in the sender object.  The from object is 
 
 Figure 8 shows other supported elements in the sender object.   The _replyTo_ object is also a string and must also be a valid URI.  The _replyTo_ address should be the address of an OVON-compliant assistant or host-browser and should be capable of receiving messages in OVON Envelope format.
 
-#### 1.9 Response Code Object
-
-    {
-      "ovon": {
-        …        
-        "responseCode": {
-          "code": 200
-        }
-        … 
-      }
-    }
-
-##### Figure 9. Mandatory elements of the optional _responseCode_ object.
-
-Figure 9 shows the mandatory elements of the optional _responseCode_ object.  This is an integer value and is modeled on the semantics defined in [RFC 9110 HTTP Semantics](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.w6ym7j9punzt).
-
-    {
-      "ovon": {
-        …        
-        "responseCode": {
-          "code": 200
-          "description": "Invite request accepted."
-        }
-        … 
-      }
-    }
-
-##### Figure 10.  Other supported elements in the responseCode object.
-
-Figure 10 shows Other supported elements in the _responseCode_ object.  An optional description can be added to the response code.  This is a text string. There are no constraints on the content of this string which is intended to convey information for audit and logging purposes.
-
-#### 1.10 Events Object
+#### 1.9 Events Object
 
     {
       ovon {
         ..
         "events": [
           {
+            "to" : "https://intended recipient A",
             "eventType": "event type A",
             "parameters": {
               "parameter 1" : { parameter 1 values }  
@@ -309,6 +272,7 @@ Figure 10 shows Other supported elements in the _responseCode_ object.  An optio
             } 
           },
           {
+            "to" : "intended recipient B",
             "eventType": "event type B",
             "parameters": {
               "parameter 1" : { parameter 1 values }
@@ -324,9 +288,9 @@ Figure 10 shows Other supported elements in the _responseCode_ object.  An optio
 
 Figure 11 shows the structure of the _events) object.  This should be an array of one or more objects which we will call an event object. 
 
-Each event object must have an _eventType_, which is a string, and a parameters object which is a dictionary of parameter objects with standard key names specific to the event-type.
+Each event object must have an _eventType_, which is a string.  Two other parameters may be present depending on the eventType. The _to_ parameter is a valid URL of the assistant that the message is intended for.  If the parameter is not present then is can be assumed that the event is intended for all recipients of the envelope.  The _parameters_ object is a dictionary of parameter objects with standard key names specific to the event-type.  Some eventTypes support a 'bare' mode without any parameters.
 
-#### 1.11 Event-Types
+#### 1.10 Event-Types
 
 The following are valid values for _eventTypes_.
 
@@ -340,17 +304,18 @@ The following are valid values for _eventTypes_.
   * _requestManifest_ - Ask another agent for information about their identity and capabilties.
   * _publishManifest_ - Publish information about an agents' identity and capabilties.
   * _findAssistant_ - Ask an agent to recommend themself or another agent for a task.
-  * _candidateAssistants_ - Return a list of recommended agents for a task.
+  * _proposeAssistant_ - Return a list of recommended agents for a task.
 
 The following sections define these event objects in more detail.
 
-#### 1.12 Utterance Events
+#### 1.11 Utterance Events
 
     {
       "ovon" {
         ..
         "events": [
           {
+            "to" : "https://someBotOrPerson.com",
             "eventType": "utterance",
             "parameters": {
               "dialogEvent": {
@@ -372,7 +337,7 @@ The following sections define these event objects in more detail.
 
 Figure 12. Mandatory elements of the OVON _utterance_ event.
 
-Figure 12 shows the structure of an event with the _eventType_ of _utterance_.  This object contains just one parameter with the key-name _dialogEvent_.
+Figure 12 shows the structure of an event with the _eventType_ of _utterance_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.  The _to_ parameter is optional and can be used to designate that the utterance is directed to a certain participant in the conversation.  This can be thought of as the quivalent of catching someone's eye during a round table conversation.
 
 OVON events of this type are sent whenever a user or an assistant takes a dialog act.  The value of the _dialogEvent_ dictionary key must contain a valid dialog event object as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay ).
 Figure 12 shows the structure of an event with the eventType of utterance.  This object contains just one parameter with the key-name dialogEvent.
@@ -387,7 +352,7 @@ The following sections describe the _features_ that are currently supported in t
 
 Additional keys and mime-types are permitted.  Compliant OVON dialog agents do not need to respond to any unsupported keys in the dialog event.
 
-##### 1.12.1 Utterance Text Feature
+##### 1.11.1 Utterance Text Feature
 
 The _text_ feature is **mandatory** in all _utterance_ dialog events.
 
@@ -398,13 +363,14 @@ The _text_ feature is **mandatory** in all _utterance_ dialog events.
 |_value_|Any number of values are allowed as strings in the _tokens_ section.  When concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 |_valueUrl_|Any number of value URLs are allowed in the tokens section.  These URLs should locate content of type 'text/plain' and when downloaded and concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 
-### 1.13 Whisper Events
+### 1.12 Whisper Events
 
     {
       "ovon" {
         ..
         "events": [
           {
+            "to" : "https://someBotOrPerson.com",
             "eventType": "whisper",
             "parameters": {
               "dialogEvent": {
@@ -426,13 +392,13 @@ The _text_ feature is **mandatory** in all _utterance_ dialog events.
 
 ##### Figure 13. Mandatory elements of the OVON _whisper_ event.
 
-Figure 13 shows the structure of an OVON event with the _eventType_ of _whisper_.  This object contains just one parameter with the key-name _dialogEvent_.\
+Figure 13 shows the structure of an OVON event with the _eventType_ of _whisper_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.\  An optional _to_ parameter indicates which assistant is the intended recipient of the whisper.  If it is absent then all recipients should consider themselves the intended recipient.
 \
 OVON events of this type are sent whenever an assistant wants to send a natural language instruction or request to another agent.   _whisperUtterance_ events are identical in format to _utterance_ events but they are not to be directly voiced in the dialog.\
 \
 This object can contain any valid dialog event objects as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay).   
 
-##### 1.13.1 Whisper Text Feature
+##### 1.12.1 Whisper Text Feature
 
 The _text_ feature is **mandatory** in all _whisper_ dialog events.
 
@@ -444,7 +410,7 @@ The _text_ feature is **mandatory** in all _whisper_ dialog events.
 |_valueUrl_|Any number of value URLs are allowed in the tokens section.  These URLs should locate content of type 'text/plan' and when downloaded and concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 
 
-### 1.14 Extensible Dialog Event Features (informative)
+### 1.13 Extensible Dialog Event Features (informative)
 
 The features in Dialog Events are intentionally intended to be extensible.  This specification does not limit the features that can be put into an utterance event or a whisper event.
 
@@ -470,7 +436,7 @@ There are no limitations on the features that are added to a dialog event.  This
 
 #### Figure 14. Example video feature, which at present would be considered a custom feature.
 
-### 1.15 Invite Event
+### 1.14 Invite Event
 
     "ovon": {
         "schema": {
@@ -484,12 +450,8 @@ There are no limitations on the features that are added to a dialog event.  This
         },
         "events": [
             {
-                "eventType": "invite",
-                "parameters": {
-                    "to": {
-                        "url": "https://someBotThatIsBeingInvited.com"
-                    }
-                }
+                "to": "https://someBotThatIsBeingInvited.com",
+                "eventType": "invite"
             }
         ]
     }
@@ -497,7 +459,7 @@ There are no limitations on the features that are added to a dialog event.  This
 
 ##### Figure 15. Mandatory elements of the _invite_ object shown as a 'bare invite'
 
-Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  This object contains just one parameter with the key-name _to_ which contains a single key _url_. There are no optional parameters for the _invite_ event.\
+Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  The optional _to_ object is used to specify the URL of the agent that is being invited.  If it is absent then all receipients of the envelope should consider themselves invited to the conversation.\
 \
 It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 15.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
 
@@ -512,7 +474,6 @@ It is possible to invite an agent to a conversation without giving it any other 
         "sender": {
           "from": "https://someBotThatOfferedTheInvite.com"
         },
-        "responseCode" : { "code": 200 },
         "events": [
           {
             "eventType": "utterance",
@@ -530,12 +491,11 @@ It is possible to invite an agent to a conversation without giving it any other 
             }
           },
           {
-            "eventType": "invite",
-            "parameters": {
-              "to": { "url": "https://my-weather-bot.com" }
-            }
+            "to": "https://my-weather-bot.com",
+            "eventType": "invite"
           },
           {
+            "to": "https://my-weather-bot.com",
             "eventType": "whisper",
             "parameters": {
               "dialogEvent": {
@@ -549,19 +509,16 @@ It is possible to invite an agent to a conversation without giving it any other 
                 }
               }
             }
-          },
-          {
-            "eventType" : "bye"
           }
         ]
       }
     }
 
-##### Figure 16. A typical dialog envelope for a delegation invite, including a voiced transfer prompt.
+##### Figure 16. A typical dialog envelope for an invite, including a voiced transfer prompt.
 
-Invite events will typically be accompanied by additional events.  Figure 16 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it, and a bye message to indicate that the inviting agent is withdrawing from the conversation.
+Invite events will typically be accompanied by additional events.  Figure 16 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it.
 
-### 1.16 Bye Event
+### 1.15 Bye Event
 
     {
       "ovon": {
@@ -585,7 +542,7 @@ Invite events will typically be accompanied by additional events.  Figure 16 sho
 
 Figure 17. A minimal _bye_ envelope detaching an agent from a conversation.
 
-When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in figure 17. It has no _parameters_.
+When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in figure 17. It has no _parameters_.  The optional _to_ object can be included but it is not neccessary.
 
     "ovon": {
       "schema": {
@@ -626,7 +583,7 @@ Figure 18. A _bye_ event with a voiced farewell.
 
 As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
 
-### 1.17 requestManifest Event
+### 1.16 requestManifest Event
 
     {
       "ovon": {
@@ -638,10 +595,11 @@ As with the _invite_ event, the _bye_ event can be accompanied by other events a
         },
         "sender": {
           "from": "https://someBot.com",
-          "to": "https://dev.buerokratt.ee/ovonr/conversation"
+
         },
         "events": [
           {
+            "to": "https://dev.buerokratt.ee/ovonr/conversation"
             "eventType": "requestManifest"
           }
         ]
@@ -654,7 +612,9 @@ All participants in a conversation are expected to maintain a manifest of their 
 
 Figure 19 shows an example of a _requestManifest_ event. On receipt of this event, the target assistant should return a _publishManifest_ event.
 
-### 1.18 publishManifest Event
+The _to_ object is optional. If it is absent then the recipient of the envelope should consider themself the target of the request.
+
+### 1.17 publishManifest Event
 
     {
       "ovon": {
@@ -670,6 +630,7 @@ Figure 19 shows an example of a _requestManifest_ event. On receipt of this even
         },
         "events": [
             { 
+                "to" : "https://whoeverAskedForTheManifest.com"
                 "eventType": "publishManifest",
                 "parameters": {
                     "manifest" : {
@@ -714,7 +675,9 @@ The _publishManifest_ event can be used to publish information about the capabil
  
 This event can be sent at any time but should always be sent in response to a _requestManifest_ event.  Figure 20 shows an example of a _publishManifest_ event.  The event has one mandatory parameter _manfest_.  This parameter must be in the format specified in [3]
 
-### 1.19 findAssistant Event
+The _to_ object is optional.  It can be used to indicate whether the manifest is intended for a specific conversant in the conversation.  
+
+### 1.18 findAssistant Event
 
     {
       "ovon": {
@@ -725,14 +688,15 @@ This event can be sent at any time but should always be sent in response to a _r
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "from": "https://someBot.com",
-          "to": "https://myFavoriteDiscoveryBot.com"
+          "from": "https://someBot.com"
         },
         "events": [
           {
+            "to": "https://myFavoriteDiscoveryBot.com"
             "eventType": "findAssistant"
           },
           {
+            "to": "https://myFavoriteDiscoveryBot.com"
             "eventType": "whisper",
             "parameters": {
               "dialogEvent": {
@@ -758,15 +722,17 @@ The _findAssistant_ event can be used to ask any other assistant to recommend on
 1. Asking an assistant to recommend one or more assistants that can help with a certain task.
 2. Asking an assistant (or human agent) if they are willing and able to support a certain task.
 
-A _findAssistant_ event will normally be accompanied by a _whisper_ event containing a natural language description of the task to be performed.  A _candidateAssistant_ event will be returned in response to this event.
+A _findAssistant_ event will normally be accompanied by a _whisper_ event containing a natural language description of the task to be performed.  A _proposeAssistant_ event will be returned in response to this event.
 
 _findAssistant_ events can be sent without an associated _whisper_ event.  This is not very meaningful for use case 1 but if a discovery agent does receive an _findAssistant_ event with no _whisper_ then recipient assistant could simply return the address of their favorite general purpose assistant. 
 
 For use case 2, a missing _whisper_ event could be interpreted as a request to see whether that assistant is willing and able to recieve requests in general under the assumption that the client already knows the capabilities of the recipient.
 
-See section 1.20 for more information on _candidateAssistants_ event behaviors.
+The optional _to_ object can be used to indicate which agent is the intended recipient of the event.  If absent then all recipients should consider the request directed at them.
 
-### 1.20 candidateAssistants Event
+See section 1.19 for more information on _proposeAssistant_ event behaviors.
+
+### 1.19 proposeAssistant Event
 
     {
       "ovon": {
@@ -777,12 +743,12 @@ See section 1.20 for more information on _candidateAssistants_ event behaviors.
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "from": "https://myFavoriteDiscoveryBot.com ",
-          "to": "https://someBot.com"
+          "from": "https://myFavoriteDiscoveryBot.com "
         },
         "events": [
           { 
-            "eventType": "candidateAssistants",
+            "to": "https://someBotThatAskedForIt.com",
+            "eventType": "proposeAssistant",
             "parameters": {
               "servicingManifests" : [
                   {
@@ -822,25 +788,31 @@ See section 1.20 for more information on _candidateAssistants_ event behaviors.
       }
     }
 
-##### Figure 22. A typical candidateAssistants event 
+##### Figure 22. A typical proposeAssistant event 
 
-The _candidateAssistants_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event.
+The _proposeAssistant_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event but can also be used to make a delegation suggestion in response to an _utterance_.
 
 Once an agent receives a _findAssistant_ event it can do a combination of the following:
 
 - Recommend one or more agents (including itself) to service this request.
 - Recommend one or more agents to help find who can service this request.
 
-In order to support this the _candidateAssistants_ event has two mandatory parameters:
+In order to support this the _proposeAssistant_ event has two mandatory parameters:
 
 - _servicingManifests_ - A list of agents that can service this request.
 - _discoveryManifests_ - A list of agents that can recommend other agents to service this request.
 
+It is the responsibility of the receiver of this event choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _whisper_ event.
+
+If an agent receives an _utterance_ event that it does not feel capable of servicing, it can also return a _proposeAssistant_ event.  
+
+The optional _to_ can be used to indicate a specific agent to which the proposal is addressed.  Otherwise any recipient should consider the proposal addressed to themselves.
+
 Each list item in the recommendation is the manifest format as specified in [4] with two notable exceptions:
 
-1. It is permissible to return only a subset of the manifest. The only mandatory manifest items are:
-  - _identification_/_serviceEndpoint_ - The service endpoint of the assistant. (mandatory)
-  - _identification_/_synopsis_ - A brief synopsis of the capabilities of this endpoint. (optional) 
+1. It is permissible to return only a subset of the manifest. The only mandatory manifest items is:
+  - _identification_/_serviceEndpoint_ - The service endpoint of the assistant.  
+  - _identification_/_synopsis_ - A brief synopsis of the capabilities of this endpoint.  
 
 2. The manifest object can contain one additional optional key that is not present in the manifest specification:
   - _score_ - A recommendation score between 0 and 100  
@@ -868,8 +840,8 @@ OVON-compliant dialog assistants must support all event types in order to be con
   * _bye_ - Ignore this event from another assistant.
   * _requestManifest_ - Return a minimal manifest that meets the manifest schema.
   * _publishManifest_ - Ignore this event if you did not ask for a manifest.
-  * _findAssistant_ - Return your own URL as a candidate servicingManifest in a _candidateAssistants_ event.
-  * _candidateAssistants_ - Ignore this event if you did not ask for a recommendation.
+  * _findAssistant_ - Return your own URL as a candidate servicingManifest in a _proposeAssistant_ event.
+  * _proposeAssistant_ - Ignore this event if you did not ask for a recommendation.
 
 #### 2.2 Minimal Conversation Floor Manager Behaviors
 OVON-compliant conversation floor managers (including host browsers) agents must support all types in order to be considered fully compliant.\
@@ -881,12 +853,12 @@ The minimal behavior expected from an OVON-compliant conversation floor manager 
   * _whisper_ - Send this _whisper_ to the current focal agent.
 
 * _agent control events_  - structured control messages
-  * _invite_ -  Forward the _invite_ to the designated agent and set this agent to be the current focal agent.    
+  * _invite_ -  Forward the _invite_ to any agent designated by the _to_, otherwise ignore it.
   * _bye_ - Remove this agent from the current register of active conversants.
-  * _requestManifest_ - Send this event to all active conversants.
-  * _publishManifest_ - Send this event to all active conversants.
-  * _findAssistant_ - Send this event to all active conversants.
-  * _candidateAssistants_ - Send this event to all active conversants.
+  * _requestManifest_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
+  * _publishManifest_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
+  * _findAssistant_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
+  * _proposeAssistant_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
 
 The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can for example include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation to deal with exceptions, and deciding when to terminate a conversation with the user.  
 
@@ -949,9 +921,9 @@ This section documents some of the key design decisions that were made by the te
 |How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
 |Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
 |Multi-conversant support|_Question:_ How might this specification be extended to support multiple conversant support?   The most pressing need for this is to enable a 'favored' agent to be able to respond to interruption messages from the user.   After that, use cases could include having multiple users on a single conversation and multiple agents competing for the floor - i.e. a conference call involving multiple users and/or agents.</br>_Answer:_  This specification fully anticipates that the conversation floor manager could support multiple conversants.   The group has identified the following features that will probably be needed to support this.</br> - Uninviting conversants (See above)</br> - Adding targetSpeakerID to dialog events (to allow one conversant to specifically address another specific conversant).</br> - Adding a speakers section to the conversation object to keep track of the speakers in the conversation including their speakerIDs, URLs, displayNames, and spokenNames.
-|candidateAssistants|_Question_: should we rename this to be _candidateAssistants_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: TBD|
-|sender.to|Question: There is an urgent need to add support for sender.to and discuss exactly how the addressing of events is managed.  This spec does not include this parameter yet but it is creeping into common usage with users.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: TBD|
-|responseCode|Question: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: TBD|
+|candidateAssistants|_Question_: should we rename this to be _proposeAssistant_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: It was agreed to rename this _proposeAssistant_.|
+|'to' destinations|Question: There is an urgent need to agree how to express 'to' and discuss exactly how the addressing of events is managed.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: We have added an optional 'to' parameter to all events.  This helps the recipient decide whether they want to ignore it or not.|
+|responseCode|Question: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: We decided to deprecate the responseCode and introduce an 'acknowledge' event instead. |
 |discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberarately left this out for now but if we need it will consider additional flags on the manifest in some form.|
 
 
@@ -961,4 +933,4 @@ This section documents some of the key design decisions that were made by the te
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.04.30|- Added findAssistant event</br> - Added candidateAssistants event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Removed "to" from Invite</br>- Removed inline schema and kept a link instead.|  
+|0.9.2|2024.04.30|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optinal on all events</br>- Removed inline schema and kept a link instead.|  

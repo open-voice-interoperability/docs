@@ -18,6 +18,7 @@
 
         "events": [
             {
+                "to" : "someBotOrPerson.com",
                 "eventType": "utterance",
                 "parameters": {
                     "dialogEvent": {

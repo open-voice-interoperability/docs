@@ -56,20 +56,6 @@
 
         },
 
-        "responseCode": {  
-          "type": "object",
-          "required":  ["code"],
-          "properties" : {
-            "code" : {
-              "type" : "integer"
-            },
-            "description" : {
-              "type" : "string"
-            }            
-          }
-
-        },
-
         "events": {  
           "type": "array",
           "items" : {
@@ -85,8 +71,12 @@
                   "requestManifest", 
                   "publishManifest", 
                   "findAssistant", 
-                  "candidateAssistants"
+                  "proposeAssistant"
               ]
+              },
+              "to" : {
+                "$ref": "#/$defs/uri",
+                "description": "The URI of the target of the event."
               }
             },
             "allOf": [
@@ -249,14 +239,14 @@
               {
                 "if": {
                   "properties": {
-                    "eventType": { "const": "candidateAssistants" }
+                    "eventType": { "const": "proposeAssistant" }
                   },
                   "required": ["eventType"]
                 },
                 "then" : {
                   "properties": { 
                     "parameters" : {
-                      "description": "Parameters for the candidateAssistants event.",
+                      "description": "Parameters for the proposeAssistant event.",
                       "type": "object",
                       "properties" : {
                         "discoveryManifests": {

@@ -51,11 +51,7 @@
             
             { 
                 "eventType": "invite",
-                "parameters": {
-                    "to": {
-                        "url": "https://mybot.pharmacy.com"
-                    }
-                }
+                "to": "https://mybot.pharmacy.com"
             },
 
 	        {
