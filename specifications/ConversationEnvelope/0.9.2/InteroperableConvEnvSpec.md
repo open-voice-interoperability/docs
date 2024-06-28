@@ -337,7 +337,7 @@ The following sections define these event objects in more detail.
 
 Figure 12. Mandatory elements of the OVON _utterance_ event.
 
-Figure 12 shows the structure of an event with the _eventType_ of _utterance_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.  The _to_ parameter is optional and can be used to designate that the utterance is directed to a certain participant in the conversation.  This can be thought of as the quivalent of catching someone's eye during a round table conversation.
+Figure 12 shows the structure of an event with the _eventType_ of _utterance_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.  The _to_ parameter is optional and can be used to designate that the utterance is directed to a certain participant in the conversation.  This can be thought of as the equivalent of catching someone's eye during a round table conversation.
 
 OVON events of this type are sent whenever a user or an assistant takes a dialog act.  The value of the _dialogEvent_ dictionary key must contain a valid dialog event object as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay ).
 Figure 12 shows the structure of an event with the eventType of utterance.  This object contains just one parameter with the key-name dialogEvent.
@@ -394,7 +394,7 @@ The _text_ feature is **mandatory** in all _utterance_ dialog events.
 
 Figure 13 shows the structure of an OVON event with the _eventType_ of _whisper_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.\  An optional _to_ parameter indicates which assistant is the intended recipient of the whisper.  If it is absent then all recipients should consider themselves the intended recipient.
 \
-OVON events of this type are sent whenever an assistant wants to send a natural language instruction or request to another agent.   _whisperUtterance_ events are identical in format to _utterance_ events but they are not to be directly voiced in the dialog.\
+OVON events of this type are sent whenever an assistant wants to send a natural language instruction or request to another agent.   _whisper_ events are identical in format to _utterance_ events but they are not to be directly voiced in the dialog.\
 \
 This object can contain any valid dialog event objects as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay).   
 
@@ -459,7 +459,7 @@ There are no limitations on the features that are added to a dialog event.  This
 
 ##### Figure 15. Mandatory elements of the _invite_ object shown as a 'bare invite'
 
-Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  The optional _to_ object is used to specify the URL of the agent that is being invited.  If it is absent then all receipients of the envelope should consider themselves invited to the conversation.\
+Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  The optional _to_ object is used to specify the URL of the agent that is being invited.  If it is absent, then all recipients of the envelope should consider themselves invited to the conversation.\
 \
 It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 15.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
 
@@ -582,6 +582,7 @@ When an agent wants to leave the conversation it sends a _bye_ event.  This mess
 Figure 18. A _bye_ event with a voiced farewell.
 
 As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
+[Debbie] I think we should have an overview paragraph of the overall functionality of the manifest/assistant events here because they're interrelated and distinct from the other events. 
 
 ### 1.16 requestManifest Event
 
@@ -594,7 +595,7 @@ As with the _invite_ event, the _bye_ event can be accompanied by other events a
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "from": "https://someBot.com",
+          "from": "https://someBot.com"
 
         },
         "events": [
@@ -724,7 +725,7 @@ The _findAssistant_ event can be used to ask any other assistant to recommend on
 
 A _findAssistant_ event will normally be accompanied by a _whisper_ event containing a natural language description of the task to be performed.  A _proposeAssistant_ event will be returned in response to this event.
 
-_findAssistant_ events can be sent without an associated _whisper_ event.  This is not very meaningful for use case 1 but if a discovery agent does receive an _findAssistant_ event with no _whisper_ then recipient assistant could simply return the address of their favorite general purpose assistant. 
+_findAssistant_ events can be sent without an associated _whisper_ event.  This is not very meaningful for use case 1, but if a discovery agent does receive an _findAssistant_ event with no _whisper_, then the recipient assistant could simply return the address of their favorite general purpose assistant. 
 
 For use case 2, a missing _whisper_ event could be interpreted as a request to see whether that assistant is willing and able to recieve requests in general under the assumption that the client already knows the capabilities of the recipient.
 
@@ -802,7 +803,7 @@ In order to support this the _proposeAssistant_ event has two mandatory paramete
 - _servicingManifests_ - A list of agents that can service this request.
 - _discoveryManifests_ - A list of agents that can recommend other agents to service this request.
 
-It is the responsibility of the receiver of this event choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _whisper_ event.
+It is the responsibility of the receiver of this event to choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _whisper_ event.
 
 If an agent receives an _utterance_ event that it does not feel capable of servicing, it can also return a _proposeAssistant_ event.  
 
@@ -815,9 +816,9 @@ Each list item in the recommendation is the manifest format as specified in [4] 
   - _identification_/_synopsis_ - A brief synopsis of the capabilities of this endpoint.  
 
 2. The manifest object can contain one additional optional key that is not present in the manifest specification:
-  - _score_ - A recommendation score between 0 and 100  
+  - _score_ - A recommendation score between 0 and 100.  
 
-Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversatoin and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssitant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to intiting it to do so. 
+Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversation and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssistant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to inviting it to do so. 
 
 Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be sent a _findAssistant_ event with the same _whisper_.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
 
@@ -883,7 +884,7 @@ The structure of a JSON conversation envelope is defined as a JSON Schema locate
 |delegation|A conversational assistant passes control and management of the dialog to another conversational assistant, along with a negotiated amount of context and dialog history. 
 |derived specification|A derivative standard, built upon this specification, which defines a specific way to use a dialog event in a particular context.
 |dialog event |A linguistic event in a spoken or written monologue or dialog between two or more speakers.  
-|ialog event feature |A layer of information of a certain type associated with the dialog event.
+|dialog event feature |A layer of information of a certain type associated with the dialog event.
 |dialog event object|A JSON object encoding a dialog event as part of an interface to a natural language component in a text or speech processing solution or dialog system.
 |dialog event object id |The unique identifier of the dialog event object
 |dialog event span|Identifies the span of time for the dialog event
@@ -924,7 +925,7 @@ This section documents some of the key design decisions that were made by the te
 |candidateAssistants|_Question_: should we rename this to be _proposeAssistant_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: It was agreed to rename this _proposeAssistant_.|
 |'to' destinations|Question: There is an urgent need to agree how to express 'to' and discuss exactly how the addressing of events is managed.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: We have added an optional 'to' parameter to all events.  This helps the recipient decide whether they want to ignore it or not.|
 |responseCode|Question: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: We decided to deprecate the responseCode and introduce an 'acknowledge' event instead. |
-|discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberarately left this out for now but if we need it will consider additional flags on the manifest in some form.|
+|discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberately left this out for now, but if we need it, we will consider additional flags on the manifest in some form.|
 
 
 ### Chapter 7. Document Change Log
@@ -933,4 +934,4 @@ This section documents some of the key design decisions that were made by the te
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.04.30|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optinal on all events</br>- Removed inline schema and kept a link instead.|  
+|0.9.2|2024.04.30|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.|  
