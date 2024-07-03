@@ -6,8 +6,9 @@ The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-25 June 2024 \
+3 July 2024 \
 Draft Version 0.9.2
+Status: Published
 
 *_Editor-in-Chief: David Attwater_*\
 *_Contributors: Emmett Coin,  Deborah Dahl,  Jim Larson, Allan Wylie,  Rainer Türner and Diego Gosmar_*
@@ -18,30 +19,29 @@ Draft Version 0.9.2
 #### &nbsp; 0.2 Conversation envelopes
 #### &nbsp; 0.3 Delegation, Channeling and Mediation
 ### CHAPTER 1. SPECIFICATION
-#### &nbsp; 1.1 Representation
-#### &nbsp; 1.2 Syntax and Protocol
-#### &nbsp; 1.3 AAA & Security
-#### &nbsp; 1.4 Nomenclature
-#### &nbsp; 1.5 Conversation Envelope Object Structure
-#### &nbsp; 1.6 Schema Object
-#### &nbsp; 1.7 Conversation Object
-#### &nbsp; 1.8 Sender Object
-#### &nbsp; 1.9 Events Object
-#### &nbsp; 1.10 Event-Types
-#### &nbsp; 1.11 Utterance Events
-##### &nbsp; &nbsp; &nbsp;  1.12.1 Utterance Text Feature
-#### 1.12 Whisper Events
-##### &nbsp; &nbsp; &nbsp;  1.13.1 Whisper Text Feature
-#### 1.13 Extensible Dialog Event Features (Informative)
-#### 1.14 Invite Event
-#### 1.15 Bye Event
-#### 1.16 requestManifest Event
-#### 1.17 publishManifest Event
-#### 1.18 findAssistant Event
-#### 1.19 proposeAssistant Event
+#### &nbsp; 1.1 Syntax and Protocol
+#### &nbsp; 1.2 AAA & Security
+#### &nbsp; 1.3 Nomenclature
+#### &nbsp; 1.4 Conversation Envelope Object Structure
+#### &nbsp; 1.5 Schema Object
+#### &nbsp; 1.6 Conversation Object
+#### &nbsp; 1.7 Sender Object
+#### &nbsp; 1.8 Events Object
+#### &nbsp; 1.9 Event-Types
+#### &nbsp; 1.10 Utterance Events
+##### &nbsp; &nbsp; &nbsp;  1.10.1 Utterance Text Feature
+#### 1.11 Whisper Events
+##### &nbsp; &nbsp; &nbsp;  1.11.1 Whisper Text Feature
+#### 1.12 Extensible Dialog Event Features (Informative)
+#### 1.13 Invite Event
+#### 1.14 Bye Event
+#### 1.15 requestManifest Event
+#### 1.16 publishManifest Event
+#### 1.17 findAssistant Event
+#### 1.18 proposeAssistant Event
 
 ### CHAPTER 2. MINIMAL BEHAVIORS
-#### &nbsp; 2.1 Minimal Agent Behavior
+#### &nbsp; 2.1 Minimal Assistant Behavior
 #### &nbsp; 2.2 Minimal Conversation Floor Manager Behaviors
 ### CHAPTER 3. JSON Envelope SCHEMA
 ### CHAPTER 4. REFERENCES
@@ -70,16 +70,15 @@ In this draft of the specification, we consider the case where the function of t
 \
 In its simplest configuration, the user proxy agent might present a text-based chat interface to the user.  For spoken interaction, the proxy agent will likely also contain speech-to-text and text-to-speech facilities but other configurations are anticipated.  The proxy agent may have conversational ability in its own right but in many cases, it may only provide rudimentary capabilities such as wake-word detection.\
 \
-Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single conversation envelope.   Each conversant can 'hear' things said to it or 'say' things.  Conversants may also invite other agents to join the conversation and take the conversational floor.
-
+Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single conversation envelope.   Each conversant can 'hear' things said to it or 'say' things.   They can also 'whisper' to each other behind the scenes.   Conversants may also 'invite' other agents to join the conversation or they might ask other agents if they are capabale of a certain activity or would like recommend another agent for a certain task.
 
 #### 0.3 Delegation, Channeling and Mediation
 
 The conversational floor manager is in control of which conversants are engaged in a conversation at any given moment.\
 \
-To start a conversation, the proxy agent invites a specific dialog agent (e.g. Dialog Agent A) to take part in a conversation with the user.   Once engaged, a dialog agent receives a dialogue envelope containing each user utterance and sends an utterance back to the user in response.  Once the assistant is done with the interaction they can simply end the interaction or invite another agent to enter the conversation (e.g. Dialogue Agent B in the diagram).   The change of control of a dialog between two agents is called 'delegation'.\
+To start a conversation, the proxy agent invites a specific dialog agent (e.g. Dialog Assistant A) to take part in a conversation with the user.   Once engaged, a dialog agent receives a dialogue envelope containing each user utterance and sends an utterance back to the user in response.  Once the assistant is done with the interaction they can simply end the interaction or invite another agent to enter the conversation (e.g. Dialogue Assistant B in the diagram).   The change of control of a dialog between two agents is called 'delegation'.\
 \
-Dialog Assistants may also engage the services of another dialog agent behind the scenes to assist with the conversation (e.g. Agent A engages the services of target agent C to support it in its interaction with the user.)    The controlling agent might choose to pass user utterances unaltered to the target agent and may in return pass the target agent's responses unaltered to the user.  This pattern is termed 'channeling'. It is in many ways functionally equivalent to delegating the conversation but the channeling agent is also able to take, intervene or override the contribution of the agent to which the conversation is being channeled.  While channeling does not change the conversational intent of the utterance, it may change how the content is rendered.  For example, increase the volume for the hard of hearing, decrease the speed of presentation for the cognitively challenged or for non-native speakers, change the voice characteristics of the presentation, or change the language, or change visual characteristics if these are present.\
+Dialog Assistants may also engage the services of another dialog agent behind the scenes to assist with the conversation (e.g. Assistant A engages the services of target agent C to support it in its interaction with the user.)    The controlling agent might choose to pass user utterances unaltered to the target agent and may in return pass the target agent's responses unaltered to the user.  This pattern is termed 'channeling'. It is in many ways functionally equivalent to delegating the conversation but the channeling agent is also able to take, intervene or override the contribution of the agent to which the conversation is being channeled.  While channeling does not change the conversational intent of the utterance, it may change how the content is rendered.  For example, increase the volume for the hard of hearing, decrease the speed of presentation for the cognitively challenged or for non-native speakers, change the voice characteristics of the presentation, or change the language, or change visual characteristics if these are present.\
 \
 Alternatively, the intermediate agent may reformulate the user's utterances and/or the target agent's utterances, holding whole conversations behind the scenes in order to achieve a goal.  This pattern is termed 'mediation'.  The mediation pattern also may be particularly relevant in the case where the target agent is in fact another human user (e.g. where an autonomous agent acts on behalf of a user to book an appointment with a doctor or restaurant).\
 \
@@ -89,25 +88,38 @@ The patterns described above allow for conversation between one user and multipl
 \
 It is envisaged that later extensions to this specification will also support simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another.
 
+### 0.4 Discovery
+
+Agents can ask other agents if they are able to satisfy a certain enquiry or whether they can recommend another agent for the task.  This pattern is called 'discovery'.  The initiating agent asks another agent to 'find' an assistant and 'whispers' details of the task to this agent.  The recipient can then respond by:
+
+- Proposing themself for the task (i.e. 'accept' the request to do a task)
+- Proposing one or more agents for the task with a rating (u.e. act as a discovery agent)
+- Proposing one or more agents to help 'find' an agent for the task (i.e. recommend another discovery agent)
+- Proposing no agents (i.e. the agent cannot do the task or recommend any other agent)
+
+The requesting agent can then choose to invite the proposed agent to the conversation, or simply speak directly to the proposed agent if they already party to the conversation,
+
+By combining this discovery mechanism with the delegation and channelling patterns mentioned above rich patterns of agent interaction can emerge. Some agents can specialize as 'discovery agents' whose only role is to provide recommendations of other agents. This provides the conversational equivalent of a web search.  Agents can also recommend themselves for some enquiries and recommend other agents for others. This allows, for example, for a primary assistant to perform day to day tasks and recommend other agents for less common tasks. Agents can ask one or more agents to assist with this search who in turn can ask other agents. 
+
 ### CHAPTER 1. SPECIFICATION
-#### 1.1 Representation
 
+#### 1.1 Syntax and Protocol
 
-#### 1.2 Syntax and Protocol
+A conversation envelope will be represented as a JSON [1] object in a string format.  The JSON conversation envelope is expected to be a stand-alone document or object but there is no reason that it cannot be part of a larger JSON document.
 
 JSON was chosen for the OVON conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.  Supported protocols and the mechanisms by which two agents agree on a protocol to be used are currently outside the scope of this document.\
 \
 For the sake of simplicity, it is anticipated that OVON implementations will initially use HTTPS as underlying communication protocol, but could include several other ones currently available (i.e. SIP, Websockets, WebRTC, etc) or any future available ones (i.e, HTTP/3, etc).
 
-#### 1.3 AAA & Security
+#### 1.2 AAA & Security
 
 Authorization, Authentication, Accounting, and Security specifications are outside the scope of this document and will be defined in separate documents. 
 
-#### 1.4 Nomenclature
+#### 1.3 Nomenclature
 
 This specification uses ‘camelCase’ (i.e. no spaces with new words being capitalized) for all nominal property names, for example, eventType and replyTo.  
 
-#### 1.5 Conversation Envelope Object Structure
+#### 1.4 Conversation Envelope Object Structure
 
     {
       "ovon": {
@@ -160,7 +172,7 @@ Figure 2 shows an example of a conversation envelope.  The envelope is wrapped i
 
 The responseCode section is optional.  All other sections are mandatory.
 
-#### 1.6 Schema Object
+#### 1.5 Schema Object
 
     {
       "ovon": {
@@ -189,7 +201,7 @@ The _schema_ object specifies the format of the message in this OVON envelope.  
 
 The schema for the version of the envelope specification can be found in **Chapter 3. Schema**.  Figure 4 shows an optional _url_ that may also be included which should point to the correct version of that JSON schema.
 
-#### 1.7 Conversation Object
+#### 1.6 Conversation Object
 
     {
       "ovon": {
@@ -225,7 +237,7 @@ As shown in figure 5, the conversation section contains just one piece of mandat
 
 Figure 6 shows other additional elements in the conversation object. The _persistentState_ is optional and consists of key-value pairs where the values can be any arbitrary JSON object.  The purpose of this is to enable agents to persist information that is important to maintaining internal state in the conversation.  Any message sender can add a new unique key-value pair.  All message handlers should persist the data in this section when replying to a message.  Agents are encouraged to remove key-value pairs from the message that are specific to them when sending a 'bye' event.    There are currently no restrictions currently placed on the content of persistent objects.   Privacy and security issues apply here. It is suggested that the data in these sections is encrypted but this is not mandatory.  Consideration should also be given to the size of any objects in this section as this might affect the downstream performance of the remaining conversation.
 
-#### 1.8 Sender Object
+#### 1.7 Sender Object
 
     {
       "ovon": {
@@ -256,7 +268,7 @@ Figure 7 shows the mandatory elements in the sender object.  The from object is 
 
 Figure 8 shows other supported elements in the sender object.   The _replyTo_ object is also a string and must also be a valid URI.  The _replyTo_ address should be the address of an OVON-compliant assistant or host-browser and should be capable of receiving messages in OVON Envelope format.
 
-#### 1.9 Events Object
+#### 1.8 Events Object
 
     {
       ovon {
@@ -290,7 +302,7 @@ Figure 11 shows the structure of the _events) object.  This should be an array o
 
 Each event object must have an _eventType_, which is a string.  Two other parameters may be present depending on the eventType. The _to_ parameter is a valid URL of the assistant that the message is intended for.  If the parameter is not present then is can be assumed that the event is intended for all recipients of the envelope.  The _parameters_ object is a dictionary of parameter objects with standard key names specific to the event-type.  Some eventTypes support a 'bare' mode without any parameters.
 
-#### 1.10 Event-Types
+#### 1.9 Event-Types
 
 The following are valid values for _eventTypes_.
 
@@ -308,7 +320,7 @@ The following are valid values for _eventTypes_.
 
 The following sections define these event objects in more detail.
 
-#### 1.11 Utterance Events
+#### 1.10 Utterance Events
 
     {
       "ovon" {
@@ -352,18 +364,18 @@ The following sections describe the _features_ that are currently supported in t
 
 Additional keys and mime-types are permitted.  Compliant OVON dialog agents do not need to respond to any unsupported keys in the dialog event.
 
-##### 1.11.1 Utterance Text Feature
+##### 1.10.1 Utterance Text Feature
 
 The _text_ feature is **mandatory** in all _utterance_ dialog events.
 
 |parameter|Description|
 |-|-|
 |_mimeType_|text/plain
-|_speakerId_|The _speakerId_ should be a unique identifier to the speaker that was or will be perceived as the social actor in the conversation.  Agents that are channeling utterances from other agents or speakers should keep the _speakerId_ of the original speaker.   This is one of the main distinctions between channeling and mediation.  It is the responsibility of the agent that generates the event to decide which _speakerId_ to attach to the event.
+|_speakerId_|The _speakerId_ should be a unique identifier to the speaker that was or will be perceived as the social actor in the conversation.  Assistants that are channeling utterances from other agents or speakers should keep the _speakerId_ of the original speaker.   This is one of the main distinctions between channeling and mediation.  It is the responsibility of the agent that generates the event to decide which _speakerId_ to attach to the event.
 |_value_|Any number of values are allowed as strings in the _tokens_ section.  When concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 |_valueUrl_|Any number of value URLs are allowed in the tokens section.  These URLs should locate content of type 'text/plain' and when downloaded and concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 
-### 1.12 Whisper Events
+### 1.11 Whisper Events
 
     {
       "ovon" {
@@ -398,7 +410,7 @@ OVON events of this type are sent whenever an assistant wants to send a natural 
 \
 This object can contain any valid dialog event objects as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay).   
 
-##### 1.12.1 Whisper Text Feature
+##### 1.11.1 Whisper Text Feature
 
 The _text_ feature is **mandatory** in all _whisper_ dialog events.
 
@@ -410,7 +422,7 @@ The _text_ feature is **mandatory** in all _whisper_ dialog events.
 |_valueUrl_|Any number of value URLs are allowed in the tokens section.  These URLs should locate content of type 'text/plan' and when downloaded and concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 
 
-### 1.13 Extensible Dialog Event Features (informative)
+### 1.12 Extensible Dialog Event Features (informative)
 
 The features in Dialog Events are intentionally intended to be extensible.  This specification does not limit the features that can be put into an utterance event or a whisper event.
 
@@ -436,7 +448,7 @@ There are no limitations on the features that are added to a dialog event.  This
 
 #### Figure 14. Example video feature, which at present would be considered a custom feature.
 
-### 1.14 Invite Event
+### 1.13 Invite Event
 
     "ovon": {
         "schema": {
@@ -453,7 +465,6 @@ There are no limitations on the features that are added to a dialog event.  This
                 "to": "https://someBotThatIsBeingInvited.com",
                 "eventType": "invite"
             }
-        ]
     }
 
 
@@ -518,7 +529,7 @@ It is possible to invite an agent to a conversation without giving it any other 
 
 Invite events will typically be accompanied by additional events.  Figure 16 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it.
 
-### 1.15 Bye Event
+### 1.14 Bye Event
 
     {
       "ovon": {
@@ -584,7 +595,7 @@ Figure 18. A _bye_ event with a voiced farewell.
 As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
 [Debbie] I think we should have an overview paragraph of the overall functionality of the manifest/assistant events here because they're interrelated and distinct from the other events. 
 
-### 1.16 requestManifest Event
+### 1.15 requestManifest Event
 
     {
       "ovon": {
@@ -615,7 +626,7 @@ Figure 19 shows an example of a _requestManifest_ event. On receipt of this even
 
 The _to_ object is optional. If it is absent then the recipient of the envelope should consider themself the target of the request.
 
-### 1.17 publishManifest Event
+### 1.16 publishManifest Event
 
     {
       "ovon": {
@@ -678,7 +689,7 @@ This event can be sent at any time but should always be sent in response to a _r
 
 The _to_ object is optional.  It can be used to indicate whether the manifest is intended for a specific conversant in the conversation.  
 
-### 1.18 findAssistant Event
+### 1.17 findAssistant Event
 
     {
       "ovon": {
@@ -733,7 +744,7 @@ The optional _to_ object can be used to indicate which agent is the intended rec
 
 See section 1.19 for more information on _proposeAssistant_ event behaviors.
 
-### 1.19 proposeAssistant Event
+### 1.18 proposeAssistant Event
 
     {
       "ovon": {
@@ -828,7 +839,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
 
 ## Chapter 2. Minimal Behaviors
 
-#### 2.1 Minimal Agent Behaviors
+#### 2.1 Minimal Assistant Behaviors
 
 OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant.  
 
@@ -933,5 +944,5 @@ This section documents some of the key design decisions that were made by the te
 |Version|Release Date|Description|
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
-|0.9.1|2024.04.16|- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.04.30|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.|  
+|0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
+|0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>|  
