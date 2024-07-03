@@ -18,6 +18,7 @@ Status: Published
 #### &nbsp; 0.1 Document Scope
 #### &nbsp; 0.2 Conversation envelopes
 #### &nbsp; 0.3 Delegation, Channeling and Mediation
+#### &nbsp; 0.4 Discovery
 ### CHAPTER 1. SPECIFICATION
 #### &nbsp; 1.1 Syntax and Protocol
 #### &nbsp; 1.2 AAA & Security
