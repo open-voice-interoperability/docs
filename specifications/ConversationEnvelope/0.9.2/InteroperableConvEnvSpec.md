@@ -594,7 +594,7 @@ When an agent wants to leave the conversation it sends a _bye_ event.  This mess
 Figure 18. A _bye_ event with a voiced farewell.
 
 As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
-[Debbie] I think we should have an overview paragraph of the overall functionality of the manifest/assistant events here because they're interrelated and distinct from the other events. 
+
 
 ### 1.15 requestManifest Event
 
