@@ -94,7 +94,7 @@ It is envisaged that later extensions to this specification will also support si
 Agents can ask other agents if they are able to satisfy a certain enquiry or whether they can recommend another agent for the task.  This pattern is called 'discovery'.  The initiating agent asks another agent to 'find' an assistant and 'whispers' details of the task to this agent.  The recipient can then respond by:
 
 - Proposing themself for the task (i.e. 'accept' the request to do a task)
-- Proposing one or more agents for the task with a rating (u.e. act as a discovery agent)
+- Proposing one or more agents for the task with a rating (i.e. act as a discovery agent)
 - Proposing one or more agents to help 'find' an agent for the task (i.e. recommend another discovery agent)
 - Proposing no agents (i.e. the agent cannot do the task or recommend any other agent)
 
