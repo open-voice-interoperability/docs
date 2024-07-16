@@ -543,7 +543,6 @@ Invite events will typically be accompanied by additional events.  Figure 16 sho
         "sender": {
           "from": "https://someBotThatOfferedTheBye.com"
         },
-        "responseCode" : { "code": 200 },
         "events": [
           {
             "eventType" : "bye"
@@ -566,7 +565,6 @@ When an agent wants to leave the conversation it sends a _bye_ event.  This mess
       "sender": {
         "from": "https://someBot.com"
       },
-      "responseCode" : 200,
       "events": [
         {
           "eventType": "utterance",
