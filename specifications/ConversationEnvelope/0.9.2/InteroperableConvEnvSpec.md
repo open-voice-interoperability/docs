@@ -118,7 +118,7 @@ Authorization, Authentication, Accounting, and Security specifications are outsi
 
 #### 1.3 Nomenclature
 
-This specification uses ‘camelCase’ (i.e. no spaces with new words being capitalized) for all nominal property names, for example, eventType and replyTo.  
+This specification uses ‘camelCase’ (i.e. no spaces with new words being capitalized) for all nominal property names, for example, _eventType_ and _persistentState_.  
 
 #### 1.4 Conversation Envelope Object Structure
 
@@ -253,21 +253,6 @@ Figure 6 shows other additional elements in the conversation object. The _persis
 ##### Figure 7. Mandatory elements of the _sender_ object
 
 Figure 7 shows the mandatory elements in the sender object.  The from object is a string and should be a valid URI.  
-
-    {
-      "ovon": {
-        …        
-        "sender": {
-          "from": "https://example.com/message-from",
-          "replyTo": "https://example.com/reply-message-to"
-        },
-        … 
-      }
-    }
-
-##### Figure 8. Optional elements in the _sender_ object.
-
-Figure 8 shows other supported elements in the sender object.   The _replyTo_ object is also a string and must also be a valid URI.  The _replyTo_ address should be the address of an OVON-compliant assistant or host-browser and should be capable of receiving messages in OVON Envelope format.
 
 #### 1.8 Events Object
 
@@ -926,7 +911,7 @@ This section documents some of the key design decisions that were made by the te
 |Host Browsers and User Proxies|_Question:_ Is the host browser a user proxy or does it have unique responsibilities for control?</br>_Answer:_ The host browser is a close coupling of a user proxy and a conversation floor manager.  It is anticipated that user proxies and floor managers can be implemented separately and communicate using dialog envelopes.  This has not been fully proven yet and there are likely to be additional control structures needed to fully support the separation.  We anticipate that early adoption of this standard will require a unified host browser.
 |responseCodes|_Question:_ Are responseCodes optional or mandatory</br>_Answer:_ It was agreed that this section is optional in the envelope.|
 |location of schemas|_Question:_ Where should we publish the schema?</br>_Answer:_ Let's use https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas, but add a new subfolder for each version (e.g. "0.9.2" for the current schemas).
-|replyTo Optional|_Question_: Should replyTo be optional or mandatory?</br>_Answer:_ We agreed that it would be optional and if not present then replies would be addressed to the sender.  In the HTTPS model, even the sender is redundant and may only be useful for logging.    
+|replyTo |_Question_: Should replyTo be optional, mandatory (or removed)?</br>_Answer:_ The replyTo element appears to have become redundant and was retired out of the specification in version 9.9.2.  
 |Returning Control|_Question_:Have we fully addressed what happens on handing back control? Need to discuss control on 'bye' and 'invite'.</br>_Answer:_ Minimal behaviors for 'bye' and 'invite' are defined in this specification with the introduction of a 'focal agent'.  Subsequent incarnations of this specification are likely to formalize these further in order to support multi-participant conversations.
 |How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
 |Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
@@ -943,4 +928,4 @@ This section documents some of the key design decisions that were made by the te
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply-to</br>|  
+|0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed replyTo</br>|  
