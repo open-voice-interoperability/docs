@@ -282,9 +282,9 @@ Figure 7 shows the mandatory elements in the sender object.  The from object is 
       }
     }
 
-##### Figure 11. The _events_ object
+##### Figure 8. The _events_ object
 
-Figure 11 shows the structure of the _events) object.  This should be an array of one or more objects which we will call an event object. 
+Figure 8 shows the structure of the _events) object.  This should be an array of one or more objects which we will call an event object. 
 
 Each event object must have an _eventType_, which is a string.  Two other parameters may be present depending on the eventType. The _to_ parameter is a valid URL of the assistant that the message is intended for.  If the parameter is not present then is can be assumed that the event is intended for all recipients of the envelope.  The _parameters_ object is a dictionary of parameter objects with standard key names specific to the event-type.  Some eventTypes support a 'bare' mode without any parameters.
 
@@ -333,12 +333,12 @@ The following sections define these event objects in more detail.
       }
     }
 
-Figure 12. Mandatory elements of the OVON _utterance_ event.
+Figure 9. Mandatory elements of the OVON _utterance_ event.
 
-Figure 12 shows the structure of an event with the _eventType_ of _utterance_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.  The _to_ parameter is optional and can be used to designate that the utterance is directed to a certain participant in the conversation.  This can be thought of as the equivalent of catching someone's eye during a round table conversation.
+Figure 9 shows the structure of an event with the _eventType_ of _utterance_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.  The _to_ parameter is optional and can be used to designate that the utterance is directed to a certain participant in the conversation.  This can be thought of as the equivalent of catching someone's eye during a round table conversation.
 
 OVON events of this type are sent whenever a user or an assistant takes a dialog act.  The value of the _dialogEvent_ dictionary key must contain a valid dialog event object as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay ).
-Figure 12 shows the structure of an event with the eventType of utterance.  This object contains just one parameter with the key-name dialogEvent.
+Figure 9 shows the structure of an event with the eventType of utterance.  This object contains just one parameter with the key-name dialogEvent.
 
 OVON events of this type are sent whenever a user or an assistant takes a dialog act.  The value of the dialogEvent dictionary key must contain a valid dialog event object as specified in Interoperable Dialog Event Object Specification Version 1.0.   
 
@@ -388,9 +388,9 @@ The _text_ feature is **mandatory** in all _utterance_ dialog events.
       }
     }
 
-##### Figure 13. Mandatory elements of the OVON _whisper_ event.
+##### Figure 10. Mandatory elements of the OVON _whisper_ event.
 
-Figure 13 shows the structure of an OVON event with the _eventType_ of _whisper_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.\  An optional _to_ parameter indicates which assistant is the intended recipient of the whisper.  If it is absent then all recipients should consider themselves the intended recipient.
+Figure 10 shows the structure of an OVON event with the _eventType_ of _whisper_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.\  An optional _to_ parameter indicates which assistant is the intended recipient of the whisper.  If it is absent then all recipients should consider themselves the intended recipient.
 \
 OVON events of this type are sent whenever an assistant wants to send a natural language instruction or request to another agent.   _whisper_ events are identical in format to _utterance_ events but they are not to be directly voiced in the dialog.\
 \
@@ -417,7 +417,7 @@ The current version of this specification mandates only the text feature in each
 * _ssml_ to describe how text should be rendered as speech
 * _speech_ to send raw speech for output or input.
 
-There are no limitations on the features that are added to a dialog event.  This enables agents to exchange any media that they wish in addition to the text message.  For example, a video feature intended to represent Video Conversational agent communications (i.e. Avatar communications) could be added as shown in Figure 14.  This example is informative only
+There are no limitations on the features that are added to a dialog event.  This enables agents to exchange any media that they wish in addition to the text message.  For example, a video feature intended to represent Video Conversational agent communications (i.e. Avatar communications) could be added as shown in Figure 11.  This example is informative only
 
       "features": {
       ...
@@ -432,7 +432,7 @@ There are no limitations on the features that are added to a dialog event.  This
       ...
       }
 
-#### Figure 14. Example video feature, which at present would be considered a custom feature.
+#### Figure 11. Example video feature, which at present would be considered a custom feature.
 
 ### 1.13 Invite Event
 
@@ -454,11 +454,11 @@ There are no limitations on the features that are added to a dialog event.  This
     }
 
 
-##### Figure 15. Mandatory elements of the _invite_ object shown as a 'bare invite'
+##### Figure 12. Mandatory elements of the _invite_ object shown as a 'bare invite'
 
 Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  The optional _to_ object is used to specify the URL of the agent that is being invited.  If it is absent, then all recipients of the envelope should consider themselves invited to the conversation.\
 \
-It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 15.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
+It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 12.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
 
     {
       "ovon": {
@@ -511,9 +511,9 @@ It is possible to invite an agent to a conversation without giving it any other 
       }
     }
 
-##### Figure 16. A typical dialog envelope for an invite, including a voiced transfer prompt.
+##### Figure 13. A typical dialog envelope for an invite, including a voiced transfer prompt.
 
-Invite events will typically be accompanied by additional events.  Figure 16 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it.
+Invite events will typically be accompanied by additional events.  Figure 13 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it.
 
 ### 1.14 Bye Event
 
@@ -536,9 +536,9 @@ Invite events will typically be accompanied by additional events.  Figure 16 sho
       }
     }
 
-Figure 17. A minimal _bye_ envelope detaching an agent from a conversation.
+Figure 14. A minimal _bye_ envelope detaching an agent from a conversation.
 
-When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in figure 17. It has no _parameters_.  The optional _to_ object can be included but it is not neccessary.
+When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in Figure 14. It has no _parameters_.  The optional _to_ object can be included but it is not neccessary.
 
     "ovon": {
       "schema": {
@@ -574,9 +574,9 @@ When an agent wants to leave the conversation it sends a _bye_ event.  This mess
       ]
     }
 
-Figure 18. A _bye_ event with a voiced farewell.
+Figure 15. A _bye_ event with a voiced farewell.
 
-As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
+As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 15.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
 
 
 ### 1.15 requestManifest Event
@@ -601,11 +601,11 @@ As with the _invite_ event, the _bye_ event can be accompanied by other events a
       }
     }
 
-##### Figure 19. A typical dialog envelope for a requestManifest event
+##### Figure 16. A typical dialog envelope for a requestManifest event
 
 All participants in a conversation are expected to maintain a manifest of their capabilities and core attributes.  They should publish this on request. The _requestManifest_ event is used for this.  This is a bare event with no _parameters_. 
 
-Figure 19 shows an example of a _requestManifest_ event. On receipt of this event, the target assistant should return a _publishManifest_ event.
+Figure 16 shows an example of a _requestManifest_ event. On receipt of this event, the target assistant should return a _publishManifest_ event.
 
 The _to_ object is optional. If it is absent then the recipient of the envelope should consider themself the target of the request.
 
@@ -664,11 +664,11 @@ The _to_ object is optional. If it is absent then the recipient of the envelope 
       }
     }
 
-##### Figure 20. A typical dialog envelope for a publishManifest event
+##### Figure 17. A typical dialog envelope for a publishManifest event
 
 The _publishManifest_ event can be used to publish information about the capabilities and identity of a participant in a conversation.   
  
-This event can be sent at any time but should always be sent in response to a _requestManifest_ event.  Figure 20 shows an example of a _publishManifest_ event.  The event has one mandatory parameter _manfest_.  This parameter must be in the format specified in [3]
+This event can be sent at any time but should always be sent in response to a _requestManifest_ event.  Figure 17 shows an example of a _publishManifest_ event.  The event has one mandatory parameter _manfest_.  This parameter must be in the format specified in [3]
 
 The _to_ object is optional.  It can be used to indicate whether the manifest is intended for a specific conversant in the conversation.  
 
@@ -710,7 +710,7 @@ The _to_ object is optional.  It can be used to indicate whether the manifest is
       }
     }
 
-##### Figure 21. A typical dialog envelope for a findAssistant event
+##### Figure 18. A typical dialog envelope for a findAssistant event
 
 The _findAssistant_ event can be used to ask any other assistant to recommend one or more assistants.    There are a two primary use-cases for this event.
 
@@ -783,7 +783,7 @@ See section 1.19 for more information on _proposeAssistant_ event behaviors.
       }
     }
 
-##### Figure 22. A typical proposeAssistant event 
+##### Figure 19. A typical proposeAssistant event 
 
 The _proposeAssistant_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event but can also be used to make a delegation suggestion in response to an _utterance_.
 
