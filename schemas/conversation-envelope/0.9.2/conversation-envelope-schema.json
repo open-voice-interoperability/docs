@@ -47,10 +47,6 @@
             "from": {
               "$ref": "#/$defs/uri",
               "description": "The URI of the sender of the envelope."
-            },
-            "replyTo": {
-              "$ref": "#/$defs/uri",
-              "description": "The URI to direct responses to the envelope."
             }
           }
 
