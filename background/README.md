@@ -5,3 +5,6 @@ This folder contains some background information about the Open Voice Interopera
 - video1_IntroToSandbox.mp4 is an introduction to the Open Voice Sandbox
 - video2_SomeSandboxFeatures.mp4 illustrates some additional features of the Sandbox
 - Standard_Benefits_intro.pptx is a high-level introduction to the benefits of Open Voice standards
+- Presentations from the 2024 Grace Hopper Open Source Day Hackathon, October 4
+  -   Introduction to the Interoperability Initiative
+  -   Introduction to the Sandbox
