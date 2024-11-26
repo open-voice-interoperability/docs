@@ -6,7 +6,7 @@ The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-3 July 2024 \
+26 November 2024 \
 Draft Version 0.9.3
 Status: Published
 
@@ -935,4 +935,4 @@ This section documents some of the key design decisions that were made by the te
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
-|0.9.3|UNPUBLISHED|- Added private to event objects</br>- Added context parameter to whisper</br>|
+|0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
