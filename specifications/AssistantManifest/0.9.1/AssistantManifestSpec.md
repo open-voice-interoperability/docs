@@ -5,7 +5,7 @@
 The Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-2 May 2024 \
+26 November 2024 \
 Draft Version 0.9.1
 
 *_Editor-in-Chief: David Attwater_*\
@@ -56,7 +56,7 @@ Target uses for this manifest are as follows:
 - Provide information on request to potential user-agents to assist with their own ranking of candidate agents for a specific task.
 - Provide vocalizable information that allow other agents to know how to address this agent in a conversation (e.g. what name to address the agent by)
 
-One standard that uses this document format is [[3] Interoperable Conversation Envelope Specification Version 0.9.0.](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.0/InteroperableConvEnvSpec.md ). That specification defines a number if events types that are designed to help conversational agents discover other agents for certain tasks.  There are events for requesting and publishing manifests, and also events for finding and recommending agents for certain tasks.  These events make use of all or part of the contents of the Assistant Manifest. 
+One standard that uses this document format is [[3] Interoperable Conversation Envelope Specification Version 0.9.3](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.3/InteroperableConvEnvSpec.md ). That specification defines a number if events types that are designed to help conversational agents discover other agents for certain tasks.  There are events for requesting and publishing manifests, and also events for finding and recommending agents for certain tasks.  These events make use of all or part of the contents of the Assistant Manifest. 
 
 ### CHAPTER 1. SPECIFICATION
 #### 1.1 Representation
@@ -144,7 +144,7 @@ The features of each capability object are shown below.
 |`keyphrases`|string array|A list of searchable key phrases, in no particular order, that represent the key features of the service provided or topics about which questions can be answered by the assistant.  These can be words or phrases and will typically be simple noun or verb phrases, suitable, for example, for use in simple text searches.  There is no limit to the length of the list or the length of the phrases.|["visa",  "immigration", "passport","permanent resident" ],|Mandatory|
 |`languages`|string array|A list of the languages supported by this capability according to [IETF BCP 47 Language Tag [4]](https://www.rfc-editor.org/rfc/rfc5646.txt).|["en-us"]|*Default:* *Undefined*|
 `descriptions`|string array|A set of searchable texts, in no particular order, describing the services and capabilities of the assistant. These are expressed in natural language suitable, for example, for inclusion in queries or searches using natural language technologies. There is no limit to the length of the list or the length of the phrases.|["international travel to and from Estonia","permanent and temporary visa requirements when visiting Estonia"]|Mandatory|
-`supportedLayers`|dict of string arrays|A dictionary containing lists of the dialogEvent layers supported as the input and the output of this capability. See [[2] Interoperable Dialog Event Specification](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0) and [[3] Interoperable Conversation Envelope Specification Version 0.9.0.](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.0/InteroperableConvEnvSpec.md ) |{ "input" : ["text","pronun","voice"], "output" : ["text","ssml","pronun","voice","html"] }|*Default:* *{"input":["text"], "output":["text"]}*|
+`supportedLayers`|dict of string arrays|A dictionary containing lists of the dialogEvent layers supported as the input and the output of this capability. See [[2] Interoperable Dialog Event Specification](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0) and [[3] Interoperable Conversation Envelope Specification Version 0.9.3](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.3/InteroperableConvEnvSpec.md ) |{ "input" : ["text","pronun","voice"], "output" : ["text","ssml","pronun","voice","html"] }|*Default:* *{"input":["text"], "output":["text"]}*|
 
 ### Chapter 2. Schema
 
@@ -154,7 +154,7 @@ The structure of a JSON conversation envelope is defined as a JSON Schema locate
 
 * [1] https://www.ecma-international.org/publications-and-standards/standards/ecma-404/ ECMA-404 The JSON data interchange syntax
 * [2] https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0 Interoperable Dialog Event Specification (version 1.0.1)
-* [3] https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.0/InteroperableConvEnvSpec.md Interoperable Conversation Envelope Specification Version 0.9.0.
+* [3] https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.3/InteroperableConvEnvSpec.md Interoperable Conversation Envelope Specification Version 0.9.3
 * [4] https://www.rfc-editor.org/rfc/rfc5646.txt RFC 5646. BCP 47. Tags for Identifying Languages.
 * [5] https://www.ietf.org/rfc/rfc4646.txt RFC 4646 Regarding Best Practice for Tags for Identifying Languages
 
