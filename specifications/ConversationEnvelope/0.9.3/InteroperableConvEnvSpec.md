@@ -135,8 +135,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
           },
     
           "sender": {
-              "from": "https://example.com/message-from",
-              "reply-to": "https://example.com/reply-message-to"
+              "from": "https://example.com/message-from"
           },
     
           "events": [
@@ -222,8 +221,7 @@ As shown in figure 5, the conversation section contains just one piece of mandat
       "ovon": {
         …        
         "conversation": { 
-          "id": "jk31050879662407560061859425913208"
-
+          "id": "jk31050879662407560061859425913208",
 
           "persistentState": {
             "uniqueKey1": { .. object .. },
@@ -287,11 +285,11 @@ Figure 7 shows the mandatory elements in the sender object.  The from object is 
 
 Figure 8 shows the structure of the _events_ object.  This should be an array of one or more objects which we will call an event object. 
 
-Each event object must have an _eventType_, which is a string.  Two other parameters may be present depending on the eventType. The _parameters_ object is a dictionary of parameter objects with standard key names specific to the event-type.  Some eventTypes support a 'bare' mode without any parameters. 
+Each event object must have an _eventType_, which is a string.  Other parameters may be present depending on the eventType. The _parameters_ object is a dictionary of parameter objects with standard key names specific to the event-type.  Some eventTypes support a 'bare' mode without any parameters. 
 
-The _to_ parameter is a valid URL of the assistant that the message is intended for.  If the parameter is not present then is can be assumed that the event is intended for all recipients of the envelope.  When  
+The _to_ parameter is a valid URL of the assistant that the message is intended for.  If the parameter is not present then is can be assumed that the event is intended for all recipients of the envelope.
 
-The _private_ boolean parameter indicates that the event is only intended for the _to_ agent and should not be copied to any other agents in a multi-participant conversation. By default it is assumed to be _false_ i.e. any message intented for another recipient can be copied to other participants in the conversation for context. 
+The _private_ boolean parameter indicates that the event is only intended for the _to_ agent and should not be copied to any other agents in a multi-participant conversation. If it is not defined it is assumed to be _false_ i.e. any message intented for another recipient can be copied to other participants in the conversation for context. 
 
 #### 1.9 Event-Types
 
@@ -379,14 +377,14 @@ The _text_ feature is **mandatory** in all _utterance_ dialog events.
               "dialogEvent": {
                 "speakerId": "agent08kkmy6gt",
                 "span": { "start-time": "2023-06-19 03:09:07+00:00" },
+                "context" : "The user has a history of serious depression and is seeking information about the side effects of different drug types.",
                 "features": {
                   "text": {
                     "mimeType": "text/plain",
                     "tokens": [ { "value": "explain the side effects of citalopram in less than 200 words" } ]
                   }
                 }
-              },
-              "context": "The user has a history of serious depression and is seeking information about the side effects of different drug types."
+              }
             }
           },
           ..
@@ -402,7 +400,7 @@ _whisper_ events are sent whenever an assistant wants to send a natural language
 
 This event contains just one mandatory parameter with the key-name _dialogEvent_.   The _dialogEvent_ can contain any linguistic information but it expected to contain a brief utterance or instruction to the recipient as to what is expected of them at this point in the dialog. For example, in the simplest use-case the _dialogEvent_ may repeat an utterance given by the user in order to delegate the servicing of this request to a newly invited agent. This parameter can contain any valid dialog event objects as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay).   
 
-The _context_ parameter is optional and is plain text.  This field should contain a natural language description of the context of the request at this point in the dialog. It should not be used to communicate instructions from one agent to another agent.\
+The _context_ parameter is an optional part of the _dialogEvent_ and is a plain text.  This field should contain a natural language description of the context of the request at this point in the dialog. It should not be used to communicate instructions from one agent to another agent.\
 
 ##### 1.11.1 Whisper Text Feature
 
@@ -919,7 +917,7 @@ This section documents some of the key design decisions that were made by the te
 |Host Browsers and User Proxies|_Question:_ Is the host browser a user proxy or does it have unique responsibilities for control?</br>_Answer:_ The host browser is a close coupling of a user proxy and a conversation floor manager.  It is anticipated that user proxies and floor managers can be implemented separately and communicate using dialog envelopes.  This has not been fully proven yet and there are likely to be additional control structures needed to fully support the separation.  We anticipate that early adoption of this standard will require a unified host browser.
 |responseCodes|_Question:_ Are responseCodes optional or mandatory</br>_Answer:_ It was agreed that this section is optional in the envelope.|
 |location of schemas|_Question:_ Where should we publish the schema?</br>_Answer:_ Let's use https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas, but add a new subfolder for each version (e.g. "0.9.2" for the current schemas).
-|replyTo |_Question_: Should replyTo be optional, mandatory (or removed)?</br>_Answer:_ The replyTo element appears to have become redundant and was retired out of the specification in version 9.9.2.  
+|reply_to |_Question_: Should reply_to be optional, mandatory (or removed)?</br>_Answer:_ The reply_to element appears to have become redundant and was retired out of the specification in version 9.9.2.  
 |Returning Control|_Question_:Have we fully addressed what happens on handing back control? Need to discuss control on 'bye' and 'invite'.</br>_Answer:_ Minimal behaviors for 'bye' and 'invite' are defined in this specification with the introduction of a 'focal agent'.  Subsequent incarnations of this specification are likely to formalize these further in order to support multi-participant conversations.
 |How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
 |Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
@@ -936,5 +934,5 @@ This section documents some of the key design decisions that were made by the te
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed replyTo</br>|  
+|0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|UNPUBLISHED|- Added private to event objects</br>- Added context parameter to whisper</br>|
