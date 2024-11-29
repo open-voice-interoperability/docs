@@ -131,7 +131,7 @@ The primary key of this data model is the _serviceEndpoint_ which should be a un
 |`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"Buerokratt"|Mandatory|
 |`department`|string|The area of the organization's function that this agent reports to or is addressed by this agent's expertise.  This will be searchable and vocalizable.   |"Passport Office"|Optional|
 |`role`|string|The 'job title' or 'role' of the assistant.  This will be how the agent would describe its role in the organization or its relationship to its users.  This will be searchable and vocalizable.|"Immigration Specialist"|Optional|
-|`synopsis`|string|A sentence signposting the who the assistant is and their area of expertise.  This is a natural language synopsis of the identity of the agent that also signposts their broad capabilities.  This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. |"Immigration specialist as part of the Buerokratt system."|Mandatory|
+|`synopsis`|string|A sentence signposting who the assistant is and their area of expertise.  This is a natural language synopsis of the identity of the agent that also signposts their broad capabilities.  This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. |"Immigration specialist as part of the Buerokratt system."|Mandatory|
 
 #### 1.7 The `capabilities` object
 
