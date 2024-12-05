@@ -1,14 +1,14 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Interoperable Conversation Envelope Specification Version 0.9.3
+# Interoperable Conversation Envelope Specification Version 0.9.4
 
 The Open Voice Network\
 Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-26 November 2024 \
-Draft Version 0.9.3
-Status: Published
+((Release Date)) \
+Draft Version 0.9.4
+Status: Under Development
 
 *_Editor-in-Chief: David Attwater_*\
 *_Contributors: Emmett Coin,  Deborah Dahl,  Jim Larson, Allan Wylie,  Rainer Türner and Diego Gosmar_*
@@ -826,6 +826,128 @@ Note that there is no requirement in the OVON framework for an assistant to be e
 
 The recommending agent is free to use any mechanism it wants to generate the _score_.   
 
+### 1.19 requestFloor Event
+
+    {
+      ovon ": {
+        schema ": {
+          version ":"0.9.2"
+        },
+        conversation ": {
+          id ":"someUniqueIdForTheConversation"
+        },
+        sender ": {
+        "from ":"https://agentRequestingFloor.com"
+        } ,
+        "events ": [
+          {
+            "to":"https://some_Convener.com",
+            "eventType":""requestFloor",
+            "parameters": {
+              "request_reason":"interjection "
+            }
+          },
+          {
+            "to ":"https :/ some_Convener.com ",
+            "eventType ":"whisper",
+            "parameters ": {
+              "dialogEvent ": {
+                "speakerId ": "agentRequestingFloorID ",
+                "span ": { "startTime ": "2024 -08 -31 T10 :05:00 Z"} ,
+                "features ": {
+                  "text ": {
+                    "mimeType ": "text / plain ",
+                    "tokens ": [
+                      { "value ": "I would like to add that blah blah blah ."}
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+
+### 1.20 grantFloor Event
+
+    {
+      ovon ": {
+        schema ": {
+          version ":"0.9.2"
+        },
+        conversation ": {
+          id ":"someUniqueIdForTheConversation"
+        },
+        sender ": {
+          "from ":" https://some_Convener.com"
+        } ,
+        "events ": [
+          {
+            "to":"https://agentRequestingFloor.com",
+            "eventType":""grantFloor",
+            "parameters ": {
+              "duration_ms ": 60000
+              XX "context ": {
+              XX  "previous_speaker_id":"https://previousAgent.com" ,
+              XX  "topic":"AI Multi - Agent Interoperability"
+              XX}
+            }
+          }
+        ]
+      }
+    }
+
+### 1.21 revokeFloor Event
+
+    {
+      ovon ": {
+        schema ": {
+          version ":"0.9.2"
+        },
+        conversation ": {
+          id ":"someUniqueIdForTheConversation"
+        },
+        sender ": {
+          "from ":" https://some_Convener.com"
+        } ,
+        "events ": [
+          {
+            "to":"https://agentRequestingFloor.com",
+            "eventType":""revokeFloor",
+            "parameters ": {
+              "reason" : "timed out"
+            }
+          }
+        ]
+      }
+    }
+
+### 1.22 uninvite Event
+
+    {
+      ovon ": {
+        schema ": {
+          version ":"0.9.2"
+        },
+        conversation ": {
+          id ":"someUniqueIdForTheConversation"
+        },
+        sender ": {
+          "from ":" https://some_Convener.com"
+        } ,
+        "events ": [
+          {
+            "to":"https://agentInConversation.com",
+            "eventType":""uninvite",
+            "parameters ": {
+              "reason" : "no authorized to participate"
+            }
+          }
+        ]
+      }
+    }
+
 ## Chapter 2. Minimal Behaviors
 
 #### 2.1 Minimal Assistant Behaviors
@@ -936,3 +1058,4 @@ This section documents some of the key design decisions that were made by the te
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
+|0.9.4|2024.11.26| UNDER DEVELOPMENT |

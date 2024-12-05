@@ -44,12 +44,10 @@ This document specifies the object format for the Open Voice Interoperability In
 #### 0.2 Assistant Manifest Purpose
 The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceEndpoint.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used, for example, by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard, it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
 
-The Assistant Manifest is intended to be used as a component of other specifications; it is not a stand-alone document.
-
 #### 0.3 Approach and Potential Uses
 The Assistant Manifest intentionally avoids the use of any domain-specific schemas or ontologies.  This follows the philosophy of the Open Voice Interoperability Initiative regarding a dependence on natural language to give the loosest possible linkage between components.
 
-Target uses for this manifest are as follows:
+The Assistant Manifest is a standardized data structure that intended to be used as a component of other specifications; it is not a stand-alone document.  Having said that, target uses for this manifest are as follows:
 
 - Enable discovery agents to compile static indexes for rapid searching of a large number of agents.
 - Enable discovery agents to use language model technology to rank agents for recommendation without asking specific questions of the target agents
@@ -131,7 +129,7 @@ The primary key of this data model is the _serviceEndpoint_ which should be a un
 |`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"Buerokratt"|Mandatory|
 |`department`|string|The area of the organization's function that this agent reports to or is addressed by this agent's expertise.  This will be searchable and vocalizable.   |"Passport Office"|Optional|
 |`role`|string|The 'job title' or 'role' of the assistant.  This will be how the agent would describe its role in the organization or its relationship to its users.  This will be searchable and vocalizable.|"Immigration Specialist"|Optional|
-|`synopsis`|string|A sentence signposting who the assistant is and their area of expertise.  This is a natural language synopsis of the identity of the agent that also signposts their broad capabilities.  This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. |"Immigration specialist as part of the Buerokratt system."|Mandatory|
+|`synopsis`|string|A sentence summarizing who the assistant is and their area of expertise. This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. This is a natural language synopsis of the contents of the whole manifest and should not contain new information that is not present in the specific fields of the manifest.|"Immigration specialist as part of the Buerokratt system."|Mandatory|
 
 #### 1.7 The `capabilities` object
 
