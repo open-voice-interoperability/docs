@@ -157,11 +157,16 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
           },
 
           "conversation": {
-              "id": "31050879662407560061859425913208"
+              "id": "31050879662407560061859425913208",
+              "conversants": [
+                  {manifest for speaker 1}
+                  ...
+                  {manifest for speaker N}
+              ]
           },
     
           "sender": {
-              "url": "https://example.com/message-from"
+            "url": "https://example.com/message-from"
           },
     
           "events": [
@@ -199,10 +204,10 @@ Figure 2 shows an example of a conversation envelope.  The envelope is wrapped i
 
 * schema - the version of the conversation envelope and a schema to validate it against
 * conversation - persistent information related to the current dialog
-* sender - details of the sender
+* sender - details of the sender of the envelope
 * events - a list of OVON 'events'
 
-The responseCode section is optional.  All other sections are mandatory.
+All sections are mandatory.
 
 #### 1.5 Schema Object
 
@@ -258,7 +263,20 @@ As shown in figure 5, the conversation section contains just one piece of mandat
           "persistentState": {
             "uniqueKey1": { .. object .. },
             "uniqueKey2": { .. object .. } 
-          }
+          },
+
+          "conversants" :[
+              {
+                  "identification": {
+                      "serviceEndpoint": "https://acmeConvenerAssistant.com",
+                      "speakerUri" : "tag:acmeConvenerAssistant.com,2025:0021",
+                      ...
+                  },
+                  "capabilities": {
+                      ...
+                  }
+              }
+          ]
         },
         … 
       }
@@ -268,21 +286,29 @@ As shown in figure 5, the conversation section contains just one piece of mandat
 
 Figure 6 shows other additional elements in the conversation object. The _persistentState_ is optional and consists of key-value pairs where the values can be any arbitrary JSON object.  The purpose of this is to enable agents to persist information that is important to maintaining internal state in the conversation.  Any message sender can add a new unique key-value pair.  All message handlers should persist the data in this section when replying to a message.  Agents are encouraged to remove key-value pairs from the message that are specific to them when sending a 'bye' event.    There are currently no restrictions currently placed on the content of persistent objects.   Privacy and security issues apply here. It is suggested that the data in these sections is encrypted but this is not mandatory.  Consideration should also be given to the size of any objects in this section as this might affect the downstream performance of the remaining conversation.
 
+The _conversants_ section is optional and if present should contain a list of all the conversants in the conversation and be persisted by participants in the conversation.  Each conversant is represented by a partial or complete copy of their manifest as defined in [4].  Each conversant object should contain at least the following keys:
+ 
+- `identification.serviceEndpoint`
+- `identificatoin.speakerUri`
+
+All other elements are optional but if present they should follow the naming and structure defined in [4].
+
 #### 1.7 Sender Object
 
     {
       "ovon": {
         …        
         "sender": {
-          "url": "https://example.com/message-from"
+            "speakerUri" : "tag:acmeConvenerAssistant.com,2025:0021",
+            "url": "https://acmeConvenerAssistant.com",
         },
         … 
       }
     }
 
-##### Figure 7. Mandatory elements of the _sender_ object
+##### Figure 7. Elements of the _sender_ object. 
 
-Figure 7 shows the mandatory elements in the sender object.  The from object is a string and should be a valid URI.  
+!! Figure 7 shows the elements in the sender object.  _speakerUri_ is mandatory. The _serviceEndpoint_ is optional but it is good practice to include it if there is no _conversant_section or the protocol being used to transport the envelopes does not carry source and destination address information.   
 
 #### 1.8 Events Object
 
@@ -292,16 +318,16 @@ Figure 7 shows the mandatory elements in the sender object.  The from object is 
         "events": [
           {
             "to" : {
+                "SpeakerUri" : "Speaker Uri of intended recipient A",
                 "url" : "URL of intended recipient A",
-                "SpeakerUri" : "Speaker Uri of intended recipient A"
+                "private" : false
             },
             "eventType": "event type A",
             "parameters": {
               "parameter 1" : { parameter 1 values },  
               … 
               "parameter n" : { parameter n values } 
-            },
-            "private" : false
+            }
           },
           {
             "to" : {
@@ -325,25 +351,28 @@ Figure 8 shows the structure of the _events_ object.  This should be an array of
 
 Each event object must have an _eventType_, which is a string.  Other parameters may be present depending on the eventType. The _parameters_ object is a dictionary of parameter objects with standard key names specific to the event-type.  Some eventTypes support a 'bare' mode without any parameters. 
 
-The _to_ section contains two parameters. The first is _url_ which is a valid URL of the assistant that the message is intended for. The second is _SpeakerUri' which is the unique SpeakerUri of the target recipient.  The _to_ section is optional. If it is present then it must contain both a _url_ and a _SpeakerUri_.  If the _to_ section is not present then is can be assumed that the event is intended for all recipients of the envelope.
+The _to_ section contains two parameters. The first is a _SpeakerUri' which is the unique SpeakerUri of the target recipient.  The second is the _url_ which is a valid URL of the assistant that the message is intended for.   The _to_ section is optional. If it is present then it must contain a _url_ or a _SpeakerUri_ or both.  If the _to_ section is not present then is can be assumed that the event is intended for all recipients of the envelope.  
 
-The _private_ boolean parameter indicates that the event is only intended for the _to_ agent and should not be copied to any other agents in a multi-participant conversation. If it is not defined it is assumed to be _false_ i.e. any message intented for another recipient can be copied to other participants in the conversation for context. If there is not a _to_section then the _private_ parameter should be ignored.
+The _to_ section also contains a _private_ boolean parameter which, when set to true, indicates that the event is only intended for the _to_ agent alone.  If true then the event should not be copied by any intermediary agent to any other agents in a multi-participant conversation.  If it is not defined it is assumed to be _false_ i.e. any message intented for another recipient can be copied to other participants in the conversation for context. If there is not a _to_section then the event is by default assumed to be public.
 
 #### 1.9 Event-Types
 
 The following are valid values for _eventTypes_.
 
 * utterance events - spoken or written natural language
-  * _utterance_  - An utterance spoken in the conversation itself by a user or agent
-  * _whisper_ - An out-of-band linguistic instruction from one agent to another
+  * _utterance_  - An utterance spoken in the conversation itself by a user or agent.
+  * _whisper_ - An out-of-band linguistic instruction from one agent to another.
 
 * agent control events  - structure control messages
-  * _invite_ - A user-agent or assistant is invited to join the conversation.
-  * _bye_ -  A user-agent or assistant is leaving the conversation
-  * _requestManifest_ - Ask another agent for information about their identity and capabilties.
-  * _publishManifest_ - Publish information about an agents' identity and capabilties.
+  * _invite_ - A conversant is invited to join the conversation.
+  * _uninvite_ - A conversant is removed from the conversation.
+  * _bye_ -  A conversant is leaving the conversation
   * _findAssistant_ - Ask an agent to recommend themself or another agent for a task.
   * _proposeAssistant_ - Return a list of recommended agents for a task.
+  * _requestFloor_ - Used by a conversant to request the floor.
+  * _grantFloor_ - Used by a convener agent to offer the floor to another conversant. 
+  * _revokeFloor_ - Used by a convener agent to revoke the floor from another conversant. 
+  * _yieldFloor_ - Used by a conversant to yeild the floor to another conversant.
 
 The following sections define these event objects in more detail.
 
@@ -494,7 +523,6 @@ There are no limitations on the features that are added to a dialog event.  This
           "id": "someUniqueIdCreatedByTheFirstParticipant"
         },
         "sender": {
-            "url": "https://botsite.botThatOfferedTheInvite.com",
             "SpeakerUri": "tag:botThatOfferedTheInvite.com,2025:4567"
         },
         "events": [
@@ -511,12 +539,12 @@ There are no limitations on the features that are added to a dialog event.  This
 
 ##### Figure 12. Mandatory elements of the _invite_ object shown as a 'bare invite'
 
-Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  The optional _to_ object is used to specify the URL of the agent that is being invited.  
+Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  The  _to_ object is used to specify the identity of the agent that is being invited.  
 
-#! The optional _SpeakerUri_ in the _to_ object should only be used if the inviting agent knows the specific SpeakerUri of the agent that it wants to invite- i.e. a specific agent identity operating under that URL.  IN many use cases the invite will exclude the _SpeakerUri_.  If a _SpeakerUri_ is sent then there is no obligation that the agent that responds to the invite adopts that SpeakerUri.
+!! The _to_ object is mandatory for an _invite_event and must contain either a _url_ or a speakerUri.  The _SpeakerUri_ in the _to_ object can be used if the inviting agent knows the specific SpeakerUri of the agent that it wants to invite- i.e. a specific agent identity.  In many use cases the invite will exclude the _SpeakerUri_.  If a _SpeakerUri_ is sent then there is no obligation that the agent that responds to the invite adopts that SpeakerUri.
 
- If the _to_ event is absent, then all recipients of the envelope should consider themselves invited to the conversation.\
-\
+If the _to_ event is absent, then all recipients of the envelope should consider themselves invited to the conversation.
+
 It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 12.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
 
     {
@@ -553,13 +581,6 @@ It is possible to invite an agent to a conversation without giving it any other 
               "url" : "https://siteof.botThatIsBeingInvited.com",
               "SpeakerUri" : "tag:botThatIsBeingInvited.com,2025:1234"
             }
-          },
-          {
-            "eventType": "whisper",
-            "to" : {
-              "url" : "https://siteof.botThatIsBeingInvited.com",
-              "SpeakerUri" : "tag:botThatIsBeingInvited.com,2025:1234"
-            },
             "parameters": {
               "dialogEvent": {
                 "SpeakerUri": "tag:botThatOfferedTheInvite.com,2025:4567",
@@ -577,9 +598,11 @@ It is possible to invite an agent to a conversation without giving it any other 
       }
     }
 
-##### Figure 13. A typical dialog envelope for an invite, including a voiced transfer prompt.
+##### Figure 13. A typical dialog envelope for an invite, including a voiced transfer prompt and a dialogEvent specifying the purpose of the invite.
 
-Invite events will typically be accompanied by additional events.  Figure 13 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a whisper which tells the new bot what it is that is being asked of it.
+!!Note the whisper event has been replaced by a dialogEvent parameter.
+
+Invite events may be accompanied by additional events and contain optional parameters.  Figure 13 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a dialogEvent which tells the new bot the purpose of the request.
 
 ### 1.14 Bye Event
 
@@ -592,7 +615,6 @@ Invite events will typically be accompanied by additional events.  Figure 13 sho
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "url": "https://siteof.botThatOfferedTheBye.com",
           "speakerUri" : "tag:botThatOfferedTheBye.com/7890"
         },
         "events": [
@@ -711,15 +733,7 @@ The returned manifest list will be expected to only contain manifests from the t
               "url" : "https://dev.buerokratt.ee/ovon/conversation"
             },
             "parameters" : {
-              "recommendScope" : "internal"
-            }
-          },
-          {
-            "to": {
-              "url" : "https://dev.buerokratt.ee/ovon/conversation"
-            },
-            "eventType": "whisper",
-            "parameters": {
+              "recommendScope" : "internal",
               "dialogEvent": {
                 "SpeakerUri": "tag:someuser.com,2025:4567",
                 "span": { "startTime": "2023-06-14 02:06:07+00:00" },
@@ -758,15 +772,7 @@ Figure 17 shows the same bot as Figure 16 being asked if it supports a specific 
               "url": "https://myFavoriteDiscoveryBot.com"
             },
             "parameters" : {
-              "recommendScope" : "external"
-            }
-          },
-          {
-            "to": {
-              "url": "https://myFavoriteDiscoveryBot.com"
-            },
-            "eventType": "whisper",
-            "parameters": {
+              "recommendScope" : "external",
               "dialogEvent": {
                 "SpeakerUri": "speaker0819",
                 "span": { "startTime": "2023-06-14 02:06:07+00:00" },
@@ -783,7 +789,7 @@ Figure 17 shows the same bot as Figure 16 being asked if it supports a specific 
       }
     }
 
-##### Figure 18. A typical dialog envelope for a findAssistant event
+##### Figure 18. Use case #3. Asking a site or assistant to recommend one or more assistants that can help with a certain task. 
 
 Finally, Figure 18 shows use case #3 where a discovery agent is being asked to recommend some other agent to service a specific request.  The returned _proposeAssitant_ event should contain the manifests of any recommended assistants for the task.  
 
@@ -791,7 +797,7 @@ Assitants can recommend themselves or other agents for a task.  In this example 
 
 The optional _to_ object can be used to indicate which agent is the intended recipient of the event.  If absent then all recipients should consider the request directed at them, for example multiple assistants could be simulataneously asked to make recommendations.
 
-There is no requirement for a _SpeakerUri_ on a _findManifest_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.
+!! As with the invite event, there is no requirement for a _SpeakerUri_ on a _findManifest_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.
 
 See section 1.16 for more information on _proposeAssistant_ event behaviors.
 
@@ -806,7 +812,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "url": "https://myFavoriteDiscoveryBot.com"
+          "SpeakerUri": tag://myFavoriteDiscoveryBot.com,2025:0001"
         },
         "events": [
           { 
@@ -820,6 +826,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                   {
                     "identification": {
                       "serviceEndpoint": "https://findMyAIAssistant.com",
+                      "speakerUri" : "tag:findMyAIAssistant.com,2025:xykz",
                       "synopsis" : "A bot for those who love reading."
                       ...
                     },
@@ -830,7 +837,8 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                   },
                   {
                     "identification": {
-                      "url": "https://nationalLibraryArchive.org",
+                      "serviceEndpoint": "https://nationalLibraryArchive.org",
+                      "speakerUri" : "tag:nationalLibraryArchive.org,2025:0564",
                       "synopsis" : "A government catalog of every book published in the USA."
                       ...
                     },
@@ -842,6 +850,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                   {
                     "identification": {
                       "url": "https://booksRUs.com",
+                      "speakerUri" : "tag:booksRUs.com,2025:jkl12",
                       "synopsis" : "Browse, sample and buy any book you desire."
                       ...
                     },
@@ -855,6 +864,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                   {
                     "identification": {
                       "serviceEndpoint": "https://findMyAIAssistant.com",
+                      "speakerUri" : "tag:findMyAIAssistant.com,2025:searchInstance1567",
                       "synopsis" : "Finds assistants anywhere in the world"
                       ...
                     },
@@ -886,24 +896,18 @@ In order to support this the _proposeAssistant_ event has two mandatory paramete
 
 It is the responsibility of the receiver of this event to choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _whisper_ event.
 
-If an agent receives an _utterance_ event that it does not feel capable of servicing, it can also return a _proposeAssistant_ event.  
+If an agent receives any other event that it does not feel capable of servicing, it can also return a _proposeAssistant_ event.  
 
 The optional _to_ can be used to indicate a specific agent to which the proposal is addressed.  Otherwise any recipient should consider the proposal addressed to themselves.
 
 #! There is no requirement for a _SpeakerUri_ on a _proposeAssistant_ event.  If one is provided then it is good practice for the receiving agent to pass this SpeakerUri along in any subsequent _invite_ event to this agent.
 
-Each list item in the recommendation is the manifest format as specified in [4] with two notable exceptions:
-
-1. It is permissible to return only a subset of the manifest. The only mandatory manifest items is:
-  - _identification_/_serviceEndpoint_ - The service endpoint of the assistant.  
-  - _identification_/_synopsis_ - A brief synopsis of the capabilities of this endpoint.  
-
-2. The manifest object can contain one additional optional key that is not present in the manifest specification:
+Each list item in the recommendation should be in the manifest format as specified in [4].  In addition to the keys specified in that document, the manifest object can contain one additional optional key that is not present in the manifest specification:
   - _score_ - A recommendation score between 0 and 100.  
 
 Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversation and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssistant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to inviting it to do so. 
 
-Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be sent a _findAssistant_ event with the same _whisper_.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
+Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be sent a _findAssistant_ event with the same _dialogEvent_ parameter.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
 
 Note that there is no requirement in the OVON framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.  There is also nothing to stop an agent recommending servicing agents and discovery agents in its response.
 
@@ -920,34 +924,24 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
           id ":"someUniqueIdForTheConversation"
         },
         sender ": {
-          "from" :"https://agentRequestingFloor.com"
-        } ,
+          "speakerUri" : "tag:agentRequestingFloor.com,2025:1234"
+        },
         "events ": [
           {
-            "to": {
-              "url": "https://some_Convener.com",
-              "SpeakerUri":"convenerSpeakerID"
-            },
             "eventType":""requestFloor",
-            "parameters": {
-              "request_reason":"interjection "
-            }
-          },
-          {
             "to": {
-              "url": "https://some_Convener.com",
-              "SpeakerUri":"convenerSpeakerID"
+              "SpeakerUri":"tag:some_Convener.com,2025:"
             },
-            "eventType ":"whisper",
-            "parameters ": {
+            "parameters": {
+              "request_reason":"interjection ",
               "dialogEvent ": {
-                "SpeakerUri ": "agentRequestingFloorID ",
+                "SpeakerUri ": "tag:agentRequestingFloor.com,2025:1234",
                 "span ": { "startTime ": "2024 -08 -31 T10 :05:00 Z"} ,
                 "features ": {
                   "text ": {
                     "mimeType ": "text / plain ",
                     "tokens ": [
-                      { "value ": "I would like to add that blah blah blah ."}
+                      { "value ": "I have background information that could be useful at this point."}
                     ]
                   }
                 }
@@ -969,22 +963,14 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
           id ":"someUniqueIdForTheConversation"
         },
         sender ": {
-          "from ":" https://some_Convener.com"
-        } ,
+          "SpeakerUri":"tag:some_Convener.com,2025:"
+        },
         "events ": [
           {
+            "eventType":""grantFloor"
             "to": {
-              "url": "https://agent_being_granted_the_floor.com",
-              "SpeakerUri":"agent_being_granted_the_floor_speakerID"
+              "SpeakerUri":"tag:agentBeingGrantedTheFloor.com,2025:1234"
             },
-            "eventType":""grantFloor",
-            "parameters ": {
-              "duration_ms ": 60000
-              XX "context ": {
-              XX  "previous_speaker_id":"https://previousAgent.com" ,
-              XX  "topic":"AI Multi - Agent Interoperability"
-              XX}
-            }
           }
         ]
       }
@@ -1001,14 +987,13 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
           id ":"someUniqueIdForTheConversation"
         },
         sender ": {
-          "from ":" https://some_Convener.com"
-        } ,
+          "SpeakerUri":"tag:some_Convener.com,2025:"
+        },
         "events ": [
           {
             "eventType":""revokeFloor",
             "to": {
-              "url": "https://agent_being_revoked.com",
-              "SpeakerUri":"agent_being_revoked_speakerID"
+              "SpeakerUri":"tag:agentBeingRevoked,2025:1234"
             },
             "parameters ": {
               "reason" : "complete"
@@ -1071,17 +1056,16 @@ The following reasons are currently supported:
           id ":"someUniqueIdForTheConversation"
         },
         sender ": {
-          "from ":" https://some_Convener.com"
-        } ,
+          "SpeakerUri":"tag:some_Convener.com,2025:"
+        },
         "events ": [
           {
-            "to" : {
-              "url": "https://agentInConversation.com",
-              "SpeakerUri" : "agentInConversation_SpeakerUri"
-            },
             "eventType":""uninvite",
+            "to" : {
+              "SpeakerUri" : "tag:agentBeingUnivited,2025:1234"
+            },
             "parameters ": {
-              "reason" : "no authorized to participate"
+              "reason" : "not authorized to participate"
             }
           }
         ]
@@ -1101,12 +1085,11 @@ OVON-compliant dialog assistants must support all event types in order to be con
 * agent control events  - structure control messages
   * _invite_ - Say 'hello' and respond to any whisper utterances. 
   * _bye_ - Ignore this event from another assistant.
-  * _requestManifest_ - Return a minimal manifest that meets the manifest schema.
-  * _publishManifest_ - Ignore this event if you did not ask for a manifest.
   * _findAssistant_ - Return your own URL as a candidate servicingManifest in a _proposeAssistant_ event.
   * _proposeAssistant_ - Ignore this event if you did not ask for a recommendation.
 
 #### 2.2 Minimal Conversation Floor Manager Behaviors
+
 OVON-compliant conversation floor managers (including host browsers) agents must support all types in order to be considered fully compliant.\
 \
 The minimal behavior expected from an OVON-compliant conversation floor manager in response to these event types is as follows:
@@ -1190,31 +1173,12 @@ This section documents some of the key design decisions that were made by the te
 |'to' destinations|_Question_: There is an urgent need to agree how to express 'to' and discuss exactly how the addressing of events is managed.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: We have added an optional 'to' parameter to all events.  This helps the recipient decide whether they want to ignore it or not.|
 |responseCode|_Question_: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: We decided to deprecate the responseCode and introduce an 'acknowledge' event instead. |
 |discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberately left this out for now, but if we need it, we will consider additional flags on the manifest in some form.|
-|SpeakerUri uniqueness|_Question_:Who allocates unique SpeakerIDs?  Is it the 'floor' (or client) or the agent server?|_Answer_: We considered whether agents should have a universal unique SpeakerId. If it did then it would make sense to lodge this in the manifest. This however would eventually require a register to guarnatee uniqueness globally. The alternative is to have the inviting agent allocate a SpeakerUri for the duration of a conversation. We decided on the latter.  We also added a "toSpeakerId" to every event as it is becoming clear that the "url" alone is not sufficient to carry unique identity in a dialog.|
-
-**Unresolved Issues**
-
-|Issue Topic|Issue/Decision|
-|-|-|
-|private flag in to|- should the private flag be inside the _to_ section because it has no meaning if there is no _to_section.|
-|SpeakerUris in invites|- we need to talk about SpeakerUris in invites.  There is clear evidence that we decided that SpeakerUri woudl be allocated in invites so the reversal of this decision means that when we invite a BOT we may need to know its SpeakerUri as well as its Url.  This might mean that we always have to get a manifest before we invite an agetn. Need to discuss this.|
-|SpeakerUri in from| Do we need a SpeakerUri on the _from_ parameter as well?  I supect that we do.|
+|SpeakerUri uniqueness|_Question_:Who allocates unique SpeakerIDs?  Is it the 'floor' (or client) or the agent server?<br>_Answer_: Agents should have a universal unique SpeakerId. This will be stored in the manifest.  To guarantee uniqueness we propose using the tag: scheme or reserving something like an 'ovon' urn namespace.|
+|private flag in _to_|_Question:_ Should the private flag be inside the _to_ section because it has no meaning if there is no _to_section.<br>_Answer;_ Yes|
+|SpeakerUris in invites|_Question:_Should we allow/expect speakerUris in invites? <br>_Answer:_ These are optionally allowed. If present it will mean that the inviting agent has either received the manifest or has spoken with the agent previously. The receiving agent can ignore this parameter, especially if it not valid.|
+|SpeakerUri in _from_|_Question:_ Do we need a SpeakerUri on the _from_ parameter as well?<br>_Answer:_Yes|
 
 
-**To Do**
-
-- keeping url in 'to' event, and manifest.
-- removing need for url to uniquely identify an agent
-- change SpeakerUri to be speakerUri (in conversation envelope, manifest and dialog event spec)
-- add speakerUri into manifest spec.  
-- refactor requestManifest into a unified findAgent
-  - add a flag in findAgent event to specify
-    - recommendInternal: true
-    - recommendExternal: true
-    - "recommendScope": "internal", "external", "all"  (default 'all')  
-  - return full array of manfests in recommendAgent not just the synopsis
-  - move private into 'to' of the event
-  - add 'speakerUri' into the 'sender'
 
 ### Chapter 7. Document Change Log
 
@@ -1224,4 +1188,9 @@ This section documents some of the key design decisions that were made by the te
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD| -Make "to" a dictionary containing "url" and "SpeakerUri" in all events</br> -Added section on identity and SpeakerUris</br>- Add 'floorYield" to mirror "floorRevoke"|
+|0.9.4|TBD|- Changed SpeakerUri to be speakerUri <br>- Make "to" a dictionary containing "url" and "SpeakerUri" in all events</br> - Added section on identity and SpeakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added a new section on agent identity<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>
+|
+## To Do
+
+- Add speakerUri into manifest spec.  
+- Change speakerId to speakerUri in dialogEvent spec.  
