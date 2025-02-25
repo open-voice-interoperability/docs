@@ -159,9 +159,9 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
           "conversation": {
               "id": "31050879662407560061859425913208",
               "conversants": [
-                  {manifest for speaker 1}
+                  {partial manifest speaker 1}
                   ...
-                  {manifest for speaker N}
+                  {partial manifest speaker N}
               ]
           },
     
@@ -260,11 +260,6 @@ As shown in figure 5, the conversation section contains just one piece of mandat
         "conversation": { 
           "id": "jk31050879662407560061859425913208",
 
-          "persistentState": {
-            "uniqueKey1": { .. object .. },
-            "uniqueKey2": { .. object .. } 
-          },
-
           "conversants" :[
               {
                   "identification": {
@@ -272,8 +267,9 @@ As shown in figure 5, the conversation section contains just one piece of mandat
                       "speakerUri" : "tag:acmeConvenerAssistant.com,2025:0021",
                       ...
                   },
-                  "capabilities": {
-                      ...
+                  "persistentState": {
+                    "uniqueKey1": { .. object .. },
+                    "uniqueKey2": { .. object .. } 
                   }
               }
           ]
@@ -286,10 +282,11 @@ As shown in figure 5, the conversation section contains just one piece of mandat
 
 Figure 6 shows other additional elements in the conversation object. The _persistentState_ is optional and consists of key-value pairs where the values can be any arbitrary JSON object.  The purpose of this is to enable agents to persist information that is important to maintaining internal state in the conversation.  Any message sender can add a new unique key-value pair.  All message handlers should persist the data in this section when replying to a message.  Agents are encouraged to remove key-value pairs from the message that are specific to them when sending a 'bye' event.    There are currently no restrictions currently placed on the content of persistent objects.   Privacy and security issues apply here. It is suggested that the data in these sections is encrypted but this is not mandatory.  Consideration should also be given to the size of any objects in this section as this might affect the downstream performance of the remaining conversation.
 
-The _conversants_ section is optional and if present should contain a list of all the conversants in the conversation and be persisted by participants in the conversation.  Each conversant is represented by a partial or complete copy of their manifest as defined in [4].  Each conversant object should contain at least the following keys:
- 
+The _conversants_ section is optional and if present should contain a list of all the conversants in the conversation and be persisted by participants in the conversation.  Each conversant is represented by a partial or complete copy of their manifest as defined in [4].  Each conversant object should contain the full identification section from the manifest.  For example:
+
+!!! 
 - `identification.serviceEndpoint`
-- `identificatoin.speakerUri`
+- `identification.speakerUri`
 
 All other elements are optional but if present they should follow the naming and structure defined in [4].
 
@@ -300,7 +297,7 @@ All other elements are optional but if present they should follow the naming and
         …        
         "sender": {
             "speakerUri" : "tag:acmeConvenerAssistant.com,2025:0021",
-            "url": "https://acmeConvenerAssistant.com",
+            "serviceUrl": "https://acmeConvenerAssistant.com",
         },
         … 
       }
@@ -308,7 +305,7 @@ All other elements are optional but if present they should follow the naming and
 
 ##### Figure 7. Elements of the _sender_ object. 
 
-!! Figure 7 shows the elements in the sender object.  _speakerUri_ is mandatory. The _serviceEndpoint_ is optional but it is good practice to include it if there is no _conversant_section or the protocol being used to transport the envelopes does not carry source and destination address information.   
+Figure 7 shows the elements in the sender object.  _speakerUri_ is mandatory. The _serviceUrl_ is optional. It is good practice to include it if there is no _conversant_ section or the protocol being used to transport the envelopes does not carry source and destination address information.   
 
 #### 1.8 Events Object
 
@@ -318,8 +315,8 @@ All other elements are optional but if present they should follow the naming and
         "events": [
           {
             "to" : {
-                "SpeakerUri" : "Speaker Uri of intended recipient A",
-                "url" : "URL of intended recipient A",
+                "speakerUri" : "Speaker Uri of intended recipient A",
+                "serviceUrl" : "URL of intended recipient A",
                 "private" : false
             },
             "eventType": "event type A",
@@ -331,8 +328,8 @@ All other elements are optional but if present they should follow the naming and
           },
           {
             "to" : {
-                "url" : "URL of intended recipient A",
-                "SpeakerUri" : "Speaker Uri of intended recipient A"
+                "serviceUrl" : "URL of intended recipient A",
+                "speakerUri" : "Speaker Uri of intended recipient A"
             },
             "eventType": "event type B",
             "parameters": {
@@ -351,7 +348,7 @@ Figure 8 shows the structure of the _events_ object.  This should be an array of
 
 Each event object must have an _eventType_, which is a string.  Other parameters may be present depending on the eventType. The _parameters_ object is a dictionary of parameter objects with standard key names specific to the event-type.  Some eventTypes support a 'bare' mode without any parameters. 
 
-The _to_ section contains two parameters. The first is a _SpeakerUri' which is the unique SpeakerUri of the target recipient.  The second is the _url_ which is a valid URL of the assistant that the message is intended for.   The _to_ section is optional. If it is present then it must contain a _url_ or a _SpeakerUri_ or both.  If the _to_ section is not present then is can be assumed that the event is intended for all recipients of the envelope.  
+The _to_ section contains two parameters. The first is a _speakerUri_ of the target recipient.  The second is the _serviceUrl_ which is a valid URL of the assistant that the message is intended for.   The _to_ section is optional. If it is present then it must contain a _ServiceUrl_ or a _SpeakerUri_ or both.  If the _to_ section is not present then is can be assumed that the event is intended for all recipients of the envelope.  
 
 The _to_ section also contains a _private_ boolean parameter which, when set to true, indicates that the event is only intended for the _to_ agent alone.  If true then the event should not be copied by any intermediary agent to any other agents in a multi-participant conversation.  If it is not defined it is assumed to be _false_ i.e. any message intented for another recipient can be copied to other participants in the conversation for context. If there is not a _to_section then the event is by default assumed to be public.
 
@@ -384,7 +381,6 @@ The following sections define these event objects in more detail.
         "events": [
           {
             "to": { 
-              "url" : "https://someBotOrPerson.com",
               "SpeakerUri" : "tag:someBotOrPerson.com,2025:0021"
             }
             "eventType": "utterance",
@@ -442,7 +438,6 @@ The _text_ feature is **mandatory** in all _utterance_ dialog events.
         "events": [
           {
             "to": { 
-              "url" : "https://someBotOrPerson.com",
               "SpeakerUri" : "tag:someBotOrPerson.com,2025:0021"
             }
             "eventType": "whisper",
@@ -1177,8 +1172,9 @@ This section documents some of the key design decisions that were made by the te
 |private flag in _to_|_Question:_ Should the private flag be inside the _to_ section because it has no meaning if there is no _to_section.<br>_Answer;_ Yes|
 |SpeakerUris in invites|_Question:_Should we allow/expect speakerUris in invites? <br>_Answer:_ These are optionally allowed. If present it will mean that the inviting agent has either received the manifest or has spoken with the agent previously. The receiving agent can ignore this parameter, especially if it not valid.|
 |SpeakerUri in _from_|_Question:_ Do we need a SpeakerUri on the _from_ parameter as well?<br>_Answer:_Yes|
-
-
+|Size of conversation object|_Question:_ Do we need to worry about the size of the conversation object and should we allow full manifests and unlimited persistentState objects etc.|
+|persistentState|_Question:_ Do we need to keep the persistent state? Should clients modify it directly or should there be a separate event and use the floor to modify it?|
+|should _to_ always be present?|_Question?_:Should we insist on a _to_ in all events and have an explicitly way of indicating 'all'?  Does _to_ on an utterance imply giving the floor to the receiver?|
 
 ### Chapter 7. Document Change Log
 
@@ -1188,9 +1184,13 @@ This section documents some of the key design decisions that were made by the te
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD|- Changed SpeakerUri to be speakerUri <br>- Make "to" a dictionary containing "url" and "SpeakerUri" in all events</br> - Added section on identity and SpeakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added a new section on agent identity<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>
+|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "url" and "SpeakerUri" in all events</br> - Added section on identity and SpeakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>
 |
 ## To Do
 
 - Add speakerUri into manifest spec.  
 - Change speakerId to speakerUri in dialogEvent spec.  
+
+- Limit conversants to identification section only.
+- Move persistent state into the conversant section 
+- rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.
