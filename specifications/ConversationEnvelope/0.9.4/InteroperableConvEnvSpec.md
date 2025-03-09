@@ -851,7 +851,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
               "servicingManifests" : [
                   {
                     "identification": {
-                      "serviceEndpoint": "https://findMyAIAssistant.com",
+                      "serviceUrl": "https://findMyAIAssistant.com",
                       "speakerUri" : "tag:findMyAIAssistant.com,2025:xykz",
                       "synopsis" : "A bot for those who love reading."
                       ...
@@ -863,7 +863,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                   },
                   {
                     "identification": {
-                      "serviceEndpoint": "https://nationalLibraryArchive.org",
+                      "serviceUrl": "https://nationalLibraryArchive.org",
                       "speakerUri" : "tag:nationalLibraryArchive.org,2025:0564",
                       "synopsis" : "A government catalog of every book published in the USA."
                       ...
@@ -889,7 +889,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                 "discoveryManifests": [
                   {
                     "identification": {
-                      "serviceEndpoint": "https://findMyAIAssistant.com",
+                      "serviceUrl": "https://findMyAIAssistant.com",
                       "speakerUri" : "tag:findMyAIAssistant.com,2025:searchInstance1567",
                       "synopsis" : "Finds assistants anywhere in the world"
                       ...
@@ -1244,10 +1244,6 @@ This section documents some of the key design decisions that were made by the te
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
 |0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section <br>
 
-## To Do
-
-- Change speakerId to speakerUri in dialogEvent spec.  
-- add context into the dialogEvent spec.
 
 
 - 
