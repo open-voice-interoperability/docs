@@ -1,0 +1,79 @@
+{
+    "ovon": {
+        "schema": {
+            "version": "0.9.2"      
+        },
+
+        "sender": {
+            "from": "https://example.com/message-from",
+            "replyTo": "https://example.com/reply-message-to"
+        },
+
+        "conversation": {
+            "id": "31050879662407560061859425913208",
+            "persistentState": {
+                "www.cassandra.com:457ns654y" : "49kwu698dkw75hfks943jglsesjrforr94j489f62whdkd948rjfleo29378hgndoir03487543iuhrefiuodf087riu8435huoj43do0e987g0er84u35n34-0-f9-f8jiertoppe9t53"
+            }
+        }, 
+
+        "events": [
+            {
+                "to" : "someBotOrPerson.com",
+                "eventType": "utterance",
+                "parameters": {
+                    "dialogEvent": {
+                        "speakerID": "mh8k907jjj",
+                        "span": {"startTime": "2023-06-14 02:06:12+00:00"},
+                        
+                        "features": {
+                            "text": {
+                                "mimeType": "plain/text",
+                                "lang": "en",
+                                "encoding": "UTF-8",
+                                "tokens": [ { "value": "We have a regular prescription for Citalopram 20 mg on file"  } ]
+                            },
+
+                            "audio": {
+                                "mimeType": "audio/mpeg",
+                                "value-uri" : "https://texttospeech.googleapis.com/v1beta1/text:synthesize?Authorization: Bearer ACCESS_TOKEN { \"input\": {\"text\": \"<speak> <s>We have a regular prescription for Citalopram 20 mg on file </s> </speak>\" }, \"voice\": { \"languageCode\": \"en-US\", \"name\": \"en-US-WaveNet-D\" }, \"audioConfig\": {\"audioEncoding\": \"MP3\"} }"
+                            },
+                    
+                            "redacted-text": {
+                                "mimeType": "plain/text",
+                                "lang": "en",
+                                "encoding": "UTF-8",
+                                "tokens": [ { "value": "We have a regular prescription for $MEDICATION on file"  } ]
+                            },
+                    
+                            "ssml": {
+                                "mimeType": "ssml+xml",
+                                "tokens": [ { "value": "<speak> <s>We have a regular prescription for Citalopram 20 mg on file </s> </speak>" } ]
+                            },
+                            
+                            "custom-semantic":{
+                                "mimeType": "x-custom/semantic",
+                                "tokens": [ { "value": "Confirm Prescription [2]"} ]
+                            },
+                            
+                            "custom-emotion": {
+                                "mimeType": "x-custom/emotion",
+                                "tokens": [ { "value":"ejNeutral"} ]
+                            },
+
+                            "custom-gesture": {
+                                "mimeType": "x-custom/gesture",
+                                "tokens": [ { "value" : ""} ]
+                            } 
+                        },
+
+                        "custom-id": "1",
+                        "custom-mode": "output/voice",
+                        "custom-voice": "candandra",
+                        "custom-originPointType": "",
+                        "custom-asrType": "webkitSpeechRecognition"
+                    }
+                }
+            }
+        ]
+    }
+}

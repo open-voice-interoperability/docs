@@ -1,12 +1,12 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Assistant Manifest Specification Version 0.9.1
+# Assistant Manifest Specification Version 0.9.2
 
 The Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
-26 November 2024 \
-Draft Version 0.9.1
+NOT PUBLISHED YET \
+Draft Version 0.9.2
 
 *_Editor-in-Chief: David Attwater_*\
 *_Contributors: Emmett Coin, Deborah Dahl, Leah Barnes, Allan Wylie and Diego Gosmar_*
@@ -42,7 +42,7 @@ Draft Version 0.9.1
 This document specifies the object format for the Open Voice Interoperability Initiative  - LF AI & Data Foundation (OVON) Assistant Manifest.  
 
 #### 0.2 Assistant Manifest Purpose
-The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceEndpoint.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used, for example, by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard, it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
+The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceUrl.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used, for example, by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard, it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
 
 #### 0.3 Approach and Potential Uses
 The Assistant Manifest intentionally avoids the use of any domain-specific schemas or ontologies.  This follows the philosophy of the Open Voice Interoperability Initiative regarding a dependence on natural language to give the loosest possible linkage between components.
@@ -54,7 +54,7 @@ The Assistant Manifest is a standardized data structure that intended to be used
 - Provide information on request to potential user-agents to assist with their own ranking of candidate agents for a specific task.
 - Provide vocalizable information that allow other agents to know how to address this agent in a conversation (e.g. what name to address the agent by)
 
-One standard that uses this document format is [[3] Interoperable Conversation Envelope Specification Version 0.9.3](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.3/InteroperableConvEnvSpec.md ). That specification defines a number if events types that are designed to help conversational agents discover other agents for certain tasks.  There are events for requesting and publishing manifests, and also events for finding and recommending agents for certain tasks.  These events make use of all or part of the contents of the Assistant Manifest. 
+One standard that uses this document format is [[3] Interoperable Conversation Envelope Specification Version 0.9.4](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.4/InteroperableConvEnvSpec.md ). That specification defines a number if events types that are designed to help conversational agents discover other agents for certain tasks.  There are events for requesting and publishing manifests, and also events for finding and recommending agents for certain tasks.  These events make use of all or part of the contents of the Assistant Manifest. 
 
 ### CHAPTER 1. SPECIFICATION
 #### 1.1 Representation
@@ -71,14 +71,15 @@ Authorization, Authentication, Accounting, and Security specifications are outsi
 
 #### 1.4 Nomenclature
 
-This specification uses `camelCase` (i.e., no spaces with new words capitalized) for all nominal property names, such as `serviceEndpoint` and `supportedLayers`.  
+This specification uses `camelCase` (i.e., no spaces with new words capitalized) for all nominal property names, such as `serviceUrl` and `supportedLayers`.  
 
 #### 1.5 Assistant Manifest Object Structure
 
     {
         "identification":
         {
-            "serviceEndpoint": "https://dev.buerokratt.ee/ovonr/conversation",
+            "speakerUri" : "tag:dev.buerokratt.ee,2025:0001",
+            "serviceUrl": "https://dev.buerokratt.ee/ovonr/conversation",
             "organization": "Government of Estonia",
             "conversationalName": "Buerokratt",
             "department": "Passport Office",
@@ -120,16 +121,17 @@ Figure 1 shows an example of an assistant manifest object.  It has two mandatory
 
 The `identification` object publishes key aspects of the conversational assistant's role and identity.  It should not contain specific information about specific services or capabilities that are offered.  This section allows others to know how the agent refers to itself, the organization that it represents, and its role in serving its users.
 
-The primary key of this data model is the _serviceEndpoint_ which should be a unique identifier of the agent - i.e. it can be thought of as the *identity* of the agent.
+The primary key of this data model is the _serviceUrl_ which should be a unique identifier of the agent - i.e. it can be thought of as the *identity* of the agent.
 
 |Key|Type|Description|Example|Mandatory|
 |--|--|--|--|--|
-|`serviceEndpoint`|URL|The endpoint of the conversational assistant.  This endpoint will be capable of sending and receiving OVON Conversation Envelopes.|"https://dev.buerokratt.ee/ovonr/conversation"|Mandatory|
+|`speakerUri`|URI|The unique URI of the agent.  This represents the unique 'identify' of the agent. This is the primary key for an agent identity|"tag:dev.buerokratt.ee,2025:0001"|Mandatory|
+|`serviceUrl`|URL|The endpoint of the conversational assistant.  This endpoint will be capable of sending and receiving OVON Conversation Envelopes. Changing the URI does not change the identity of the agent.|"https://dev.buerokratt.ee/ovonr/conversation"|Mandatory|
 |`organization`|string|The name of the organization administering this assistant. If relevant, this is the organization that the agent will introduce itself as acting on behalf of. This will be searchable and vocalizable.|"Government of Estonia"|Mandatory|
 |`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"Buerokratt"|Mandatory|
+|`synopsis`|string|A sentence summarizing who the assistant is and their area of expertise. This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. This is a natural language synopsis of the contents of the whole manifest and should not contain new information that is not present in the specific fields of the manifest.|"Immigration specialist as part of the Buerokratt system."|Mandatory|
 |`department`|string|The area of the organization's function that this agent reports to or is addressed by this agent's expertise.  This will be searchable and vocalizable.   |"Passport Office"|Optional|
 |`role`|string|The 'job title' or 'role' of the assistant.  This will be how the agent would describe its role in the organization or its relationship to its users.  This will be searchable and vocalizable.|"Immigration Specialist"|Optional|
-|`synopsis`|string|A sentence summarizing who the assistant is and their area of expertise. This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. This is a natural language synopsis of the contents of the whole manifest and should not contain new information that is not present in the specific fields of the manifest.|"Immigration specialist as part of the Buerokratt system."|Mandatory|
 
 #### 1.7 The `capabilities` object
 
@@ -146,13 +148,13 @@ The features of each capability object are shown below.
 
 ### Chapter 2. Schema
 
-The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/0.9.1/assistant-manifest-schema.json]
+The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/0.9.2/assistant-manifest-schema.json]
 
 ### Chapter 3. References
 
 * [1] https://www.ecma-international.org/publications-and-standards/standards/ecma-404/ ECMA-404 The JSON data interchange syntax
 * [2] https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0 Interoperable Dialog Event Specification (version 1.0.1)
-* [3] https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.3/InteroperableConvEnvSpec.md Interoperable Conversation Envelope Specification Version 0.9.3
+* [3] https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.4/InteroperableConvEnvSpec.md Interoperable Conversation Envelope Specification Version 0.9.4
 * [4] https://www.rfc-editor.org/rfc/rfc5646.txt RFC 5646. BCP 47. Tags for Identifying Languages.
 * [5] https://www.ietf.org/rfc/rfc4646.txt RFC 4646 Regarding Best Practice for Tags for Identifying Languages
 
@@ -203,3 +205,4 @@ mandatory elements|The mandatory elements that are required in the various eleme
 |-|-|-|
 |0.9.0|23 April 2024|Draft for comments to the community|
 |0.9.1|26 November 2024|-Rename 'serviceName' as 'department'<br>-Added note onto 'synpopsis'<br>-Add an 'Approach and Potential Uses' section.<br>-Added 'Authentication' in the Decision log.<br>-separated 'input' and 'ouput' supported layers.<br> -Clarified that URL is the unique key for an agent's identity.<br>-Removed inline schema and added reference instead. |
+|0.9.2|TBD|-Rename _serviceUrl_ to _serviceUrl_<br>-Add _SpeakerUri_ to the _identification_ section<br> |
