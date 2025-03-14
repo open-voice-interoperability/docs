@@ -50,6 +50,7 @@ Status: Under Development
 ### CHAPTER 2. MINIMAL BEHAVIORS
 #### &nbsp; 2.1 Minimal Assistant Behavior
 #### &nbsp; 2.2 Minimal Conversation Floor Manager Behaviors
+#### &nbsp; 2.3 Ignoring events with protocols such as HTTP POST
 ### CHAPTER 3. JSON Envelope SCHEMA
 ### CHAPTER 4. REFERENCES
 ### CHAPTER 5. GLOSSARY OF TERMS
@@ -297,11 +298,11 @@ Figure 7 shows other additional elements in the conversation object.
 
 The _conversants_ section is optional and if present should contain a list of all the conversants in the conversation and be persisted by participants in the conversation.  Each conversant object should contain an _identification_ key and an optional _persistentState_ key. 
 
-The _identification_ section should be a copy of the _identification_section of the agent's manifest as defined in [4].   
+The _identification_ section should be a copy of the _identification_ section of the agent's manifest as defined in [4].   
 
-The _persistentState_ is optional and consists of key-value pairs where the values can be any arbitrary JSON object.  The purpose of this is to enable agents to persist information that is important to maintaining internal state in the conversation.  Any message sender can add a new unique key-value pair.  
+The _persistentState_ is optional and consists of key-value pairs where the values can be any arbitrary JSON object.  The purpose of this is to enable agents to persist information that is important to maintaining internal state in the conversation.  Message senders should only add new key-valuep pairs to their own conversant object.
 
-All message handlers should persist the data in this section when replying to a message.  Agents are encouraged to remove themselves from the _conversant_ section when sending a 'bye' event.  It is encumbent on floor managers to also do basic housekeeping on the _Conversatn_ section.
+All message handlers should persist the data in this section when replying to a message.  Agents are encouraged to remove themselves from the _conversant_ section when sending a 'bye' event.  It is encumbent on floor managers to also do basic housekeeping on the _conversation_ section.
 
 There are currently no restrictions currently placed on the content of persistent objects.   Privacy and security issues apply here. It is suggested that the data in these sections is encrypted but this is not mandatory.  Consideration should also be given to the size of any objects in this section as this might affect the downstream performance of the remaining conversation.
 
@@ -618,7 +619,7 @@ Invite events may be accompanied by additional events and contain optional param
 
 An optional _dialogHistory_ parameter may also be included.  This parameter is intended to give conversational context to the invited agent.  This will help the agent frame its response and could also form the context in which to interpret the dialogEvent describing the purpose of the invite.
 
-The _dialogHistory_ parameter is simple list of dialog events which should contain all, some or all of the utterances in the dialog.  It is good practice to order these in startTime order with the most recent event being the last item in the list. It is at the discretion of the sender of the _invite_ to decide how much history to include and whether the omit or anonymize certain dialogEvents in order to maintain security and confidentiality. For example, the conversational floor may decide to send the last 'N' (e.g. N=4) events in the dialog as if the invited agent had been at the floor for those N dialog turns.  If the agents had not been entitled to receive some of those events then these would also be omitted from the dialogHistory array or anonymized or redacted in some fashion.
+The _dialogHistory_ parameter is simple list of dialog events which should contain all, some or all of the utterances in the dialog.  It is good practice to order these in startTime order (in universal time) with the most recent event being the last item in the list. It is at the discretion of the sender of the _invite_ to decide how much history to include and whether the omit or anonymize certain dialogEvents in order to maintain security and confidentiality. For example, the conversational floor may decide to send the last 'N' (e.g. N=4) events in the dialog as if the invited agent had been at the floor for those N dialog turns.  If the agents had not been entitled to receive some of those events then these would also be omitted from the dialogHistory array or anonymized or redacted in some fashion.
 
 ### 1.14 Bye Event
 
@@ -823,7 +824,7 @@ Assitants can recommend themselves or other agents for a task.  In this example 
 
 The optional _to_ object can be used to indicate which agent is the intended recipient of the event.  If absent then all recipients should consider the request directed at them, for example multiple assistants could be simulataneously asked to make recommendations.
 
-As with the invite event, there is no requirement for a _speakerUri_ on a _findManifest_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.
+As with the invite event, there is no requirement for a _speakerUri_ on a _findAssistant_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.
 
 See section 1.16 for more information on _proposeAssistant_ event behaviors.
 
@@ -959,7 +960,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
               "speakerUri":"tag:some_Convener.com,2025:"
             },
             "parameters": {
-              "request_reason":"interjection ",
+              "reason":"interjection ",
               "dialogEvent ": {
                 "speakerUri ": "tag:agentRequestingFloor.com,2025:1234",
                 "span ": { "startTime ": "2024 -08 -31 T10 :05:00 Z"} ,
@@ -1004,6 +1005,8 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
       }
     }
 
+!!    Add optional parameter 'reason'
+
 ##### Figure 22. A typical grantFloor event 
 
 ### 1.19 revokeFloor Event
@@ -1039,9 +1042,9 @@ The following reasons are currently supported:
 
 |Reason|Description|
 |------|-----------|
-|unsupported|The convener is removing the agent's floor rights because it believes that it cannot support the request addressed to it|
-|complete|The convener is removing the agent's floor rights because it believes that the agent has completed the request|
-|timed out|The convener is removing the agent's floor rights because the convener believes that the agent has taken too long to respond|
+|timedOut|The convener is removing the agent's floor rights because the convener believes that the agent has taken too long to respond|
+|brokenPolicy|The convener is removing the agent's floor rights because the agent has not met certain policy standards|
+|override|The convener is removing the agent's floor rights because it is granting floor rights to another agent with higher precedence|
 |error|The convener is removing the agent's floor rights because some kind of error has ocurred which means it is not longer meaningful for the agent to continue interacting.|
 
 ### 1.20 yieldFloor Event
@@ -1074,9 +1077,10 @@ The following reasons are currently supported:
 
 |Reason|Description|
 |------|-----------|
-|unsupported|The agent is yeilding the floor because it cannot support the request addressed to it (and by inference another agent is needed to respond)|
-|complete|The agent is yielding the floor because it has completed the request|
-|timed out|The agent is yielding the floor because it has time out waiting for responses and feels unable to help any further|
+|outOfDomain|The agent is yeilding the floor because it cannot support the request addressed to it (and by inference another agent is needed to respond)|
+|complete|The agent is yielding the floor because it believes it has completed the request|
+|timedOut|The agent is yielding the floor because it has time out waiting for responses and feels unable to help any further|
+|refused|The agent is yeilding the floor because it is not willing to handle this request|
 |error|The agent is yielding the floor because it has encountered an error from which it cannot recover|
 
 ### 1.21 uninvite Event
@@ -1106,13 +1110,19 @@ The following reasons are currently supported:
       }
     }
 
-##### Figure 25. A typical yieldFloor event 
+##### Figure 25. A typical univite event 
 
 ## Chapter 2. Minimal Behaviors
 
-#### 2.1 Minimal Assistant Behaviors
+#### 2.1 Minimal Servicing Assistant Behaviors (on Receipt of Events)
 
-OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant.  
+!! This section is informative not normative !!
+
+OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant if the agent.
+
+If any events contain a _to_ that is not addressed to the agent, then ignore the event.
+
+If the _to_ section is addressed to the agent (or is absent) then the following minimal behaviours are recommended when receiving the following events. 
 
 * utterance events - spoken or written natural language
   * _utterance_  -  Answer the speaker with an utterance in return.
@@ -1121,34 +1131,40 @@ OVON-compliant dialog assistants must support all event types in order to be con
 * agent control events  - structure control messages
   * _invite_ - Say 'hello' and respond to any whisper utterances. 
   * _bye_ - Ignore this event from another assistant.
-  * _findAssistant_ - Return your own URLa nd manifest as a candidate servicingManifest in a _proposeAssistant_ event.
+  * _findAssistant_ 
+      - if the _to_ is addressed to you:
+        - If the scope is 'internal' or 'all' - return your own manifest as a candidate servicingManifest in a _proposeAssistant_ event.
+        - If the scope is 'external' - ignore this event.  
+      - if there is _to_ section is not specified: 
+        - If the scope is 'internal' or 'all'
+          - If there is NOT a dialogEvent parameter - return your own manifest as a candidate servicingManifest in a _proposeAssistant_ event.
+          - If there is a dialogEvent parameter - consider whether the dialog event contains something you want to service.  If you are not sure, ignore this event. Otherwise return a servicingManifest in a _proposeAssistant_ event containing the relevant manifests of the services you offer that can meet the request.
+        - if the scope is 'external' - ignore this event.
   * _proposeAssistant_ - Ignore this event if you did not ask for a recommendation.
-  * _invite_ - A conversant is invited to join the conversation.
-  * _uninvite_ - A conversant is removed from the conversation.
-  * _bye_ -  A conversant is leaving the conversation
+  * _uninvite_ - Leave this conversation (i.e. stop responding to all events from this conversation_id)
   
 * floor management events - giving and taking the floor
-  * _requestFloor_ - Send this if you don't have the floor and want to requeswt it
-  * _grantFloor_ - If this is addressed to you then take the floor.
-  * _revokeFloor_ - If this is addressed to you cease all communication and return a _yieldFloor_ event.
-  * _yieldFloor_ - Send this if you are unable to complete an enquiry satisfactorily.
+  * _requestFloor_ - Ignore this message (unless you are floor manager, see below)
+  * _grantFloor_ - If this is addressed to you then take the floor in a similar to receiving an _invite_.
+  * _revokeFloor_ - If this is addressed to you, send a _yieldFloor_ event and wait for either a _grantFloor_ or an _utterance_ directed specifically to you as an agent before sending any more events.
+  * _yieldFloor_ - Ignore this.
 
-#### 2.2 Minimal Conversation Floor Manager Behaviors
+!!! REVIEW CONTINUES HERE!!!
+
+#### 2.2 Minimal Conversation Floor Manager Behaviors (on Recept of Events)
 
 OVON-compliant conversation floor managers (including host browsers) agents must support all types in order to be considered fully compliant.\
 \
 The minimal behavior expected from an OVON-compliant conversation floor manager in response to these event types is as follows:
 
 * _utterance events_ - spoken or written natural language
-  * _utterance_  -  Send this _utterance_ to all current conversants apart from the sender. 
-  * _whisper_ - Send this _whisper_ to the current focal agent.
+  * _utterance_  -  Send this _utterance_ to all conversants (unless private)
+  * !!! _whisper_ Send this _utterance_ to all conversants (unless private)
 
 * _agent control events_  - structured control messages
-  * _invite_ -  Forward the _invite_ to any agent designated by the _to_, otherwise ignore it.
-  * _bye_ - Remove this agent from the current register of active conversants.
-  * _requestManifest_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
-  * _publishManifest_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
-  * _findAssistant_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
+  * _invite_ -  Forward the _invite_ to any agent designated by the _to_.
+  * _bye_ - Remove this agent from the current register of active conversants. Forward this message to all conversants (unless private)
+  * _findAssistant_ - Send this event to any agent designated by the _to_ otherwise send to all active conversants.
   * _proposeAssistant_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
 
 * floor management events - giving and taking the floor
@@ -1158,6 +1174,10 @@ The minimal behavior expected from an OVON-compliant conversation floor manager 
   * _yieldFloor_ - Consider what is the next appropriate agent to invite to take the floor.
 
 The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can for example include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation to deal with exceptions, and deciding when to terminate a conversation with the user.  
+
+
+
+If the messaging protocol that sent the envelope requires a response (e.g. HTTP POST) and your agent has no need to respond to any of the events in the envelope (i.e. the agent is ingoring it) then return an envelope with an _event_ object containing an empty array.(i.e. an array with no events in it).
 
 ## Chapter 3. JSON Envelope Schema
 
@@ -1242,8 +1262,9 @@ This section documents some of the key design decisions that were made by the te
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section <br>
+|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section- Added section on multi-party conversations. <br>
 
-
-
-- 
+## TO DO ##
+- Modify the score to be between 0 and 1. (manifest spec and envelope spec)
+- requestFloor, grantFloor add some descrition and make these informative not normative.   
+- uninvite : add description for the uninvite.  reason is open text.
