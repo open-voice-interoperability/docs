@@ -927,10 +927,10 @@ If an agent receives any other event that it does not feel capable of servicing,
 
 The optional _to_ can be used to indicate a specific agent to which the proposal is addressed.  Otherwise any recipient should consider the proposal addressed to themselves.
 
-#! There is no requirement for a _speakerUri_ on a _proposeAssistant_ event.  If one is provided then it is good practice for the receiving agent to pass this speakerUri along in any subsequent _invite_ event to this agent.
+There is no requirement for a _speakerUri_ on a _proposeAssistant_ event.  If one is provided then it is good practice for the receiving agent to pass this speakerUri along in any subsequent _invite_ event to this agent.
 
 Each list item in the recommendation should be in the manifest format as specified in [4].  In addition to the keys specified in that document, the manifest object can contain one additional optional key that is not present in the manifest specification:
-  - _score_ - A recommendation score is a natural number between 0.0 and 1.0 with arbitrary precision. 
+  - _score_ - A recommendation score is a number between 0.0 and 1.0 with arbitrary precision. 
 
 Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversation and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssistant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to inviting it to do so. 
 
@@ -940,7 +940,7 @@ Note that there is no requirement in the OVON framework for an assistant to be e
 
 The recommending agent is free to use any mechanism it wants to generate the _score_.   
 
-### 1.17 requestFloor Event
+### 1.17 requestFloor Event [INFORMATIVE]
 
     {
       ovon ": {
@@ -981,17 +981,17 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
 
 ##### Figure 21. A typical requestFloor event 
 
-The _requestFloor_ event is used by agents that do not current have the conversational floor to request it.  Figure 21 shows a typical _requestFloor_ envelope.
+The _requestFloor_ event is used by agents that do not currently have the conversational floor to request it.  Figure 21 shows a typical _requestFloor_ envelope.
 
-This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor.  [7].
+This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor  [7].
 
-This event is somewhat experimental and is currently informative not normative and may be subject to change.  Complaint agents do not need to support this event yet and a servicing agent should not receive this message from another agent.  (See section 2.1) 
+This event is somewhat experimental and is currently informative not normative and may be subject to change.  Compliant agents do not need to support this event yet and servicing agents may send this event but they are not expected to receive it and can safely ignore it if they do (See section 2.1). 
 
-The event has two parameters.  The _dialogEvent_ parameter is optional and can be used to explains to the recipient (normally the convener) the reason why the agent is requesting the floor.  This is a dialogEvent as per [2]
+The event has two parameters.  The _dialogEvent_ parameter is optional and can be used to explains to the recipient (normally the convener) the reason why the agent is requesting the floor.  This is a dialogEvent as per [2].
 
 The optional _reason_ is a placeholder for a categorical label for the reason for the floor request.  The categories of this label are not yet defined in this standard. The _reason_ can contain any text or be omitted in draft implementations of this message.
 
-### 1.18 grantFloor Event
+### 1.18 grantFloor Event [INFORMATIVE]
 
     {
       ovon ": {
@@ -1017,7 +1017,7 @@ The optional _reason_ is a placeholder for a categorical label for the reason fo
 
 Figure 22. A bare grantFloor event 
 
-The _grantFloor_ event is used to grant the conversational floor to servicing agents.   This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor [7].
+The _grantFloor_ event is used to grant the conversational floor to agents.   This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent is present to co-ordinate the floor [7].
 
 In one use case, the _grantFloor_ event can be sent by floor managers in resonse to a _requestFloor_ event from an agent. Figure 22 shows a bare _grantFloor_ envelope which might be used for this purpose.  Once this message is recieved by an agent is free to send Utterance events to the floor with the expectation that they will be delivered to the designated destination.
 
@@ -1061,13 +1061,13 @@ In one use case, the _grantFloor_ event can be sent by floor managers in resonse
 
 #### Figure 23. A grantFloor event inviting an agent to service a specific request. 
 
-Figure 23 shows an alternate use-case for the _grantFloor_ event. In this use case an agent is already present in a multi-party conversation. It does not currently have the floor and has not requested it.  It is an observer in the conversation.  The convener, floor manager or another agent can direct a _grantFloor_ event to an agent with a _dialogEvent_ to invite the agent to take the floor and describing the purpose of the request.  This is very similar in structure and purpose to an _invite_ event but is sent to an agent that is already party to teh conversation.
+Figure 23 shows an alternate use-case for the _grantFloor_ event. In this use case an agent is already present in a multi-party conversation. It does not currently have the floor and has not requested it.  It is an observer in the conversation.  The convener, floor manager or another agent can direct a _grantFloor_ event to an agent with a _dialogEvent_ to invite the agent to take the floor and describing the purpose of the request.  This is very similar in structure and purpose to an _invite_ event but is sent to an agent that is already party to the conversation.
 
 The event has two parameters.  The optional _dialogEvent_ explains in natural anguage and supporting media to the recipient describing what is requested of them.   This might be a user utterance or an instruction generated by another agent or the floor manager.  This is in dialogEvent format as per [2].
 
 The optional _reason_ is a placeholder for a categorical label for the reason for the floor grant.  The categories of this label are not yet defined in this standard. The _reason_ can contain any text or be omitted in draft implementations of this message.
 
-This event is somewhat experimental and is currently informative not normative and may be subject to change.  Complaint agents do not need to support this event yet but naïve implementations can treat this event as they would an _invite_ event. (See section 2.1) 
+This event is somewhat experimental and is currently informative not normative and may be subject to change.  Compliant agents do not need to support this event yet but naïve implementations can treat this event as they would an _invite_ event. (See section 2.1) 
 
 ### 1.19 revokeFloor Event
 
@@ -1098,7 +1098,7 @@ This event is somewhat experimental and is currently informative not normative a
 
 ##### Figure 24. A typical revokeFloor event 
 
-The _revokeFloor_ event informs an agent that they no longer have the conversatonal floor.  The agent should cease to send _utterance_ events on receipt of this event.   
+The _revokeFloor_ event informs an agent that they no longer have the conversational floor.  Typically the agent will cease to send _utterance_ events on receipt of this event.   
 
 Figure 24 shows a typical _revokeFloor_ event which shows an agent having the floor revoked because a higher precedence request has been made that needs to be serviced by a different agent.
 
@@ -1112,6 +1112,7 @@ The following reasons are currently supported:
 |brokenPolicy|The convener is removing the agent's floor rights because the agent has not met certain policy standards|
 |override|The convener is removing the agent's floor rights because it is granting floor rights to another agent with higher precedence|
 |error|The convener is removing the agent's floor rights because some kind of error has ocurred which means it is not longer meaningful for the agent to continue interacting.|
+|other|The convener is removing the agent's floor rights for some other reason|
 
 ### 1.20 yieldFloor Event
 
@@ -1139,7 +1140,7 @@ The following reasons are currently supported:
 
 ##### Figure 25. A typical yieldFloor event 
 
-The _yieldFloor_ event is sent by an agent to indicate that they no longer intends to send any more _utterance_ events to any conversants.  This event is useful for several use cases. The optional _reason_ parameter is a categorical label indicating the reason that the floor has been yielded.
+The _yieldFloor_ event is sent by an agent to indicate that they no longer intend to send _utterance_ events to any conversants.  This event is useful for several use cases. The optional _reason_ parameter is a categorical label indicating the reason that the floor has been yielded.
 
 Figure 25 shows a typical _yieldFloor_ event indicating that the agent believes that they have completed the current goal that they are working on supporting and are not expecting to contribute any more utterances unless requested.
 
@@ -1152,6 +1153,7 @@ The following _reason_ values are currently supported:
 |timedOut|The agent is yielding the floor because it has time out waiting for responses and feels unable to help any further|
 |refused|The agent is yeilding the floor because it is not willing to handle this request|
 |error|The agent is yielding the floor because it has encountered an error from which it cannot recover|
+|other|The agent is yielding the floor for some other reason|
 
 ### 1.21 uninvite Event
 
@@ -1182,21 +1184,20 @@ The following _reason_ values are currently supported:
 
 ##### Figure 26. A typical univite event 
 
-The _uninvite_ event is the opposite of an _invite_ event and informs an agent that they have been removed from a conversation.   The agent should cease all interaction (with the exception of acknowledging the message with an empty envelope if required).  
+The _uninvite_ event is the opposite of an _invite_ event and informs an agent that they have been removed from a conversation.  In the absence of a new _invite_ event, the agent should not expect to receive any more envelopes from this conversation.
 
 |Reason|Description|
 |------|-----------|
-|timedOut|The convener is removing the agent from the conversation because it believes that the agent has taken too long to respond.|
-|brokenPolicy|The convener is removing the agent from the conversation because the agent has not met certain policy standards. This may be for example due to unsolicited or offensive contributions to the conversation.|
-|error|The convener is removing the agent from the conversation because some kind of error has ocurred which means it is not longer meaningful for the agent to continue being part of the conversation.|
+|timedOut|The floor manager or convener is removing the agent from the conversation because it believes that the agent has taken too long to respond.|
+|brokenPolicy|The floor manager or convener is removing the agent from the conversation because the agent has not met certain policy standards. This may be for example due to unsolicited or offensive contributions to the conversation.|
+|error|The floor manager or convener is removing the agent from the conversation because some kind of error has ocurred which means it is not longer meaningful for the agent to continue being part of the conversation.|
+|other|The floor manager or convener is removing the agent from the conversation for some other reason|
 
 ## Chapter 2. Minimal Behaviors
 
-#### 2.1 Minimal Servicing Assistant Behaviors (on Receipt of Events)
+#### 2.1 Minimal Servicing Assistant Behaviors (on Receipt of Events) [INFORMATIVE]
 
-!! This section is informative not normative !!
-
-OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant if the agent.
+OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant if the agent. These guidelines are informative not normative.
 
 If any events contain a _to_ that is not addressed to the agent, then ignore the event.
 
@@ -1224,36 +1225,32 @@ If the _to_ section is addressed to the agent (or is absent) then the following 
 * floor management events - giving and taking the floor
   * _requestFloor_ - Ignore this message (unless you are floor manager, see below)
   * _grantFloor_ - If this is addressed to you then take the floor in a similar to receiving an _invite_.
-  * _revokeFloor_ - If this is addressed to you, send a _yieldFloor_ event and wait for either a _grantFloor_ or an _utterance_ directed specifically to you as an agent before sending any more events.
+  * _revokeFloor_ - If this is addressed to you, cease sending events and wait for either a _grantFloor_ or an _utterance_ directed specifically to you as an agent before sending any more events.  
   * _yieldFloor_ - Ignore this.
 
-!!! REVIEW CONTINUES HERE!!!
+#### 2.2 Minimal Conversation Floor Manager Behaviors (on Recept of Events) [INFORMATIVE]
 
-#### 2.2 Minimal Conversation Floor Manager Behaviors (on Recept of Events)
+The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can, for example, include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation when needed, and deciding when to terminate a conversation with the user.  
 
-OVON-compliant conversation floor managers (including host browsers) agents must support all types in order to be considered fully compliant.\
-\
-The minimal behavior expected from an OVON-compliant conversation floor manager in response to these event types is as follows:
+OVON-compliant conversation floor managers (including host browsers) agents must support all normative event types in order to be considered fully compliant.
 
-* _utterance events_ - spoken or written natural language
-  * _utterance_  -  Send this _utterance_ to all conversants (unless private)
-  * !!! _whisper_ Send this _utterance_ to all conversants (unless private)
+A simple floor manager will generally forward all events to the intended recipient designated by the _to_ section of each event. If there is no _to_ section it will forward the event to all participants apart from the sender.
 
-* _agent control events_  - structured control messages
-  * _invite_ -  Forward the _invite_ to any agent designated by the _to_.
-  * _bye_ - Remove this agent from the current register of active conversants. Forward this message to all conversants (unless private)
-  * _findAssistant_ - Send this event to any agent designated by the _to_ otherwise send to all active conversants.
-  * _proposeAssistant_ - Send this event to any agent designated by the _to_, otherwise send to all active conversants.
+A minimal floor manager will therefore exhibit the following behaviours.   
 
-* floor management events - giving and taking the floor
-  * _requestFloor_ - Consider this request either return a _frantFloor_ or _revokeFloor_ (both of which can be delayed)
-  * _grantFloor_ - If this is received, consider whether to pass it on to the recipient. Send this to grand an agent the floor.
-  * _revokeFloor_ - If this is received, consider whether to pass it on to the recipient.  Send this to stop an agent speaking.
-  * _yieldFloor_ - Consider what is the next appropriate agent to invite to take the floor.
+  * _utterance_  - Forward to intended recipient. 
+  * !!! _whisper_  - Forward to intended recipient. 
+  * _invite_   - Forward to intended recipient. 
+  * _uninvite_- Forward to intended recipient. 
+  * _findAssistant_  - Forward to intended recipient. 
+  * _proposeAssistant_  - Forward to intended recipient. 
+  * _bye_ - Forward to intended recipient. Also remove this agent from the current register of active conversants.
+  * _requestFloor_ - Return a _grantFloor_ 
+  * _grantFloor_ - Forward to intended recipient. 
+  * _revokeFloor_ - Forward to intended recipient. 
+  * _yieldFloor_ - Do nothing.
 
-The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can for example include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation to deal with exceptions, and deciding when to terminate a conversation with the user.  
-
-
+#### 2.3 Ignoring events with prototols that require a response
 
 If the messaging protocol that sent the envelope requires a response (e.g. HTTP POST) and your agent has no need to respond to any of the events in the envelope (i.e. the agent is ingoring it) then return an envelope with an _event_ object containing an empty array.(i.e. an array with no events in it).
 
@@ -1343,3 +1340,4 @@ This section documents some of the key design decisions that were made by the te
 |0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.|
 
 ## TO DO ##
+- remove whisper.
