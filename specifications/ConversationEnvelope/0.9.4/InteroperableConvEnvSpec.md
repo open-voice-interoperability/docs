@@ -860,7 +860,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                     "capabilities": {
                       ...
                     }
-                    "score": 100
+                    "score": 1.00
                   },
                   {
                     "identification": {
@@ -872,7 +872,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                     "capabilities": {
                       ...
                     }
-                    "score": 25
+                    "score": 0.25
                   },
                   {
                     "identification": {
@@ -884,7 +884,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                     "capabilities": {
                       ...
                     }
-                    "score": 14
+                    "score": 0.14
                   }
                 ],
                 "discoveryManifests": [
@@ -898,7 +898,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
                     "capabilities": {
                       ...
                     }
-                    "score": 100
+                    "score": 1.00
                   }
                 ]
             }
@@ -930,7 +930,7 @@ The optional _to_ can be used to indicate a specific agent to which the proposal
 #! There is no requirement for a _speakerUri_ on a _proposeAssistant_ event.  If one is provided then it is good practice for the receiving agent to pass this speakerUri along in any subsequent _invite_ event to this agent.
 
 Each list item in the recommendation should be in the manifest format as specified in [4].  In addition to the keys specified in that document, the manifest object can contain one additional optional key that is not present in the manifest specification:
-  - _score_ - A recommendation score between 0 and 100.  
+  - _score_ - A recommendation score is a natural number between 0.0 and 1.0 with arbitrary precision. 
 
 Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversation and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssistant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to inviting it to do so. 
 
@@ -960,7 +960,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
               "speakerUri":"tag:some_Convener.com,2025:"
             },
             "parameters": {
-              "reason":"interjection ",
+              "reason":"interjection",
               "dialogEvent ": {
                 "speakerUri ": "tag:agentRequestingFloor.com,2025:1234",
                 "span ": { "startTime ": "2024 -08 -31 T10 :05:00 Z"} ,
@@ -981,6 +981,16 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
 
 ##### Figure 21. A typical requestFloor event 
 
+The _requestFloor_ event is used by agents that do not current have the conversational floor to request it.  Figure 21 shows a typical _requestFloor_ envelope.
+
+This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor.  [7].
+
+This event is somewhat experimental and is currently informative not normative and may be subject to change.  Complaint agents do not need to support this event yet and a servicing agent should not receive this message from another agent.  (See section 2.1) 
+
+The event has two parameters.  The _dialogEvent_ parameter is optional and can be used to explains to the recipient (normally the convener) the reason why the agent is requesting the floor.  This is a dialogEvent as per [2]
+
+The optional _reason_ is a placeholder for a categorical label for the reason for the floor request.  The categories of this label are not yet defined in this standard. The _reason_ can contain any text or be omitted in draft implementations of this message.
+
 ### 1.18 grantFloor Event
 
     {
@@ -992,22 +1002,72 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
           id ":"someUniqueIdForTheConversation"
         },
         sender ": {
-          "speakerUri":"tag:some_Convener.com,2025:"
+          "speakerUri":"tag:some_Convener.com,2025:1234"
         },
         "events ": [
           {
             "eventType":""grantFloor"
             "to": {
               "speakerUri":"tag:agentBeingGrantedTheFloor.com,2025:1234"
-            },
+            }
           }
         ]
       }
     }
 
-!!    Add optional parameter 'reason'
+Figure 22. A bare grantFloor event 
 
-##### Figure 22. A typical grantFloor event 
+The _grantFloor_ event is used to grant the conversational floor to servicing agents.   This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor [7].
+
+In one use case, the _grantFloor_ event can be sent by floor managers in resonse to a _requestFloor_ event from an agent. Figure 22 shows a bare _grantFloor_ envelope which might be used for this purpose.  Once this message is recieved by an agent is free to send Utterance events to the floor with the expectation that they will be delivered to the designated destination.
+
+
+    {
+      ovon ": {
+        schema ": {
+          version ":"0.9.4"
+        },
+        conversation ": {
+          id ":"someUniqueIdForTheConversation"
+        },
+        sender ": {
+          "speakerUri":"tag:some_Convener.com,2025:1234"
+        },
+        "events ": [
+          {
+            "eventType":""grantFloor"
+            "to": {
+              "speakerUri":"tag:agentBeingInvitedToTakeTheFloor.com,2025:1234"
+            },
+            "parameters": {
+              "reason":"new request",
+              "dialogEvent ": {
+                "speakerUri ": "tag:someConvener.com,2025:1234",
+                "span ": { "startTime ": "2025-01-31T10:05:00Z"} ,
+                "features ": {
+                  "text ": {
+                    "mimeType ": "text / plain ",
+                    "tokens ": [
+                      { "value ": "Go ahead an book a meeting at six o'clock for the user."}
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+
+#### Figure 23. A grantFloor event inviting an agent to service a specific request. 
+
+Figure 23 shows an alternate use-case for the _grantFloor_ event. In this use case an agent is already present in a multi-party conversation. It does not currently have the floor and has not requested it.  It is an observer in the conversation.  The convener, floor manager or another agent can direct a _grantFloor_ event to an agent with a _dialogEvent_ to invite the agent to take the floor and describing the purpose of the request.  This is very similar in structure and purpose to an _invite_ event but is sent to an agent that is already party to teh conversation.
+
+The event has two parameters.  The optional _dialogEvent_ explains in natural anguage and supporting media to the recipient describing what is requested of them.   This might be a user utterance or an instruction generated by another agent or the floor manager.  This is in dialogEvent format as per [2].
+
+The optional _reason_ is a placeholder for a categorical label for the reason for the floor grant.  The categories of this label are not yet defined in this standard. The _reason_ can contain any text or be omitted in draft implementations of this message.
+
+This event is somewhat experimental and is currently informative not normative and may be subject to change.  Complaint agents do not need to support this event yet but naïve implementations can treat this event as they would an _invite_ event. (See section 2.1) 
 
 ### 1.19 revokeFloor Event
 
@@ -1029,14 +1089,20 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
               "speakerUri":"tag:agentBeingRevoked,2025:1234"
             },
             "parameters ": {
-              "reason" : "complete"
+              "reason" : "override"
             }
           }
         ]
       }
     }
 
-##### Figure 23. A typical revokeFloor event 
+##### Figure 24. A typical revokeFloor event 
+
+The _revokeFloor_ event informs an agent that they no longer have the conversatonal floor.  The agent should cease to send _utterance_ events on receipt of this event.   
+
+Figure 24 shows a typical _revokeFloor_ event which shows an agent having the floor revoked because a higher precedence request has been made that needs to be serviced by a different agent.
+
+This event has one optional parameter _reason_. This is a categorical label describing the reason that the floor is being revoked.
 
 The following reasons are currently supported:
 
@@ -1071,9 +1137,13 @@ The following reasons are currently supported:
       }
     }
 
-##### Figure 24. A typical yieldFloor event 
+##### Figure 25. A typical yieldFloor event 
 
-The following reasons are currently supported:
+The _yieldFloor_ event is sent by an agent to indicate that they no longer intends to send any more _utterance_ events to any conversants.  This event is useful for several use cases. The optional _reason_ parameter is a categorical label indicating the reason that the floor has been yielded.
+
+Figure 25 shows a typical _yieldFloor_ event indicating that the agent believes that they have completed the current goal that they are working on supporting and are not expecting to contribute any more utterances unless requested.
+
+The following _reason_ values are currently supported:
 
 |Reason|Description|
 |------|-----------|
@@ -1103,14 +1173,22 @@ The following reasons are currently supported:
               "speakerUri" : "tag:agentBeingUnivited,2025:1234"
             },
             "parameters ": {
-              "reason" : "not authorized to participate"
+              "reason" : ""
             }
           }
         ]
       }
     }
 
-##### Figure 25. A typical univite event 
+##### Figure 26. A typical univite event 
+
+The _uninvite_ event is the opposite of an _invite_ event and informs an agent that they have been removed from a conversation.   The agent should cease all interaction (with the exception of acknowledging the message with an empty envelope if required).  
+
+|Reason|Description|
+|------|-----------|
+|timedOut|The convener is removing the agent from the conversation because it believes that the agent has taken too long to respond.|
+|brokenPolicy|The convener is removing the agent from the conversation because the agent has not met certain policy standards. This may be for example due to unsolicited or offensive contributions to the conversation.|
+|error|The convener is removing the agent from the conversation because some kind of error has ocurred which means it is not longer meaningful for the agent to continue being part of the conversation.|
 
 ## Chapter 2. Minimal Behaviors
 
@@ -1262,9 +1340,6 @@ This section documents some of the key design decisions that were made by the te
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section- Added section on multi-party conversations. <br>
+|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.|
 
 ## TO DO ##
-- Modify the score to be between 0 and 1. (manifest spec and envelope spec)
-- requestFloor, grantFloor add some descrition and make these informative not normative.   
-- uninvite : add description for the uninvite.  reason is open text.
