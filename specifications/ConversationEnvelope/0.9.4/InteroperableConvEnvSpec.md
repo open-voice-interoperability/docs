@@ -33,8 +33,7 @@ Status: Under Development
 #### &nbsp; 1.9 Event-Types
 #### &nbsp; 1.10 Utterance Events
 ##### &nbsp; &nbsp; &nbsp;  1.10.1 Utterance Text Feature
-#### 1.11 Whisper Events
-##### &nbsp; &nbsp; &nbsp;  1.11.1 Whisper Text Feature
+#### 1.11 dialogEvent parameters in other event types
 #### 1.12 Extensible Dialog Event Features (Informative)
 #### 1.13 Invite Event
 #### 1.14 Bye Event
@@ -78,7 +77,7 @@ In the example shown in Figure 1, the user proxy agent and the conversation mana
 \
 In its simplest configuration, the user proxy agent might present a text-based chat interface to the user.  For spoken interaction, the proxy agent will likely also contain speech-to-text and text-to-speech facilities but other configurations are anticipated.  The proxy agent may have conversational ability in its own right but in many cases, it may only provide rudimentary capabilities such as wake-word detection.\
 \
-Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single conversation envelope.   Each conversant can 'hear' things said to it or 'say' things.   They can also 'whisper' to each other behind the scenes.   Conversants may also 'invite' other agents to join the conversation or they might ask other agents if they are capabale of a certain activity or would like recommend another agent for a certain task.
+Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single conversation envelope.   Each conversant can 'hear' things said to it or 'say' things.   They can also 'whisper' to each other behind the scenes by sending private utterances to each other.   Conversants may also 'invite' other agents to join the conversation or they might ask other agents if they are capabale of a certain activity or would like recommend another agent for a certain task.
 
 #### 0.3 Delegation, Channeling and Mediation
 
@@ -101,18 +100,20 @@ The patterns described above allow for conversation between one user and multipl
 \
 **Figure 2.  Multi-party conversations hosted by a floor manager and a converner agent.**\
 \
-This specification also supports the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows hwo this might work.  It extends Figure 1 to show mutliple agents taking part in a conversation.  As in Figure 1, the floor manager manges the conversational interaction.  IN a multi-party conversation the floor will invite a 'Convener' agent to the conversation. This will be compliant agent but with special privileges.  Envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   The convener manages which agent has the floor at any given momment.  An in depth description of this approach can be found in [7].
+This specification also contains extensions to support the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows how this might work.  It extends Figure 1 to show mutliple agents taking part in a conversation.  As in Figure 1, the floor manager manges the conversational interaction.  IN a multi-party conversation the floor will invite a 'Convener' agent to the conversation. This will be compliant agent but with special privileges.  Envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   The convener manages which agent has the floor at any given momment.  An in depth description of this approach can be found in [7].  Support for multi-party conversations is still somewhat unproven. Additional features or small changes may be neccessary us the use-cases and patterns for this become more mature.
 
 ### 0.5 Discovery
 
-Agents can ask other agents if they are able to satisfy a certain enquiry or whether they can recommend another agent for the task.  This pattern is called 'discovery'.  The initiating agent asks another agent to 'find' an assistant and 'whispers' details of the task to this agent.  The recipient can then respond by:
+Agents can ask other agents if they are able to satisfy a certain enquiry or whether they can recommend another agent for the task.  This pattern is called 'discovery'.  The initiating agent asks another agent to 'find' an assistant and includes details of the task to this agent.  The recipient can then respond by:
 
 - Proposing themself for the task (i.e. 'accept' the request to do a task)
 - Proposing one or more agents for the task with a rating (i.e. act as a discovery agent)
 - Proposing one or more agents to help 'find' an agent for the task (i.e. recommend another discovery agent)
 - Proposing no agents (i.e. the agent cannot do the task or recommend any other agent)
 
-The requesting agent can then choose to invite the proposed agent to the conversation, or simply speak directly to the proposed agent if they already party to the conversation,
+The requesting agent can then choose to invite the proposed agent to the conversation, or simply speak directly to the proposed agent if they already party to the conversation.
+
+The 'find' assistant feature can also be used to ask an agent for a manifest of its own capabilities.
 
 By combining this discovery mechanism with the delegation and channelling patterns mentioned above rich patterns of agent interaction can emerge. Some agents can specialize as 'discovery agents' whose only role is to provide recommendations of other agents. This provides the conversational equivalent of a web search.  Agents can also recommend themselves for some enquiries and recommend other agents for others. This allows, for example, for a primary assistant to perform day to day tasks and recommend other agents for less common tasks. Agents can ask one or more agents to assist with this search who in turn can ask other agents. 
 
@@ -372,16 +373,19 @@ The _to_ section also contains a _private_ boolean parameter which, when set to 
 
 The following are valid values for _eventTypes_.
 
-* utterance events - spoken or written natural language
-  * _utterance_  - An utterance spoken in the conversation itself by a user or agent.
-  * _whisper_ - An out-of-band linguistic instruction from one agent to another.
+* **speaking or sending multi-media events** (publicly or privately)
+  * _utterance_  - An 'utterance' spoken from one conversant to some or all participants
 
-* agent control events  - structure control messages
+* **joining or leaving conversations**
   * _invite_ - A conversant is invited to join the conversation.
   * _uninvite_ - A conversant is removed from the conversation.
   * _bye_ -  A conversant is leaving the conversation
+
+* **discovering other agents and establishing their capabilities**
   * _findAssistant_ - Ask an agent to recommend themself or another agent for a task.
   * _proposeAssistant_ - Return a list of recommended agents for a task.
+
+* **managing who has the conversational floor** (support for multi-party conversations and floor passing between agents)
   * _requestFloor_ - Used by a conversant to request the floor.
   * _grantFloor_ - Used by a convener agent to offer the floor to another conversant. 
   * _revokeFloor_ - Used by a convener agent to revoke the floor from another conversant. 
@@ -424,19 +428,13 @@ Figure 10 shows the structure of an event with the _eventType_ of _utterance_.  
 
 OVON events of this type are sent whenever a user or an assistant takes a dialog act.  The value of the _dialogEvent_ dictionary key must contain a valid dialog event object as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay ).
 
-OVON events of this type are sent whenever a user or an assistant takes a dialog act.  The value of the dialogEvent dictionary key must contain a valid dialog event object as specified in Interoperable Dialog Event Object Specification Version 1.0.   
+The value of the dialogEvent key must contain a valid dialog event object as specified in Interoperable Dialog Event Object Specification Version 1.0.   
 
-The following sections describe the features that are currently supported in the utterance dialog event.   
+dialogEvent objects must contain a 'text feature.   Additional feature types and mime-types are permitted.  Compliant OVON dialog agents do not need to respond to any unsupported keys in the dialog event..   
 
-Additional keys and mime-types are permitted.  Compliant OVON dialog agents do not need to respond to any unsupported keys in the dialog event..   
+##### 1.10.1 dialogEvent Text Feature
 
-The following sections describe the _features_ that are currently supported in the _utterance_ dialog event.   
-
-Additional keys and mime-types are permitted.  Compliant OVON dialog agents do not need to respond to any unsupported keys in the dialog event.
-
-##### 1.10.1 Utterance Text Feature
-
-The _text_ feature is **mandatory** in all _utterance_ dialog events.
+The _text_ feature is **mandatory** in all dialog events.
 
 |parameter|Description|
 |-|-|
@@ -445,66 +443,30 @@ The _text_ feature is **mandatory** in all _utterance_ dialog events.
 |_value_|Any number of values are allowed as strings in the _tokens_ section.  When concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 |_valueUrl_|Any number of value URLs are allowed in the tokens section.  These URLs should locate content of type 'text/plain' and when downloaded and concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 
-### 1.11 Whisper Events
+##### 1.11 dialogEvent parameters in other event types
 
-    {
-      "ovon": {
-        ..
-        "events": [
-          {
-            "to": { 
-              "speakerUri" : "tag:someBotOrPerson.com,2025:0021"
-            }
-            "eventType": "whisper",
-            "parameters": {
-              "dialogEvent": {
-                "speakerUri": "referring_agent.com/1",
-                "span": { "start-time": "2023-06-19 03:09:07+00:00" },
-                "context" : "The user has a history of serious depression and is seeking information about the side effects of different drug types.",
-                "features": {
-                  "text": {
-                    "mimeType": "text/plain",
-                    "tokens": [ { "value": "explain the side effects of citalopram in less than 200 words" } ]
-                  }
-                }
-              }
-            }
-          },
-          ..
-        ]
-      }
-    }
+_dialogEvent_ objects are used in OVON events in situations where one conversatant wants to convey language or other media to another one.  The _utterance_ event is used where agents address each other directly and the recipient uses the content of hte dialogEvent alone to infer the intent of the utterance.  Other more specific event types also contain dialogEvents.  Other events that include dialogEvent parameters are:  
+- _invite_, 
+- _findAssitant_
+- _requestFloor_ 
+- _grantFloor_.
 
-##### Figure 11. Example OVON _whisper_ event.
+For example, a dialogEvent in an _invite_ event can be used to let the invited agent know why they are being invited.  In the simplest use-case this _dialogEvent_ may repeat an utterance given by the user in order to delegate the servicing of this request to a newly invited agent.  In a more sophisticated use-case the inviting agent may syntehsise (e.g. using generative AI) a specific instruction or request for the new agent. 
 
-Figure 11 shows the structure of an OVON event with the _eventType_ of _whisper_. 
+Such parameters should only contain valid dialog event objects as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay).   
 
-_whisper_ events are sent whenever an assistant wants to send a natural language instruction or request to another agent.   _whisper_ events are similar to _utterance_ events but they are not to be directly voiced in the dialog.\
-
-This event contains just one mandatory parameter with the key-name _dialogEvent_.   The _dialogEvent_ can contain any linguistic information but it expected to contain a brief utterance or instruction to the recipient as to what is expected of them at this point in the dialog. For example, in the simplest use-case the _dialogEvent_ may repeat an utterance given by the user in order to delegate the servicing of this request to a newly invited agent. This parameter can contain any valid dialog event objects as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay).   
-
-The _context_ parameter is an optional part of the _dialogEvent_ and is a plain text.  This field should contain a natural language description of the context of the request at this point in the dialog. It should not be used to communicate instructions from one agent to another agent.\
-
-##### 1.11.1 Whisper Text Feature
-
-The _text_ feature is **mandatory** in all _whisper_ dialog events.
-
-|parameter|Description|
-|-|-|
-|_mimeType_|text/plain
-|_speakerUri_|The _speakerUri_ should be a unique identifier of the agent or speaker that generated the request.  In the case where the event is simply a forwarded version of a user utterance, this event should be given the _speakerUri_ of the forwarding agent not the original speaker.
-|_value_|Any number of values are allowed as strings in the _tokens_ section.  When concatenated together the _tokens_ should represent the orthographic representation of the utterance.
-|_valueUrl_|Any number of value URLs are allowed in the tokens section.  These URLs should locate content of type 'text/plan' and when downloaded and concatenated together the _tokens_ should represent the orthographic representation of the utterance.
-
+!! The _context_ parameter is an optional part of the _dialogEvent_ and is a plain text.  This field should contain a natural language description of the context of the request at this point in the dialog. It should not be used to communicate instructions from one agent to another agent.\
 
 ### 1.12 Extensible Dialog Event Features (informative)
 
-The features in Dialog Events are intentionally intended to be extensible.  This specification does not limit the features that can be put into an utterance event or a whisper event.
+The features in Dialog Events are intentionally intended to be extensible.  This specification does not limit the features that can be put into dialog events.
 
 The current version of this specification mandates only the text feature in each dialog event.  Future versions are likely to support and standardize additional event features such as:
 
-* _ssml_ to describe how text should be rendered as speech
+* _ssml_ to describe how text should be rendered as speech.
 * _speech_ to send raw speech for output or input.
+* _image_ to send an accompanying image.
+* _video_ to send an accompanying video.
 
 There are no limitations on the features that are added to a dialog event.  This enables agents to exchange any media that they wish in addition to the text message.  For example, a video feature intended to represent Video Conversational agent communications (i.e. Avatar communications) could be added as shown in Figure 12.  This example is informative only
 
@@ -694,7 +656,7 @@ The _findAssistant_ event can be used to ask an assistant about the services it 
 
 A _proposeAssistant_ event will be returned in response to the _findAssitant_ event.  This will contain one or more manifests [4] each defining the location, identity, and services provided by a specific assistant.
 
-A _findAssistant_ event can optionally be accompanied by a _whisper_ event containing a natural language description of the task to be performed.  
+A _findAssistant_ event can optionally be accompanied by a _dialogEvent_ parameter containing a natural language description of the task to be performed.  
 
     {
       "ovon": {
@@ -921,7 +883,7 @@ In order to support this the _proposeAssistant_ event has two mandatory paramete
 - _servicingManifests_ - A list of agents that can service this request.
 - _discoveryManifests_ - A list of agents that can recommend other agents to service this request.
 
-It is the responsibility of the receiver of this event to choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _whisper_ event.
+It is the responsibility of the receiver of this event to choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _dialog_event_ parameter value that was used in the _findAssistant_ event.
 
 If an agent receives any other event that it does not feel capable of servicing, it can also return a _proposeAssistant_ event.  
 
@@ -1204,11 +1166,10 @@ If any events contain a _to_ that is not addressed to the agent, then ignore the
 If the _to_ section is addressed to the agent (or is absent) then the following minimal behaviours are recommended when receiving the following events. 
 
 * utterance events - spoken or written natural language
-  * _utterance_  -  Answer the speaker with an utterance in return.
-  * _whisper_ - Ignore it if the contents cannot be understood.
+  * _utterance_  -  Answer the speaker with an utterance in return <br>  (typically public utterances will have public responses and private utterances will have private responses)
 
 * agent control events  - structure control messages
-  * _invite_ - Say 'hello' and respond to any whisper utterances. 
+  * _invite_ - Say 'hello' and respond to any accompanying _dialogEvent_ parameters.
   * _bye_ - Ignore this event from another assistant.
   * _findAssistant_ 
       - if the _to_ is addressed to you:
@@ -1238,8 +1199,7 @@ A simple floor manager will generally forward all events to the intended recipie
 
 A minimal floor manager will therefore exhibit the following behaviours.   
 
-  * _utterance_  - Forward to intended recipient. 
-  * !!! _whisper_  - Forward to intended recipient. 
+  * _utterance_  - Forward to intended recipient. (keep private parameter)
   * _invite_   - Forward to intended recipient. 
   * _uninvite_- Forward to intended recipient. 
   * _findAssistant_  - Forward to intended recipient. 
@@ -1324,10 +1284,13 @@ This section documents some of the key design decisions that were made by the te
 |private flag in _to_|_Question:_ Should the private flag be inside the _to_ section because it has no meaning if there is no _to_section.<br>_Answer;_ Yes|
 |speakerUris in invites|_Question:_Should we allow/expect speakerUris in invites? <br>_Answer:_ These are optionally allowed. If present it will mean that the inviting agent has either received the manifest or has spoken with the agent previously. The receiving agent can ignore this parameter, especially if it not valid.|
 |speakerUri in _from_|_Question:_ Do we need a speakerUri on the _from_ parameter as well?<br>_Answer:_Yes|
-|Size of conversation object|_Question:_ Do we need to worry about the size of the conversation object and should we allow full manifests and unlimited persistentState objects etc.|
-|persistentState|_Question:_ Do we need to keep the persistent state? Should clients modify it directly or should there be a separate event and use the floor to modify it?|
-|should _to_ always be present?|_Question_:Should we insist on a _to_ in all events and have an explicitly way of indicating 'all'?  Does _to_ on an utterance imply giving the floor to the receiver?|
 |keeping _dialogHistory_ safe|_Question_: To what extent is it safe to put dialog history into invites and findAssitant messages?<br>_Answer_:  This is left to the discretion of the sender just as it might be in warm transfer in a real telephone conversation. The consensus was that it is probably safe to pass on the last few turns as-if the target agent had been at the table. i.e. obscure any messages that this agent is not cleared to have visibility of , for example because they were private.  More discussion will probably be needed on this issue as use cases emerge.|
+|whispers or private utterances|_Question_:Now that _dialogEvent_ parameters are embedded in events such as _invite_ and there is support for the _private_ parameter in the _to_ section of an _utterance_ event, can we retire _whisper_ in favor of private _utterance_ events instead??<br>_Answer:_ Yes. The _whisper_ event has been removed.|
+|_context_ in dialogEvents|_Question:_ We added -context- into dialog events to support context on utterances. The intention was that this would allow the passing of context in such a way that things like language type and dialect were fully supported. However it is located outside of the 'text' feature so that is not correct.   Would we not be better simply removing _context_ as a specific extension to dialog events and considering adding 'instruct' and 'context' dialogEvent parameters to events like _invite_ rather than the generic _dialogEvent_?   That way we can more directly support the established LLM paradigm of instructions and context in all messages where _dialogEvents_ are used to conveny instructions from one agent to another.<br>_Answer:_ TO BE DISCUSSED| 
+|_to_ on _utterance_ gives away floor?|_Question:_Does _to_ on an utterance imply giving the floor to the receiver?<br>_Answer:_ TO BE DISCUSSED|
+|Size of conversation object|_Question:_ Do we need to worry about the size of the conversation object and should we allow full manifests and unlimited persistentState objects etc.|
+|persistentState|_Question:_ Do we need to keep the persistent state? Should clients modify it directly or should there be a separate event and use the floor to modify it?<br>_Answer:_ TO BE DISCUSSED|
+|should _to_ always be present?|_Question_:Should we insist on a _to_ in all events and have an explicitly way of indicating 'all'?  <br>_Answer:_ If _to_ is omitted then the event is intended for all recipients.  This allows simple systems with one user and one agent to simply omit the _to_ section.<br> _Answer:_ TO BE DISCUSSED|
 
 ### Chapter 7. Document Change Log
 
@@ -1337,7 +1300,4 @@ This section documents some of the key design decisions that were made by the te
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.|
-
-## TO DO ##
-- remove whisper.
+|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ |
