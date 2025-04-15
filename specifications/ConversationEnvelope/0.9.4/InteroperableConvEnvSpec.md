@@ -34,14 +34,14 @@ Status: Under Development
 #### &nbsp; 1.10 Utterance Events
 ##### &nbsp; &nbsp; &nbsp;  1.10.1 Utterance Text Feature
 #### 1.11 Extensible Dialog Event Features (Informative)
-#### 1.12 Context Event
-#### 1.13 Invite Event
+#### 1.12 context Event
+#### 1.13 invite Event
 #### 1.14 uninvite Event
-#### 1.15 Bye Event
+#### 1.15 bye Event
 #### 1.16 describeAssistant Event
 #### 1.17 publishManifest Event
-#### 1.18 findAssistant Event
-#### 1.19 proposeAssistant Event
+#### 1.18 getManifests Event
+#### 1.19 publishManfests Event
 #### 1.20 requestFloor Event
 #### 1.21 grantFloor Event
 #### 1.22 revokeFloor Event
@@ -388,8 +388,8 @@ The following are valid values for _eventTypes_.
 * **discovering other agents and establishing their capabilities**
   * _describeAssistant_ - Ask an agent to return a list of manifests of their own capabilities.
   * _publishManifest_ - Return a list of manifests for the current assistant.
-  * _findAssistant_ - Ask an agent to recommend themself or another agent for a task.
-  * _proposeAssistant_ - Return a list of recommended agents for a task.
+  * _getManifests_ - Ask an agent to recommend themself or another agent for a task.
+  * _publishManfests_ - Return a list of recommended agents for a task.
 
 * **managing who has the conversational floor** (support for multi-party conversations and floor passing between agents)
   * _requestFloor_ - Used by a conversant to request the floor.
@@ -717,9 +717,9 @@ Figure 18. A _bye_ event with a voiced farewell.
 As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
 
 
-#### 1.16 describeAssistant Event
+#### 1.16 requestManifest Event
 
-The _describeAssistant_ event can be used to ask an assistant about the services it provides   A _publishManifest_ event will be returned in response to the _describrAssitant_ event. 
+The _requestManifest_ event can be used to ask an assistant about the services it provides   A _publishManifest_ event will be returned in response to the _describrAssitant_ event. 
 
 This will contain one or more manifests [4] each defining the location, identity, and services provided by the assistant.
 
@@ -737,7 +737,7 @@ This will contain one or more manifests [4] each defining the location, identity
         },
         "events": [
           {
-            "eventType": "describeAssistant",
+            "eventType": "requestManifest",
             "to": { 
               "serviceUrl" : "https://dev.buerokratt.ee/ovon/conversation"
             }
@@ -746,9 +746,12 @@ This will contain one or more manifests [4] each defining the location, identity
       }
     }
 
-Figure 19. A _describeAssistant_ event  
+Figure 19. A _requestManifest_ event  
 
 #### 1.17 publishManifest Event
+xxx
+
+
    {
       "ovon": {
         "schema": {
@@ -793,20 +796,6 @@ Figure 19. A _describeAssistant_ event
                     }
                     "score": 0.25
                   }
-                ],
-                "discoveryManifests": [
-                  {
-                    "identification": {
-                      "serviceUrl": "https://theBotPublishingTheManifest.com",
-                      "speakerUri" : "tag:theBotPublishingTheManifest.com,2025:003",
-                      "synopsis" : "The search assistant for ..."
-                      ...
-                    },
-                    "capabilities": {
-                      ...
-                    }
-                    "score": 1.00
-                  }
                 ]
             }
           }     
@@ -819,17 +808,17 @@ Figure 19. A _describeAssistant_ event
 !!! To be reviewed by the team !!
 
 
-### 1.18 findAssistant Event
+### 1.18 getManifests Event
 
-The _findAssistant_ event can be used to ask an assistant about the services it provides or to recommend other assistants for a certain task.   There are a three use-cases for this event.
+The _getManifests_ event can be used to ask an assistant about the services it provides or to recommend other assistants for a certain task.   There are a three use-cases for this event.
 
 1. Asking a site or assistant (or human agent) about the tasks that it can perform.
 2. Asking a site or assistant (or human agent) if they are willing and able to support a specific task.
 3. Asking a site or assistant (or human agent) to recommend one or more assistants that can help with a certain task.
 
-A _proposeAssistant_ event will be returned in response to the _findAssitant_ event.  This will contain one or more manifests [4] each defining the location, identity, and services provided by a specific assistant.
+A _publishManfests_ event will be returned in response to the _findAssitant_ event.  This will contain one or more manifests [4] each defining the location, identity, and services provided by a specific assistant.
 
-A _findAssistant_ event can optionally be accompanied by a private utterance event containing a natural language description of the task to be performed.  It can also be accompanied by a _context_ event containing dialog history to assist with the decision.
+A _getManifests_ event can optionally be accompanied by a private utterance event containing a natural language description of the task to be performed.  It can also be accompanied by a _context_ event containing dialog history to assist with the decision.
 
     {
       "ovon": {
@@ -845,21 +834,18 @@ A _findAssistant_ event can optionally be accompanied by a private utterance eve
         },
         "events": [
           {
-            "eventType": "findAssistant",
+            "eventType": "getManifests",
             "to": { 
               "serviceUrl" : "https://dev.buerokratt.ee/ovon/conversation"
-            },
-            "parameters" : {
-              "recommendScope" : "internal"
             }
           }
         ]
       }
     }
 
-##### Figure 20. Use Case #1. A bare findAssistant event used to ask an assistant about the tasks that it can perform.
+##### Figure 20. Use Case #1. A bare getManifests event used to ask an assistant about the tasks that it can perform.
 
-Figure 20 shows a findAssistant event that is used to request the manifests of all the services provided by a certain site.   This is characterised by the following features:
+Figure 20 shows a getManifests event that is used to request the manifests of all the services provided by a certain site.   This is characterised by the following features:
 
 - The _to_ object does not contain a _speakerUri_ indicating that the manifests of all agents served by this site are wanted.
 - The _recommendedScope_ parameter has the 'internal' value meaning that only services provided by the target server are wanted.
@@ -880,7 +866,7 @@ The returned manifest list will be expected to only contain manifests from the t
         },
         "events": [
           {
-            "eventType": "findAssistant",
+            "eventType": "getManifests",
             "to": { 
               "serviceUrl": "https://dev.buerokratt.ee/ovon/conversation"
             }
@@ -932,11 +918,11 @@ Figure 21 shows the same bot as Figure 20 being asked if it supports a specific 
         },
         "sender": {
           "serviceUrl": "https://someConvener.com",
-          "speakerUri": "tag:someuser.com,2025:4567"
+          "speakerUri": "tag:someconvener.com,2025:4567"
         },
         "events": [
           {
-            "eventType": "findAssistant",
+            "eventType": "getManifests",
             "to": { 
               "serviceUrl": "https://myFavoriteDiscoveryBot.com"
             }
@@ -947,17 +933,17 @@ Figure 21 shows the same bot as Figure 20 being asked if it supports a specific 
           {
             "eventType": "utterance",
             "to": { 
-              "serviceUrl": "https://dev.buerokratt.ee/ovon/conversation",
+              "serviceUrl": "https://myFavoriteDiscoveryBot.com",
               "private": true
             },
             "parameters": {
               "dialogEvent": {
-                "speakerUri": "tag:someuser.com,2025:4567",
+                "speakerUri": "tag:someconvener.com,2025:4567",
                 "span": { "startTime": "2023-06-14 02:06:07+00:00" },
                 "features": {
                   "text": {
                     "mimeType": "text/plain",
-                    "tokens": [ { "value": "Do I need a visa to enter Estonia from Spain?" } ] 
+                    "tokens": [ { "value": "I require an expert with understanding about international visa requirements" } ] 
                   }
                 }
               }
@@ -969,7 +955,16 @@ Figure 21 shows the same bot as Figure 20 being asked if it supports a specific 
               "dialogHistory": [
                 { "utterance dialog event N-2": {} },
                 { "utterance dialog event N-1": {} },
-                { "utterance dialog event N": {} }
+                {
+                  "speakerUri": "tag:someuser.com,2025:4567",
+                  "span": { "startTime": "2023-06-14 02:06:07+00:00" },
+                  "features": {
+                    "text": {
+                      "mimeType": "text/plain",
+                      "tokens": [ { "value": "Do I need a visa to enter Estonia from Spain?" } ] 
+                    }
+                  }
+                }
               ]
             }
           }
@@ -985,11 +980,11 @@ Assitants can recommend themselves or other agents for a task.  In this example 
 
 The optional _to_ object can be used to indicate which agent is the intended recipient of the event.  If absent then all recipients should consider the request directed at them, for example multiple assistants could be simulataneously asked to make recommendations.
 
-As with the invite event, there is no requirement for a _speakerUri_ on a _findAssistant_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.
+As with the invite event, there is no requirement for a _speakerUri_ on a _getManifests_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.
 
-See section 1.20 for more information on _proposeAssistant_ event behaviors.
+See section 1.20 for more information on _publishManfests_ event behaviors.
 
-### 1.19 proposeAssistant Event
+### 1.19 publishManfests Event
 
     {
       "ovon": {
@@ -1008,7 +1003,7 @@ See section 1.20 for more information on _proposeAssistant_ event behaviors.
               "serviceUrl": "https://someBotThatAskedForIt.com",
               "speakerUri" : "tag:someBotThatAskedForIt.com,2025:1234"
             },
-            "eventType": "proposeAssistant",
+            "eventType": "publishManfests",
             "parameters": {
               "servicingManifests" : [
                   {
@@ -1068,34 +1063,34 @@ See section 1.20 for more information on _proposeAssistant_ event behaviors.
       }
     }
 
-##### Figure 23. A typical proposeAssistant event 
+##### Figure 23. A typical publishManfests event 
 
-The _proposeAssistant_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event but can also be used to make a delegation suggestion in response to an _utterance_.
+The _publishManfests_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _getManifests_ event but can also be used to make a delegation suggestion in response to an _utterance_.
 
-Once an agent receives a _findAssistant_ event it can do a combination of the following:
+Once an agent receives a _getManifests_ event it can do a combination of the following:
 
 - Recommend one or more agents (including itself) to service this request.
 - Recommend one or more agents to help find who can service this request.
 
-In order to support this the _proposeAssistant_ event has two mandatory parameters:
+In order to support this the _publishManfests_ event has two mandatory parameters:
 
 - _servicingManifests_ - A list of agents that can service this request.
 - _discoveryManifests_ - A list of agents that can recommend other agents to service this request.
 
-It is the responsibility of the receiver of this event to choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _dialog_event_ parameter value that was used in the _findAssistant_ event.
+It is the responsibility of the receiver of this event to choose one (or none) of the proposed agents and to issue an _invite_ to that agent.  This will typically be accompanied by the same _dialog_event_ parameter value that was used in the _getManifests_ event.
 
-If an agent receives any other event that it does not feel capable of servicing, it can also return a _proposeAssistant_ event.  
+If an agent receives any other event that it does not feel capable of servicing, it can also return a _publishManfests_ event.  
 
 The optional _to_ can be used to indicate a specific agent to which the proposal is addressed.  Otherwise any recipient should consider the proposal addressed to themselves.
 
-There is no requirement for a _speakerUri_ on a _proposeAssistant_ event.  If one is provided then it is good practice for the receiving agent to pass this speakerUri along in any subsequent _invite_ event to this agent.
+There is no requirement for a _speakerUri_ on a _publishManfests_ event.  If one is provided then it is good practice for the receiving agent to pass this speakerUri along in any subsequent _invite_ event to this agent.
 
 Each list item in the recommendation should be in the manifest format as specified in [4].  In addition to the keys specified in that document, the manifest object can contain one additional optional key that is not present in the manifest specification:
   - _score_ - A recommendation score is a number between 0.0 and 1.0 with arbitrary precision. 
 
-Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversation and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssistant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to inviting it to do so. 
+Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversation and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _getManifests_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to inviting it to do so. 
 
-Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be re-se the _findAssistant_ event with the same accompanying context.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
+Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be re-se the _getManifests_ event with the same accompanying context.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
 
 Note that there is no requirement in the OVON framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.  There is also nothing to stop an agent recommending servicing agents and discovery agents in its response.
 
@@ -1350,15 +1345,15 @@ If the _to_ section is addressed to the agent (or is absent) then the following 
   * _bye_ - Ignore this event from another assistant.
   * _describeAssistant_ 
     - return your own manifests in a _pulishManifest_ event. !!need to check multiple manifests and context!!
-  * findAssistant
+  * getManifests
       - if the _to_ is addressed to you:
-        - If the scope is 'internal' or 'all' - return your own manifest as a candidate servicingManifest in a _proposeAssistant_ event.
+        - If the scope is 'internal' or 'all' - return your own manifest as a candidate servicingManifest in a _publishManfests_ event.
         - If the scope is 'external' - ignore this event.  
       - if the _to_ section is not specified: 
         - If the scope is 'internal' or 'all'
-          - Consider whether the contents of the envelope is something you want to service.  If you are not sure, ignore this event. Otherwise return a servicingManifest in a _proposeAssistant_ event containing the relevant manifests of the services you offer that can meet the request.
+          - Consider whether the contents of the envelope is something you want to service.  If you are not sure, ignore this event. Otherwise return a servicingManifest in a _publishManfests_ event containing the relevant manifests of the services you offer that can meet the request.
         - if the scope is 'external' - ignore this event.
-  * _proposeAssistant_ - Ignore this event if you did not ask for a recommendation.
+  * _publishManfests_ - Ignore this event if you did not ask for a recommendation.
   * _uninvite_ - Leave this conversation (i.e. stop responding to all events from this conversation_id)
   
 * floor management events - giving and taking the floor
@@ -1382,8 +1377,8 @@ A minimal floor manager will therefore exhibit the following behaviours.
   * _uninvite_- Forward to intended recipient. 
   * _describeAssistant_  - Forward to intended recipient. 
   * _publishManifest_ - Forward to intended recipient. 
-  * _findAssistant_  - Forward to intended recipient. 
-  * _proposeAssistant_  - Forward to intended recipient. 
+  * _getManifests_  - Forward to intended recipient. 
+  * _publishManfests_  - Forward to intended recipient. 
   * _bye_ - Forward to intended recipient. Also remove this agent from the current register of active conversants.
   * _requestFloor_ - Return a _grantFloor_ 
   * _grantFloor_ - Forward to intended recipient. 
@@ -1456,7 +1451,7 @@ This section documents some of the key design decisions that were made by the te
 |How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
 |Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
 |Multi-conversant support|_Question:_ How might this specification be extended to support multiple conversant support?   The most pressing need for this is to enable a 'favored' agent to be able to respond to interruption messages from the user.   After that, use cases could include having multiple users on a single conversation and multiple agents competing for the floor - i.e. a conference call involving multiple users and/or agents.</br>_Answer:_  This specification fully anticipates that the conversation floor manager could support multiple conversants.   The group has identified the following features that will probably be needed to support this.</br> - Uninviting conversants (See above)</br> - Adding targetSpeakerID to dialog events (to allow one conversant to specifically address another specific conversant).</br> - Adding a speakers section to the conversation object to keep track of the speakers in the conversation including their speakerUris, URLs, displayNames, and spokenNames.
-|candidateAssistants|_Question_: should we rename this to be _proposeAssistant_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: It was agreed to rename this _proposeAssistant_.|
+|candidateAssistants|_Question_: should we rename this to be _publishManfests_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: It was agreed to rename this _publishManfests_.|
 |'to' destinations|_Question_: There is an urgent need to agree how to express 'to' and discuss exactly how the addressing of events is managed.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: We have added an optional 'to' parameter to all events.  This helps the recipient decide whether they want to ignore it or not.|
 |responseCode|_Question_: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: We decided to deprecate the responseCode and introduce an 'acknowledge' event instead. |
 |discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberately left this out for now, but if we need it, we will consider additional flags on the manifest in some form.|
@@ -1478,14 +1473,19 @@ This section documents some of the key design decisions that were made by the te
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
+|0.9.2|2024.07.03|- Added getManifests event</br> - Added publishManfests event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ |
+|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed publishManfests to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _getManifests_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ |
 
 # TO DO
 - make it clear in the spec that utterances can be private or not and that private utterances are whispers. DONE
 
 - create a top-level context event containing a dialogHistory parameter and leaving it open for other random data to be in there. DONE
 - remove dialogEvent from all sub-events apart from dialogHistory and utterance DONE
-- re-instate findAssistant, proposeAssistant, describeAssistant (and publishManifest) DONE
+- re-instate getManifests, publishManfests, describeAssistant (and publishManifest) DONE
 - retire context in dialogEvent DONE
+
+- retire requestManifest
+- rename findAssistant getManifests. return publishManifests.  
+- make recommendScope default to internal
+- make -servicingManfests and discoveryManifests optional in publishManifests
