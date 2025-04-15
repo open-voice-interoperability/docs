@@ -205,4 +205,4 @@ mandatory elements|The mandatory elements that are required in the various eleme
 |-|-|-|
 |0.9.0|23 April 2024|Draft for comments to the community|
 |0.9.1|26 November 2024|-Rename 'serviceName' as 'department'<br>-Added note onto 'synpopsis'<br>-Add an 'Approach and Potential Uses' section.<br>-Added 'Authentication' in the Decision log.<br>-separated 'input' and 'ouput' supported layers.<br> -Clarified that URL is the unique key for an agent's identity.<br>-Removed inline schema and added reference instead. |
-|0.9.2|TBD|-Rename _serviceUrl_ to _serviceUrl_<br>-Add _SpeakerUri_ to the _identification_ section<br> |
+|0.9.2|TBD|-Rename _serviceEndpoint_ to _serviceUrl_<br>-Add _SpeakerUri_ to the _identification_ section<br> |

@@ -33,17 +33,20 @@ Status: Under Development
 #### &nbsp; 1.9 Event-Types
 #### &nbsp; 1.10 Utterance Events
 ##### &nbsp; &nbsp; &nbsp;  1.10.1 Utterance Text Feature
-#### 1.11 dialogEvent parameters in other event types
-#### 1.12 Extensible Dialog Event Features (Informative)
+#### 1.11 Extensible Dialog Event Features (Informative)
+#### 1.12 Context Event
 #### 1.13 Invite Event
-#### 1.14 Bye Event
-#### 1.15 findAssistant Event
-#### 1.16 proposeAssistant Event
-#### 1.17 requestFloor Event
-#### 1.18 grantFloor Event
-#### 1.19 revokeFloor Event
-#### 1.20 yieldFloor Event
-#### 1.21 uninvite Event
+#### 1.14 uninvite Event
+#### 1.15 Bye Event
+#### 1.16 describeAssistant Event
+#### 1.17 publishManifest Event
+#### 1.18 findAssistant Event
+#### 1.19 proposeAssistant Event
+#### 1.20 requestFloor Event
+#### 1.21 grantFloor Event
+#### 1.22 revokeFloor Event
+#### 1.23 yieldFloor Event
+
 
 
 ### CHAPTER 2. MINIMAL BEHAVIORS
@@ -100,7 +103,7 @@ The patterns described above allow for conversation between one user and multipl
 \
 **Figure 2.  Multi-party conversations hosted by a floor manager and a converner agent.**\
 \
-This specification also contains extensions to support the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows how this might work.  It extends Figure 1 to show mutliple agents taking part in a conversation.  As in Figure 1, the floor manager manges the conversational interaction.  IN a multi-party conversation the floor will invite a 'Convener' agent to the conversation. This will be compliant agent but with special privileges.  Envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   The convener manages which agent has the floor at any given momment.  An in depth description of this approach can be found in [7].  Support for multi-party conversations is still somewhat unproven. Additional features or small changes may be neccessary us the use-cases and patterns for this become more mature.
+This specification also contains extensions to support the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows how this might work.  It extends Figure 1 to show mutliple agents taking part in a conversation.  As in Figure 1, the floor manager manges the conversational interaction.  In a multi-party conversation the floor will invite a 'Convener' agent to the conversation. This will be compliant agent but with special privileges.  Envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   The convener manages which agent has the floor at any given momment.  An in depth description of this approach can be found in [7].  Support for multi-party conversations is still somewhat unproven. Additional features or small changes may be neccessary us the use-cases and patterns for this become more mature.
 
 ### 0.5 Discovery
 
@@ -374,7 +377,8 @@ The _to_ section also contains a _private_ boolean parameter which, when set to 
 The following are valid values for _eventTypes_.
 
 * **speaking or sending multi-media events** (publicly or privately)
-  * _utterance_  - An 'utterance' spoken from one conversant to some or all participants
+  * _utterance_  - An 'utterance' spoken or whispered from one conversant to some or all participants
+  * _context_ - Optional additinal text or media to  accompanying an utterance.
 
 * **joining or leaving conversations**
   * _invite_ - A conversant is invited to join the conversation.
@@ -382,6 +386,8 @@ The following are valid values for _eventTypes_.
   * _bye_ -  A conversant is leaving the conversation
 
 * **discovering other agents and establishing their capabilities**
+  * _describeAssistant_ - Ask an agent to return a list of manifests of their own capabilities.
+  * _publishManifest_ - Return a list of manifests for the current assistant.
   * _findAssistant_ - Ask an agent to recommend themself or another agent for a task.
   * _proposeAssistant_ - Return a list of recommended agents for a task.
 
@@ -424,13 +430,19 @@ The following sections define these event objects in more detail.
 
 Figure 10. Example of an OVON _utterance_ event.
 
-Figure 10 shows the structure of an event with the _eventType_ of _utterance_.  This object contains just one mandatory parameter with the key-name _dialogEvent_.  The _to_ parameter is optional and can be used to designate that the utterance is directed to a certain participant in the conversation.  This can be thought of as the equivalent of catching someone's eye during a round table conversation.
+The utterance event is the message that is for assistants or users to 'speak' to each other.
+They can contain media of any type.  dialogEvent objects must contain a 'text' feature.
+Additional feature types and mime-types are permitted.  
 
-OVON events of this type are sent whenever a user or an assistant takes a dialog act.  The value of the _dialogEvent_ dictionary key must contain a valid dialog event object as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay ).
+Figure 10 shows the structure of an event with the _eventType_ of _utterance_.
+This object contains just one mandatory parameter with the key-name _dialogEvent_.
+The _to_ parameter is optional and by default utterance events are public and addressed to all conversants. 
+They can however be addressed to specific conversants and/or made private using the _to_ element of the event.
+A private utterance events is also termed a 'whisper'.  These can be used to convey instructions and contextual information behind the scenes between conversants.
 
-The value of the dialogEvent key must contain a valid dialog event object as specified in Interoperable Dialog Event Object Specification Version 1.0.   
+The _dialogEvent_ element must contain a valid dialog event object as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay ).
 
-dialogEvent objects must contain a 'text feature.   Additional feature types and mime-types are permitted.  Compliant OVON dialog agents do not need to respond to any unsupported keys in the dialog event..   
+Compliant OVON dialog agents do not need to respond to any unsupported features or keys in the dialog event..   
 
 ##### 1.10.1 dialogEvent Text Feature
 
@@ -443,21 +455,7 @@ The _text_ feature is **mandatory** in all dialog events.
 |_value_|Any number of values are allowed as strings in the _tokens_ section.  When concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 |_valueUrl_|Any number of value URLs are allowed in the tokens section.  These URLs should locate content of type 'text/plain' and when downloaded and concatenated together the _tokens_ should represent the orthographic representation of the utterance.
 
-##### 1.11 dialogEvent parameters in other event types
-
-_dialogEvent_ objects are used in OVON events in situations where one conversatant wants to convey language or other media to another one.  The _utterance_ event is used where agents address each other directly and the recipient uses the content of hte dialogEvent alone to infer the intent of the utterance.  Other more specific event types also contain dialogEvents.  Other events that include dialogEvent parameters are:  
-- _invite_, 
-- _findAssitant_
-- _requestFloor_ 
-- _grantFloor_.
-
-For example, a dialogEvent in an _invite_ event can be used to let the invited agent know why they are being invited.  In the simplest use-case this _dialogEvent_ may repeat an utterance given by the user in order to delegate the servicing of this request to a newly invited agent.  In a more sophisticated use-case the inviting agent may syntehsise (e.g. using generative AI) a specific instruction or request for the new agent. 
-
-Such parameters should only contain valid dialog event objects as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay).   
-
-!! The _context_ parameter is an optional part of the _dialogEvent_ and is a plain text.  This field should contain a natural language description of the context of the request at this point in the dialog. It should not be used to communicate instructions from one agent to another agent.\
-
-### 1.12 Extensible Dialog Event Features (informative)
+### 1.11 Extensible Dialog Event Features (informative)
 
 The features in Dialog Events are intentionally intended to be extensible.  This specification does not limit the features that can be put into dialog events.
 
@@ -485,6 +483,39 @@ There are no limitations on the features that are added to a dialog event.  This
 
 #### Figure 12. Example video feature, which at present would be considered a custom feature.
 
+### 1.12 Context Event
+
+    {
+      "ovon": {
+        ..
+        "events": [
+          {
+            "to": { 
+              "speakerUri" : "tag:someBotOrPerson.com,2025:0021"
+            },
+            "eventType": "context",
+            "parameters": {
+              "dialogHistory": [
+                { .. utterance dialog event N-2 .. },
+                { .. utterance dialog event N-1 .. },
+                { .. utterance dialog event N } .. }
+              ],
+              "other" : { .. arbitrary contextual information }
+            }
+          },
+          ..
+        ]
+      }
+    }
+
+#### Figure 13. Typical context event
+
+The purpose of the _context_ event is to give additional information to receipient agents.   This event is intended primarily to support context for general purpose AIs. For this reason it can have any structure and content and will typically be sent alongside other events as well.   The _context_ event can also contain an optional _dialogHistory_ parameter to convey dialog history in a standard format.  If media other than text is to be included in the _context_ object it is recommended that parameters with format of a dialogEvent are used with meaningful key names.
+
+The _dialogHistory_ parameter is simple list of dialog events which should contain all, some or all of the utterances in the dialog.  It is good practice to order these in startTime order (in universal time) with the most recent event being the last item in the list. It is at the discretion of the sender of the _invite_ to decide how much history to include and whether the omit or anonymize certain dialogEvents in order to maintain security and confidentiality. For example, the conversational floor may decide to send the last 'N' (e.g. N=4) events in the dialog as if the invited agent had been at the floor for those N dialog turns.  If the agents had not been entitled to receive some of those events then these would also be omitted from the dialogHistory array or anonymized or redacted in some fashion.
+
+Conversants that do not have general purpose AI capability may choose to ignore the context event.
+
 ### 1.13 Invite Event
 
     "ovon": {
@@ -509,7 +540,7 @@ There are no limitations on the features that are added to a dialog event.  This
     }
 
 
-##### Figure 13. Mandatory elements of the _invite_ object shown as a 'bare invite'
+##### Figure 14. Mandatory elements of the _invite_ object shown as a 'bare invite'
 
 Invite events act as an invitation for the target agent to enter the conversation.  They also invite the target agent to take the conversational floor and respond to all utterances from this point onwards.  The  _to_ object is used to specify the identity of the agent that is being invited.  
 
@@ -517,7 +548,7 @@ Invite events act as an invitation for the target agent to enter the conversatio
 
 If the _to_ event is absent, then all recipients of the envelope should consider themselves invited to the conversation.
 
-It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 13.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
+It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 14.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
 
     {
       "ovon": {
@@ -553,21 +584,26 @@ It is possible to invite an agent to a conversation without giving it any other 
               "serviceUrl" : "https://siteof.botThatIsBeingInvited.com",
               "speakerUri" : "tag:botThatIsBeingInvited.com,2025:1234"
             }
+          },
+          {
+            "to": { 
+              "serviceUrl" : "https://siteof.botThatIsBeingInvited.com",
+            },
+            "eventType": "context",
             "parameters": {
-              "dialogEvent": {
-                "speakerUri": "tag:botThatOfferedTheInvite.com,2025:4567",
-                "span": { "startTime": "2023-06-14 02:06:07+00:00" },
-                "features": {
-                  "text": {
-                    "mimeType": "text/plain",
-                    "tokens": [ { "value": "What is the weather in Detroit Michigan?" } ] 
-                  }
-                }
-              },
               "dialogHistory": [
                 { .. utterance dialog event N-2 .. },
                 { .. utterance dialog event N-1 .. },
-                { .. utterance dialog event N } .. }
+                {
+                  "speakerUri": "tag:theUser.com,2025:3456",
+                  "span": { "startTime": "2023-06-14 02:06:07+00:00" },
+                  "features": {                         
+                    "text": {
+                      "mimeType": "text/plain",
+                      "tokens": [ { "value": "What is the weather in Detroit right now?"  } ]
+                    }
+                  }
+                }
               ]
             }
           }
@@ -575,15 +611,49 @@ It is possible to invite an agent to a conversation without giving it any other 
       }
     }
 
-##### Figure 14. A typical dialog envelope for an invite, including a voiced transfer prompt and a dialogEvent specifying the purpose of the invite.
+##### Figure 15. A typical dialog envelope for an invite, including a voiced transfer prompt, and a context object containing dialog history including the request from the user as the last dialog event in the history.
 
-Invite events may be accompanied by additional events and contain optional parameters.  Figure 14 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then invite event issues the invitation, accompanied by a dialogEvent parameter which tells the new bot the purpose of the request.
+Invite events may be accompanied by additional events and contain optional parameters.  Figure 15 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then invite event issues the invitation, accompanied by a context event which conveys the dialog history up to the point of the invite to help the invited bot respond appropriately.
 
-An optional _dialogHistory_ parameter may also be included.  This parameter is intended to give conversational context to the invited agent.  This will help the agent frame its response and could also form the context in which to interpret the dialogEvent describing the purpose of the invite.
+### 1.14 uninvite Event
 
-The _dialogHistory_ parameter is simple list of dialog events which should contain all, some or all of the utterances in the dialog.  It is good practice to order these in startTime order (in universal time) with the most recent event being the last item in the list. It is at the discretion of the sender of the _invite_ to decide how much history to include and whether the omit or anonymize certain dialogEvents in order to maintain security and confidentiality. For example, the conversational floor may decide to send the last 'N' (e.g. N=4) events in the dialog as if the invited agent had been at the floor for those N dialog turns.  If the agents had not been entitled to receive some of those events then these would also be omitted from the dialogHistory array or anonymized or redacted in some fashion.
+    {
+      ovon ": {
+        schema ": {
+          version ":"0.9.4"
+        },
+        conversation ": {
+          id ":"someUniqueIdForTheConversation"
+        },
+        sender ": {
+          "speakerUri":"tag:some_Convener.com,2025:"
+        },
+        "events ": [
+          {
+            "eventType":""uninvite",
+            "to" : {
+              "speakerUri" : "tag:agentBeingUnivited,2025:1234"
+            },
+            "parameters ": {
+              "reason" : ""
+            }
+          }
+        ]
+      }
+    }
 
-### 1.14 Bye Event
+##### Figure 16. A typical univite event 
+
+The _uninvite_ event is the opposite of an _invite_ event and informs an agent that they have been removed from a conversation.  In the absence of a new _invite_ event, the agent should not expect to receive any more envelopes from this conversation.
+
+|Reason|Description|
+|------|-----------|
+|timedOut|The floor manager or convener is removing the agent from the conversation because it believes that the agent has taken too long to respond.|
+|brokenPolicy|The floor manager or convener is removing the agent from the conversation because the agent has not met certain policy standards. This may be for example due to unsolicited or offensive contributions to the conversation.|
+|error|The floor manager or convener is removing the agent from the conversation because some kind of error has ocurred which means it is not longer meaningful for the agent to continue being part of the conversation.|
+|other|The floor manager or convener is removing the agent from the conversation for some other reason|
+
+### 1.15 Bye Event
 
     {
       "ovon": {
@@ -604,9 +674,9 @@ The _dialogHistory_ parameter is simple list of dialog events which should conta
       }
     }
 
-Figure 15. A minimal _bye_ envelope detaching an agent from a conversation.
+Figure 17. A minimal _bye_ envelope detaching an agent from a conversation.
 
-When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in Figure 15. It has no _parameters_.  The optional _to_ object can be included but it is not neccessary.
+When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in Figure 17. It has no _parameters_.  The optional _to_ object can be included but it is not neccessary.
 
     "ovon": {
       "schema": {
@@ -642,11 +712,114 @@ When an agent wants to leave the conversation it sends a _bye_ event.  This mess
       ]
     }
 
-Figure 16. A _bye_ event with a voiced farewell.
+Figure 18. A _bye_ event with a voiced farewell.
 
-As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 16.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
+As with the _invite_ event, the _bye_ event can be accompanied by other events as shown in Figure 18.  In this example the agent indicates its intention to leave the conversation and voices a farewell as it does so.
 
-### 1.15 findAssistant Event
+
+#### 1.16 describeAssistant Event
+
+The _describeAssistant_ event can be used to ask an assistant about the services it provides   A _publishManifest_ event will be returned in response to the _describrAssitant_ event. 
+
+This will contain one or more manifests [4] each defining the location, identity, and services provided by the assistant.
+
+    {
+      "ovon": {
+        "schema": {
+          "version": "0.9.4"      
+        },
+        "conversation": {
+          "id": "31050879662407560061859425913208"
+        },
+        "sender": {
+          "serviceUrl": "https://someBot.com",
+          "speakerUri": "tag:someBot.com,2025:4567"
+        },
+        "events": [
+          {
+            "eventType": "describeAssistant",
+            "to": { 
+              "serviceUrl" : "https://dev.buerokratt.ee/ovon/conversation"
+            }
+          }
+        ]
+      }
+    }
+
+Figure 19. A _describeAssistant_ event  
+
+#### 1.17 publishManifest Event
+   {
+      "ovon": {
+        "schema": {
+          "version": "0.9.4"      
+        },
+        "conversation": {
+          "id": "31050879662407560061859425913208"
+        },
+        "sender": {
+          "serviceUrl": "https://theBotPublishingTheManifest.com"
+        },
+        "events": [
+          { 
+            "eventType": "publishManifest",
+            "to": {
+              "serviceUrl": "https://someBotThatAskedForIt.com",
+              "speakerUri" : "tag:someBotThatAskedForIt.com,2025:1234"
+            },
+            "parameters": {
+              "servicingManifests" : [
+                  {
+                    "identification": {
+                      "serviceUrl": "tag://theBotPublishingTheManifest.com,2025",
+                      "speakerUri" : "tag:theBotPublishingTheManifest.com,2025:001",
+                      "synopsis" : "The general assistant for .."
+                      ...
+                    },
+                    "capabilities": {
+                      ...
+                    }
+                    "score": 1.00
+                  },
+                  {
+                    "identification": {
+                      "serviceUrl": "tag://theBotPublishingTheManifest.com,2025",
+                      "speakerUri" : "tag:theBotPublishingTheManifest.com,2025:002",
+                      "synopsis" : "The sales assistant for .."
+                      ...
+                    },
+                    "capabilities": {
+                      ...
+                    }
+                    "score": 0.25
+                  }
+                ],
+                "discoveryManifests": [
+                  {
+                    "identification": {
+                      "serviceUrl": "https://theBotPublishingTheManifest.com",
+                      "speakerUri" : "tag:theBotPublishingTheManifest.com,2025:003",
+                      "synopsis" : "The search assistant for ..."
+                      ...
+                    },
+                    "capabilities": {
+                      ...
+                    }
+                    "score": 1.00
+                  }
+                ]
+            }
+          }     
+        ]
+      }
+    }
+
+##### Figure 20. A typical publishManifest event
+
+!!! To be reviewed by the team !!
+
+
+### 1.18 findAssistant Event
 
 The _findAssistant_ event can be used to ask an assistant about the services it provides or to recommend other assistants for a certain task.   There are a three use-cases for this event.
 
@@ -656,7 +829,7 @@ The _findAssistant_ event can be used to ask an assistant about the services it 
 
 A _proposeAssistant_ event will be returned in response to the _findAssitant_ event.  This will contain one or more manifests [4] each defining the location, identity, and services provided by a specific assistant.
 
-A _findAssistant_ event can optionally be accompanied by a _dialogEvent_ parameter containing a natural language description of the task to be performed.  
+A _findAssistant_ event can optionally be accompanied by a private utterance event containing a natural language description of the task to be performed.  It can also be accompanied by a _context_ event containing dialog history to assist with the decision.
 
     {
       "ovon": {
@@ -684,9 +857,9 @@ A _findAssistant_ event can optionally be accompanied by a _dialogEvent_ paramet
       }
     }
 
-##### Figure 17. Use Case #1. A bare findAssistant event used to ask an assistant about the tasks that it can perform.
+##### Figure 20. Use Case #1. A bare findAssistant event used to ask an assistant about the tasks that it can perform.
 
-Figure 17 shows a findAssistant event that is used to request the manifests of all the services provided by a certain site.   This is characterised by the following features:
+Figure 20 shows a findAssistant event that is used to request the manifests of all the services provided by a certain site.   This is characterised by the following features:
 
 - The _to_ object does not contain a _speakerUri_ indicating that the manifests of all agents served by this site are wanted.
 - The _recommendedScope_ parameter has the 'internal' value meaning that only services provided by the target server are wanted.
@@ -709,10 +882,16 @@ The returned manifest list will be expected to only contain manifests from the t
           {
             "eventType": "findAssistant",
             "to": { 
-              "serviceUrl" : "https://dev.buerokratt.ee/ovon/conversation"
+              "serviceUrl": "https://dev.buerokratt.ee/ovon/conversation"
+            }
+          },
+          {
+            "eventType": "utterance",
+            "to": { 
+              "serviceUrl": "https://dev.buerokratt.ee/ovon/conversation",
+              "private": true
             },
-            "parameters" : {
-              "recommendScope" : "internal",
+            "parameters": {
               "dialogEvent": {
                 "speakerUri": "tag:someuser.com,2025:4567",
                 "span": { "startTime": "2023-06-14 02:06:07+00:00" },
@@ -722,11 +901,16 @@ The returned manifest list will be expected to only contain manifests from the t
                     "tokens": [ { "value": "Do I need a visa to enter Estonia from Spain?" } ] 
                   }
                 }
-              },
+              }
+            }
+          },
+          {
+            "eventType": "context",
+            "parameters": {
               "dialogHistory": [
-                { .. utterance dialog event N-2 .. },
-                { .. utterance dialog event N-1 .. },
-                { .. utterance dialog event N } .. }
+                { "utterance dialog event N-2": {} },
+                { "utterance dialog event N-1": {} },
+                { "utterance dialog event N": {} }
               ]
             }
           }
@@ -734,9 +918,9 @@ The returned manifest list will be expected to only contain manifests from the t
       }
     }
 
-##### Figure 18. Use Case #2. Asking and assistant if they are willing and able to support a specific task.
+##### Figure 21. Use Case #2. Asking and assistant if they are willing and able to support a specific task.
 
-Figure 18 shows the same bot as Figure 17 being asked if it supports a specific task.  The optional _dialogEvent_ parameter is used to communicate the specific task that is being requested.  It is this parameter which distinguishes use case #1 from sue case #2.  An optional _dialogHistory_ parameter may also be included as described in the _invite_ event.  This _dialogHistory_ can be used to help the agent decide whether to they are willing and able to support the enquiry or not.
+Figure 21 shows the same bot as Figure 20 being asked if it supports a specific task.  The extra _context_ and private _utterance_ events are used to communicate the specific task that is being requested.  It is this which distinguishes use case #1 from use case #2.   
 
     {
       "ovon": {
@@ -747,30 +931,45 @@ Figure 18 shows the same bot as Figure 17 being asked if it supports a specific 
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "serviceUrl": "https://someBot.com"
+          "serviceUrl": "https://someConvener.com",
+          "speakerUri": "tag:someuser.com,2025:4567"
         },
         "events": [
           {
             "eventType": "findAssistant",
-            "to": {
+            "to": { 
               "serviceUrl": "https://myFavoriteDiscoveryBot.com"
-            },
+            }
             "parameters" : {
-              "recommendScope" : "external",
+              "recommendScope" : "external"
+            }
+          },
+          {
+            "eventType": "utterance",
+            "to": { 
+              "serviceUrl": "https://dev.buerokratt.ee/ovon/conversation",
+              "private": true
+            },
+            "parameters": {
               "dialogEvent": {
-                "speakerUri": "speaker0819",
+                "speakerUri": "tag:someuser.com,2025:4567",
                 "span": { "startTime": "2023-06-14 02:06:07+00:00" },
                 "features": {
                   "text": {
                     "mimeType": "text/plain",
-                    "tokens": [ { "value": "Who is the author of war and peace?" } ] 
+                    "tokens": [ { "value": "Do I need a visa to enter Estonia from Spain?" } ] 
                   }
                 }
-              },
+              }
+            }
+          },
+          {
+            "eventType": "context",
+            "parameters": {
               "dialogHistory": [
-                { .. utterance dialog event N-2 .. },
-                { .. utterance dialog event N-1 .. },
-                { .. utterance dialog event N } .. }
+                { "utterance dialog event N-2": {} },
+                { "utterance dialog event N-1": {} },
+                { "utterance dialog event N": {} }
               ]
             }
           }
@@ -778,9 +977,9 @@ Figure 18 shows the same bot as Figure 17 being asked if it supports a specific 
       }
     }
 
-##### Figure 19. Use case #3. Asking a site or assistant to recommend one or more assistants that can help with a certain task. 
+##### Figure 22. Use case #3. Asking a site or assistant to recommend one or more assistants that can help with a certain task. 
 
-Finally, Figure 19 shows use case #3 where a discovery agent is being asked to recommend some other agent to service a specific request.  The returned _proposeAssitant_ event should contain the manifests of any recommended assistants for the task.  
+Finally, Figure 22 shows use case #3 where a discovery agent is being asked to recommend some other agent to service a specific request.  The returned _proposeAssitant_ event should contain the manifests of any recommended assistants for the task.  
 
 Assitants can recommend themselves or other agents for a task.  In this example the parameter _recommendScope_ has the value "external" which indicates that the assistant is not being invited to recommend itself for the task.   If this parameter was omittied or set to the value "all" then the discovery assistant is being invited to recommend either itself or another agent. 
 
@@ -788,9 +987,9 @@ The optional _to_ object can be used to indicate which agent is the intended rec
 
 As with the invite event, there is no requirement for a _speakerUri_ on a _findAssistant_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.
 
-See section 1.16 for more information on _proposeAssistant_ event behaviors.
+See section 1.20 for more information on _proposeAssistant_ event behaviors.
 
-### 1.16 proposeAssistant Event
+### 1.19 proposeAssistant Event
 
     {
       "ovon": {
@@ -869,7 +1068,7 @@ See section 1.16 for more information on _proposeAssistant_ event behaviors.
       }
     }
 
-##### Figure 20. A typical proposeAssistant event 
+##### Figure 23. A typical proposeAssistant event 
 
 The _proposeAssistant_ event is sent when one agent would like to recommend one or more agents (or itself) for a certain task.   This will usually be in response to a _findAssistant_ event but can also be used to make a delegation suggestion in response to an _utterance_.
 
@@ -896,41 +1095,50 @@ Each list item in the recommendation should be in the manifest format as specifi
 
 Any assistant that is returned in the _servicingManifests_ can be considered suitable to be sent an _invite_ to join the conversation and service the request.   If there are no recommendations to be made then an empty array should be returned in _servicingManifests_.  An agent can also recommend itself. This means that the _findAssistant_ event can also be used to check if a servicing agent is willing and able to service an enquiry prior to inviting it to do so. 
 
-Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be sent a _findAssistant_ event with the same _dialogEvent_ parameter.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
+Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be re-se the _findAssistant_ event with the same accompanying context.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  The _discoveryManifests_ parameter is mandatory and should contain an empty array if no discovery agents are to be recommended.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
 
 Note that there is no requirement in the OVON framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.  There is also nothing to stop an agent recommending servicing agents and discovery agents in its response.
 
 The recommending agent is free to use any mechanism it wants to generate the _score_.   
 
-### 1.17 requestFloor Event [INFORMATIVE]
+### 1.20 requestFloor Event [INFORMATIVE]
 
     {
-      ovon ": {
-        schema ": {
-          version ":"0.9.4"
+      "ovon": {
+        "schema": {
+          "version": "0.9.4"
         },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
+        "conversation": {
+          "id": "someUniqueIdForTheConversation"
         },
-        sender ": {
-          "speakerUri" : "tag:agentRequestingFloor.com,2025:1234"
+        "sender": {
+          "speakerUri": "tag:agentRequestingFloor.com,2025:1234"
         },
-        "events ": [
+        "events": [
           {
-            "eventType":""requestFloor",
+            "eventType": "requestFloor",
             "to": {
-              "speakerUri":"tag:some_Convener.com,2025:"
+              "speakerUri": "tag:some_Convener.com,2025:"
             },
             "parameters": {
-              "reason":"interjection",
-              "dialogEvent ": {
-                "speakerUri ": "tag:agentRequestingFloor.com,2025:1234",
-                "span ": { "startTime ": "2024 -08 -31 T10 :05:00 Z"} ,
-                "features ": {
-                  "text ": {
-                    "mimeType ": "text / plain ",
-                    "tokens ": [
-                      { "value ": "I have background information that could be useful at this point."}
+              "reason": "interjection"
+            }
+          },
+          {
+            "eventType": "utterance",
+            "to": {
+              "speakerUri": "tag:some_Convener.com,2025:",
+              "private": true
+            },
+            "parameters": {
+              "dialogEvent": {
+                "speakerUri": "tag:agentRequestingFloor.com,2025:1234",
+                "span": { "startTime": "2024-08-31T10:05:00Z" },
+                "features": {
+                  "text": {
+                    "mimeType": "text/plain",
+                    "tokens": [
+                      { "value": "I have background information that could be useful at this point." }
                     ]
                   }
                 }
@@ -941,19 +1149,19 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
       }
     }
 
-##### Figure 21. A typical requestFloor event 
+##### Figure 24. A typical requestFloor event 
 
-The _requestFloor_ event is used by agents that do not currently have the conversational floor to request it.  Figure 21 shows a typical _requestFloor_ envelope.
+The _requestFloor_ event is used by agents that do not currently have the conversational floor to request it.  Figure 24 shows a typical _requestFloor_ envelope.
 
 This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor  [7].
 
 This event is somewhat experimental and is currently informative not normative and may be subject to change.  Compliant agents do not need to support this event yet and servicing agents may send this event but they are not expected to receive it and can safely ignore it if they do (See section 2.1). 
 
-The event has two parameters.  The _dialogEvent_ parameter is optional and can be used to explains to the recipient (normally the convener) the reason why the agent is requesting the floor.  This is a dialogEvent as per [2].
+Accompanying private _utterance_ events can be used to explains to the recipient (normally the convener) the reason why the agent is requesting the floor.  This is a dialogEvent as per [2].
 
-The optional _reason_ is a placeholder for a categorical label for the reason for the floor request.  The categories of this label are not yet defined in this standard. The _reason_ can contain any text or be omitted in draft implementations of this message.
+The optional _reason_ parameter is a placeholder for a categorical label for the reason for the floor request.  The categories of this label are not yet defined in this standard. The _reason_ can contain any text or be omitted in draft implementations of this message.
 
-### 1.18 grantFloor Event [INFORMATIVE]
+### 1.21 grantFloor Event [INFORMATIVE]
 
     {
       ovon ": {
@@ -977,11 +1185,11 @@ The optional _reason_ is a placeholder for a categorical label for the reason fo
       }
     }
 
-Figure 22. A bare grantFloor event 
+Figure 25. A bare grantFloor event 
 
 The _grantFloor_ event is used to grant the conversational floor to agents.   This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent is present to co-ordinate the floor [7].
 
-In one use case, the _grantFloor_ event can be sent by floor managers in resonse to a _requestFloor_ event from an agent. Figure 22 shows a bare _grantFloor_ envelope which might be used for this purpose.  Once this message is recieved by an agent is free to send Utterance events to the floor with the expectation that they will be delivered to the designated destination.
+In one use case, the _grantFloor_ event can be sent by floor managers in resonse to a _requestFloor_ event from an agent. Figure 25 shows a bare _grantFloor_ envelope which might be used for this purpose.  Once this message is recieved by an agent is free to send Utterance events to the floor with the expectation that they will be delivered to the designated destination.
 
 
     {
@@ -997,10 +1205,17 @@ In one use case, the _grantFloor_ event can be sent by floor managers in resonse
         },
         "events ": [
           {
-            "eventType":""grantFloor"
+            "eventType":"grantFloor"
             "to": {
               "speakerUri":"tag:agentBeingInvitedToTakeTheFloor.com,2025:1234"
-            },
+            }
+          },
+          {
+            "eventType": "utterance"
+            "to": {
+              "speakerUri":"tag:agentBeingInvitedToTakeTheFloor.com,2025:1234",
+              "private" : true
+            },            
             "parameters": {
               "reason":"new request",
               "dialogEvent ": {
@@ -1021,17 +1236,17 @@ In one use case, the _grantFloor_ event can be sent by floor managers in resonse
       }
     }
 
-#### Figure 23. A grantFloor event inviting an agent to service a specific request. 
+#### Figure 26. A grantFloor event inviting an agent to service a specific request. 
 
-Figure 23 shows an alternate use-case for the _grantFloor_ event. In this use case an agent is already present in a multi-party conversation. It does not currently have the floor and has not requested it.  It is an observer in the conversation.  The convener, floor manager or another agent can direct a _grantFloor_ event to an agent with a _dialogEvent_ to invite the agent to take the floor and describing the purpose of the request.  This is very similar in structure and purpose to an _invite_ event but is sent to an agent that is already party to the conversation.
-
-The event has two parameters.  The optional _dialogEvent_ explains in natural anguage and supporting media to the recipient describing what is requested of them.   This might be a user utterance or an instruction generated by another agent or the floor manager.  This is in dialogEvent format as per [2].
+Figure 26 shows an alternate use-case for the _grantFloor_ event. In this use case an agent is already present in a multi-party conversation. It does not currently have the floor and has not requested it.  It is an observer in the conversation.  The convener, floor manager or another agent can direct a _grantFloor_ event to an agent with a _dialogEvent_ to invite the agent to take the floor and describing the purpose of the request.  This is very similar in structure and purpose to an _invite_ event but is sent to an agent that is already party to the conversation.
 
 The optional _reason_ is a placeholder for a categorical label for the reason for the floor grant.  The categories of this label are not yet defined in this standard. The _reason_ can contain any text or be omitted in draft implementations of this message.
 
+The accompanying private _utterance_ event  explains in natural language and supporting media to the recipient describing what is requested of them.   This might be a user utterance or an instruction generated by another agent or the floor manager.   
+
 This event is somewhat experimental and is currently informative not normative and may be subject to change.  Compliant agents do not need to support this event yet but naïve implementations can treat this event as they would an _invite_ event. (See section 2.1) 
 
-### 1.19 revokeFloor Event
+### 1.22 revokeFloor Event
 
     {
       ovon ": {
@@ -1058,11 +1273,11 @@ This event is somewhat experimental and is currently informative not normative a
       }
     }
 
-##### Figure 24. A typical revokeFloor event 
+##### Figure 27. A typical revokeFloor event 
 
 The _revokeFloor_ event informs an agent that they no longer have the conversational floor.  Typically the agent will cease to send _utterance_ events on receipt of this event.   
 
-Figure 24 shows a typical _revokeFloor_ event which shows an agent having the floor revoked because a higher precedence request has been made that needs to be serviced by a different agent.
+Figure 27 shows a typical _revokeFloor_ event which shows an agent having the floor revoked because a higher precedence request has been made that needs to be serviced by a different agent.
 
 This event has one optional parameter _reason_. This is a categorical label describing the reason that the floor is being revoked.
 
@@ -1076,7 +1291,7 @@ The following reasons are currently supported:
 |error|The convener is removing the agent's floor rights because some kind of error has ocurred which means it is not longer meaningful for the agent to continue interacting.|
 |other|The convener is removing the agent's floor rights for some other reason|
 
-### 1.20 yieldFloor Event
+### 1.23 yieldFloor Event
 
     {
       ovon ": {
@@ -1100,11 +1315,11 @@ The following reasons are currently supported:
       }
     }
 
-##### Figure 25. A typical yieldFloor event 
+##### Figure 28. A typical yieldFloor event 
 
 The _yieldFloor_ event is sent by an agent to indicate that they no longer intend to send _utterance_ events to any conversants.  This event is useful for several use cases. The optional _reason_ parameter is a categorical label indicating the reason that the floor has been yielded.
 
-Figure 25 shows a typical _yieldFloor_ event indicating that the agent believes that they have completed the current goal that they are working on supporting and are not expecting to contribute any more utterances unless requested.
+Figure 28 shows a typical _yieldFloor_ event indicating that the agent believes that they have completed the current goal that they are working on supporting and are not expecting to contribute any more utterances unless requested.
 
 The following _reason_ values are currently supported:
 
@@ -1116,44 +1331,6 @@ The following _reason_ values are currently supported:
 |refused|The agent is yeilding the floor because it is not willing to handle this request|
 |error|The agent is yielding the floor because it has encountered an error from which it cannot recover|
 |other|The agent is yielding the floor for some other reason|
-
-### 1.21 uninvite Event
-
-    {
-      ovon ": {
-        schema ": {
-          version ":"0.9.4"
-        },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
-        },
-        sender ": {
-          "speakerUri":"tag:some_Convener.com,2025:"
-        },
-        "events ": [
-          {
-            "eventType":""uninvite",
-            "to" : {
-              "speakerUri" : "tag:agentBeingUnivited,2025:1234"
-            },
-            "parameters ": {
-              "reason" : ""
-            }
-          }
-        ]
-      }
-    }
-
-##### Figure 26. A typical univite event 
-
-The _uninvite_ event is the opposite of an _invite_ event and informs an agent that they have been removed from a conversation.  In the absence of a new _invite_ event, the agent should not expect to receive any more envelopes from this conversation.
-
-|Reason|Description|
-|------|-----------|
-|timedOut|The floor manager or convener is removing the agent from the conversation because it believes that the agent has taken too long to respond.|
-|brokenPolicy|The floor manager or convener is removing the agent from the conversation because the agent has not met certain policy standards. This may be for example due to unsolicited or offensive contributions to the conversation.|
-|error|The floor manager or convener is removing the agent from the conversation because some kind of error has ocurred which means it is not longer meaningful for the agent to continue being part of the conversation.|
-|other|The floor manager or convener is removing the agent from the conversation for some other reason|
 
 ## Chapter 2. Minimal Behaviors
 
@@ -1169,16 +1346,17 @@ If the _to_ section is addressed to the agent (or is absent) then the following 
   * _utterance_  -  Answer the speaker with an utterance in return <br>  (typically public utterances will have public responses and private utterances will have private responses)
 
 * agent control events  - structure control messages
-  * _invite_ - Say 'hello' and respond to any accompanying _dialogEvent_ parameters.
+  * _invite_ - Say 'hello' and respond to any accompanying _context_ or _utterance_ events.
   * _bye_ - Ignore this event from another assistant.
-  * _findAssistant_ 
+  * _describeAssistant_ 
+    - return your own manifests in a _pulishManifest_ event. !!need to check multiple manifests and context!!
+  * findAssistant
       - if the _to_ is addressed to you:
         - If the scope is 'internal' or 'all' - return your own manifest as a candidate servicingManifest in a _proposeAssistant_ event.
         - If the scope is 'external' - ignore this event.  
-      - if there is _to_ section is not specified: 
+      - if the _to_ section is not specified: 
         - If the scope is 'internal' or 'all'
-          - If there is NOT a dialogEvent parameter - return your own manifest as a candidate servicingManifest in a _proposeAssistant_ event.
-          - If there is a dialogEvent parameter - consider whether the dialog event contains something you want to service.  If you are not sure, ignore this event. Otherwise return a servicingManifest in a _proposeAssistant_ event containing the relevant manifests of the services you offer that can meet the request.
+          - Consider whether the contents of the envelope is something you want to service.  If you are not sure, ignore this event. Otherwise return a servicingManifest in a _proposeAssistant_ event containing the relevant manifests of the services you offer that can meet the request.
         - if the scope is 'external' - ignore this event.
   * _proposeAssistant_ - Ignore this event if you did not ask for a recommendation.
   * _uninvite_ - Leave this conversation (i.e. stop responding to all events from this conversation_id)
@@ -1202,6 +1380,8 @@ A minimal floor manager will therefore exhibit the following behaviours.
   * _utterance_  - Forward to intended recipient. (keep private parameter)
   * _invite_   - Forward to intended recipient. 
   * _uninvite_- Forward to intended recipient. 
+  * _describeAssistant_  - Forward to intended recipient. 
+  * _publishManifest_ - Forward to intended recipient. 
   * _findAssistant_  - Forward to intended recipient. 
   * _proposeAssistant_  - Forward to intended recipient. 
   * _bye_ - Forward to intended recipient. Also remove this agent from the current register of active conversants.
@@ -1301,3 +1481,11 @@ This section documents some of the key design decisions that were made by the te
 |0.9.2|2024.07.03|- Added findAssistant event</br> - Added proposeAssistant event</br> - Added requestManifest event</br> - Added publishManifest event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
 |0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed recommendAgent to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _findAssistant_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ |
+
+# TO DO
+- make it clear in the spec that utterances can be private or not and that private utterances are whispers. DONE
+
+- create a top-level context event containing a dialogHistory parameter and leaving it open for other random data to be in there. DONE
+- remove dialogEvent from all sub-events apart from dialogHistory and utterance DONE
+- re-instate findAssistant, proposeAssistant, describeAssistant (and publishManifest) DONE
+- retire context in dialogEvent DONE
