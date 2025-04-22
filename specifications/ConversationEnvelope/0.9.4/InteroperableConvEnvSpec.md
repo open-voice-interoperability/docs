@@ -1489,3 +1489,5 @@ This section documents some of the key design decisions that were made by the te
 - rename findAssistant getManifests. return publishManifests.  
 - make recommendScope default to internal
 - make -servicingManfests and discoveryManifests optional in publishManifests
+- make reason an optional key in all events and allow it to be open text with special reserved words in the form '@timed-out'. Include a list of supported reserve words and also indicate in individual events how these reserved words might apply in that context.
+- Introduce a separate bare event 'declineInvite'
