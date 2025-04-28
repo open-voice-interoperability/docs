@@ -379,9 +379,7 @@ The _to_ section also contains a _private_ boolean parameter which, when set to 
             "to": {
               "speakerUri":"tag:agentBeingRevoked,2025:1234"
             },
-            "parameters ": {
-              "reason" : "convener agent taking back the floor because @timedOut"
-            }
+            "reason" : "convener agent taking back the floor because @timedOut"
           }
 
           ...
@@ -655,9 +653,7 @@ Invite events may be accompanied by additional events and contain optional param
             "to" : {
               "speakerUri" : "tag:agentBeingUnivited,2025:1234"
             },
-            "parameters ": {
-              "reason" : "@brokenPolicy: agents should not contain content that is offensive or encourages illegal activity"
-            }
+            "reason" : "@brokenPolicy: agents should not contain content that is offensive or encourages illegal activity"
           }
         ]
       }
@@ -1095,9 +1091,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
             "to": {
               "speakerUri": "tag:some_Convener.com,2025:"
             },
-            "parameters": {
-              "reason": "more information to add"
-            }
+            "reason": "more information to add"
           }
         ]
       }
@@ -1167,9 +1161,9 @@ In one use case, the _grantFloor_ event can be sent by floor managers in resonse
             "to": {
               "speakerUri":"tag:agentBeingInvitedToTakeTheFloor.com,2025:1234",
               "private" : true
-            },            
+            },    
+            "reason":"new request"       
             "parameters": {
-              "reason":"new request",
               "dialogEvent ": {
                 "speakerUri ": "tag:someConvener.com,2025:1234",
                 "span ": { "startTime ": "2025-01-31T10:05:00Z"} ,
@@ -1217,9 +1211,7 @@ This event is somewhat experimental and is currently informative not normative a
             "to": {
               "speakerUri":"tag:agentBeingRevoked,2025:1234"
             },
-            "parameters ": {
-              "reason" : "@override"
-            }
+            "reason" : "@override"
           }
         ]
       }
@@ -1256,9 +1248,7 @@ The optional _reason_ key can be used to convey the reason that the floor has be
         "events ": [
           {
             "eventType":""yieldFloor",
-            "parameters ": {
-              "reason" : "@complete"
-            }
+            "reason" : "@complete"
           }
         ]
       }
