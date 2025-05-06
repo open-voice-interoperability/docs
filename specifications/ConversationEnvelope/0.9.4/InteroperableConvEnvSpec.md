@@ -1,22 +1,21 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Interoperable Conversation Envelope Specification Version 0.9.4
+# Open-Floor Inter-Agent Message Specification Version 0.9.4
 
-The Open Voice Network\
-Open Voice Interoperability Initiative - LF AI & Data Foundation\
-Architecture Work Group
+The Open Floor Project\
+Open Voice Interoperability Initiative - LF AI & Data Foundation
 
-((Release Date)) \
-Draft Version 0.9.4
-Status: Under Development
+May 6th 2025
+Version 0.9.4
+Status: Issued
 
 *_Editor-in-Chief: David Attwater_*\
-*_Contributors: Emmett Coin,  Deborah Dahl,  Jim Larson, Allan Wylie,  Rainer Türner and Diego Gosmar_*
+*_Contributors: Leah Barnes, Emmett Coin,  Deborah Dahl, Diego Gosmar, Jim Larson, Rainer Türner, Dirk Schnelle-Walka, Allan Wylie_*
 
 ## TABLE OF CONTENTS
 ### CHAPTER 0. SCOPE AND INTRODUCTION
 #### &nbsp; 0.1 Document Scope
-#### &nbsp; 0.2 Conversation envelopes
+#### &nbsp; 0.2 Open Floor Message Envelopes
 #### &nbsp; 0.3 Delegation, Channeling and Mediation
 #### &nbsp; 0.4 Multi-Party Conversations
 #### &nbsp; 0.5 Discovery
@@ -25,7 +24,7 @@ Status: Under Development
 #### &nbsp; 1.1 Syntax and Protocol
 #### &nbsp; 1.2 AAA & Security
 #### &nbsp; 1.3 Nomenclature
-#### &nbsp; 1.4 Conversation Envelope Object Structure
+#### &nbsp; 1.4 Message Envelope Structure
 #### &nbsp; 1.5 Schema Object
 #### &nbsp; 1.6 Conversation Object
 #### &nbsp; 1.7 Sender Object
@@ -37,8 +36,8 @@ Status: Under Development
 #### 1.12 context Event
 #### 1.13 invite Event
 #### 1.14 uninvite Event
-#### 1.14B declineInvite Event
-#### 1.15 bye Event
+#### 1.15 declineInvite Event
+#### 1.16 bye Event
 #### 1.17 getManifests Event
 #### 1.18 publishManfests Event
 #### 1.19 requestFloor Event
@@ -59,48 +58,63 @@ Status: Under Development
 *****
 ### CHAPTER 0. SCOPE AND INTRODUCTION
 #### 0.1 Document Scope
-This document specifies the format for Open Voice Interoperability Initiative  - LF AI & Data Foundation (OVON) interoperable conversation envelope. The user stories upon which this specification is based can be found in the OVON white paper Interoperability of Conversational Assistants  [1].  
+This document specifies the "Open-Floor" Inter-Agent Message Specification, developed by the Open Voice Interoperability Initiative operating within the Linux Foundation AI & Data Foundation.  The purpose of this open messaging standard is to enable human and autonomous agents to work together by gathering around a shared conversational 'floor' and engage in conversation to solve a shared problem or goal.
 
-#### 0.2 Conversation Envelopes
-The OVON Conversation Envelope is a universal JSON structure whose purpose is to allow human or automatic agents (assistants) to interoperably participate in a conversation.  When coupled with a specific protocol, such as HTTPS (See section 1.2), a dialog agent that can generate and send Conversation Envelopes is capable of inter-operating with any other OVON-compliant agent, regardless of the technology or architecture on which that other agent is based.
+The standard differs from other inter-agent frameworks in the following ways:
+
+- Uses multi-party conversation as the model for inter-agent co-operation
+- Open standard that can allow inter-working between agents in different technology stacks
+- Symmetry between Users and Agents allowing humans and AIs to collaborate to solve problems
+- Extensible to new media types 
+
+The user stories upon which this specification is based can be found in the white paper - Interoperability of Conversational Assistants [1].  
+
+#### 0.2 Open-Floor Message Envelopes
+The Open-Floor Message format is a universal JSON structure whose purpose is to allow human or automatic agents (assistants) to interoperably participate in a conversation.  When coupled with a specific protocol, such as HTTPS (See section 1.2), a conversational agent that can generate and send Message Envelopes is capable of inter-operating with any other Open-Floor compliant agent, regardless of the technology or architecture on which that other agent is based.
 
 
-<img width="510" alt="Screenshot 2024-01-16 at 6 20 54 PM" src="https://github.com/open-voice-interoperability/docs/assets/101130471/6b909294-0d00-498e-9aee-ef0edcd916d9">
+<img width="510" alt="Simple Open-Floor Agent Example" src="simple-configuration.png">
 
-A conversation can consist of multiple conversants, who may be any arbitrary mixture of human or autonomous agents.  For this draft of the specification, we simplify the problem and say that at any given moment the conversation will comprise two conversants. One conversant will be a human user and the other an autonomous dialog agent.\
-\
-Figure 1 shows a simple schematic showing a user interacting with three OVON-compliant dialog assistants, via a user proxy agent, and a conversation floor manager.  Let's assume for now that there is a single user who remains constant for the duration of the conversation.  This user engages with a number of dialog agents, one at a time,  during the course of the conversation in a sequential manner.\
-\
-The proxy agent acts as a media gateway with the user - converting whatever media interface the user is interacting with into standard interoperable messaging.  The conversational floor manager acts as a hub to coordinate the conversation.\
-\
-In the example shown in Figure 1, the user proxy agent and the conversation manager can be combined.   This combined function is termed an 'OVON compliant host browser'.\
-\
-In its simplest configuration, the user proxy agent might present a text-based chat interface to the user.  For spoken interaction, the proxy agent will likely also contain speech-to-text and text-to-speech facilities but other configurations are anticipated.  The proxy agent may have conversational ability in its own right but in many cases, it may only provide rudimentary capabilities such as wake-word detection.\
-\
-Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single conversation envelope.   Each conversant can 'hear' things said to it or 'say' things.   They can also 'whisper' to each other behind the scenes by sending private utterances to each other.   Conversants may also 'invite' other agents to join the conversation or they might ask other agents if they are capabale of a certain activity or would like recommend another agent for a certain task.
+Collaboration between agents and human users is modelled upon a conversation between peers gathering around a shared 'floor'.  As with normal human-human conversation, agents (users or conversational assistants) communicate with each other by exchanging 'utterances'.  In many ways the 'floor' is analogous to a  conference bridge that joins participants in a conversation.  Also, as with normal conversation, the participants in the conversation collaborate to achieve a goal together. In some cases a convener agent may also be present to mediate the conversation on the floor in a manner analogous to a chair moderating a meeting.
+
+A conversation can consist of multiple conversants, who may be any arbitrary mixture of human or autonomous agents.  The simplicity of the interface means that the messages can also be used as a platform indepent interface between a chat client and AI chat agents.
+
+Figure 1 shows a simple schematic showing a user interacting at various points with three Open-floor compliant dialog assistants, via a user proxy agent, and a conversation floor manager.  Let's assume for now that there is a single user who remains constant for the duration of the conversation.  This user engages with a number of dialog agents, one at a time,  during the course of the conversation in a sequential manner.
+
+The proxy agent acts as a media gateway with the user - converting whatever media interface the user is interacting with into standard interoperable messaging.  The conversational floor manager acts as a hub to coordinate the conversation.
+
+In the example shown in Figure 1, the user proxy agent and the conversation manager can be combined.   This combined function is termed an 'Open-Floor Compliant Host Browser'.
+
+In its simplest form, the user proxy agent might present a text-based chat interface to the user.  For spoken interaction, the proxy agent will likely also contain speech-to-text and text-to-speech facilities but other configurations are also anticipated including support for images, video and document attachments.  The proxy agent may have conversational ability in its own right but in many cases, it may only provide rudimentary capabilities such as wake-word detection.
+
+Messages that pass between Open-floor agents are termed 'conversation envelopes'.  Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single message envelope.   Each conversant can 'hear' things said to it or 'say' things by making an 'utterance'.   They can also 'whisper' to each other behind the scenes by sending private utterances to each other.   Conversants may also invite other agents to join the conversation or they might ask other agents if they are capabale of a certain activity or would like recommend another agent for a certain task.
 
 #### 0.3 Delegation, Channeling and Mediation
 
-The conversational floor manager is in control of which conversants are engaged in a conversation at any given moment.\
-\
-To start a conversation, the proxy agent invites a specific dialog agent (e.g. Dialog Assistant A) to take part in a conversation with the user.   Once engaged, a dialog agent receives a dialogue envelope containing each user utterance and sends an utterance back to the user in response.  Once the assistant is done with the interaction they can simply end the interaction or invite another agent to enter the conversation (e.g. Dialogue Assistant B in the diagram).   The change of control of a dialog between two agents is called 'delegation'.\
-\
-Dialog Assistants may also engage the services of another dialog agent behind the scenes to assist with the conversation (e.g. Assistant A engages the services of target agent C to support it in its interaction with the user.)    The controlling agent might choose to pass user utterances unaltered to the target agent and may in return pass the target agent's responses unaltered to the user.  This pattern is termed 'channeling'. It is in many ways functionally equivalent to delegating the conversation but the channeling agent passes the messages on or can intervene or override the contribution of the agent to which the conversation is being channeled.  For example, a channelling agent may decide to keep the intent of the utterance but change how the content is rendered.  For example, increase the volume for the hard of hearing, decrease the speed of presentation for the cognitively challenged or for non-native speakers, change the voice characteristics of the presentation, or change the language, or change visual characteristics if these are present.\
-\
-Alternatively, the intermediate agent may reformulate the user's utterances and/or the target agent's utterances, holding whole conversations behind the scenes in order to achieve a goal.  This pattern is termed 'mediation'.  The mediation pattern also may be particularly relevant in the case where the target agent is in fact another human user (e.g. where an autonomous agent acts on behalf of a user to book an appointment with a doctor or restaurant).\
-\
-There is no limit to the depth of a channeling or mediation chain and delegation can happen at any level in such a chain.  Any agent that is hosting a mediated or channeled conversation will need to perform the functions of a conversation floor manager to those agents it is hosting.\
-\
+The floor manager is in control of which conversants are engaged in a conversation at any given moment.
+
+To start a conversation, the proxy agent invites a specific dialog agent (e.g. Dialog Assistant A) to take part in a conversation with the user.   Once engaged, the assistnat receives an open-floor message containing a user utterance and sends an utterance back to the user in response.  Once the assistant is done with the interaction they can simply end the interaction or, via the floor, invite another agent to enter the conversation (e.g. Dialogue Assistant B in the diagram).   The change of control of a dialog between two agents is called 'delegation'.
+
+Dialog Assistants may also engage the services of another dialog assistant behind the scenes to assist with the conversation (e.g. Assistant A engages the services of assistant C to support it in its interaction with the user.)    The controlling agent might choose to pass utterances unaltered to the target agent and may in return pass the target agent's responses unaltered to the user.  This pattern is termed 'channeling'. It is in many ways functionally equivalent to delegating the conversation but the channeling agent passes the messages on or can intervene or override the contribution of the agent to which the conversation is being channeled.  For example, a channelling agent may decide to keep the intent of the utterance but change how the content is rendered.  In a voice interface this might involve things like increasing the volume for the hard of hearing, decreasing the speed of presentation for the cognitively challenged or for non-native speakers, change the voice characteristics of the presentation, or change the language, or change visual characteristics if these are present.
+
+Alternatively, the intermediate agent may reformulate the user's utterances and/or the target agent's utterances, holding whole conversations behind the scenes in order to achieve a goal.  This pattern is termed 'mediation'.  The mediation pattern also may be particularly relevant in the case where the target agent is in fact another human user (e.g. where an autonomous agent acts on behalf of a user to book an appointment with a doctor or restaurant).
+
+There is no limit to the depth of a channeling or mediation chain and delegation can happen at any level in such a chain.  Any agent that is hosting a mediated or channeled conversation will act as the conversation floor manager to those agents it is hosting.
+
 The patterns described above allow for conversation between one user and multiple agents where it is clear which agent has the conversational floor at any given moment.  As noted the channeling and mediation pattern do allow for more than one conversational agent to be involved in the conversation at the same time.
 
 ### 0.4 Multi-Party Conversations
 
-<img width="510" alt="Screenshot 2024-01-16 at 6 20 54 PM" src="round-table.png">
+<img width="350" alt="Multi-Party Conversations" src="round-table-configuration.png">
 
 \
 **Figure 2.  Multi-party conversations hosted by a floor manager and a converner agent.**\
 \
-This specification also contains extensions to support the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows how this might work.  It extends Figure 1 to show mutliple agents taking part in a conversation.  As in Figure 1, the floor manager manges the conversational interaction.  In a multi-party conversation the floor will invite a 'Convener' agent to the conversation. This will be compliant agent but with special privileges.  Envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   The convener manages which agent has the floor at any given momment.  An in depth description of this approach can be found in [7].  Support for multi-party conversations is still somewhat experimental. Additional features or small changes may be neccessary as the use-cases and patterns for this becomes more mature.
+This specification also contains extensions to support the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows how this might work.  It extends Figure 1 to show mutliple agents taking part in a conversations simultaneously.  As in Figure 1, the floor manager manages the conversational interaction.  In a multi-party conversation the floor will optionally invite a 'Convener' agent to the conversation. This will be compliant agent but with special privileges.  Message envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   
+
+The convener manages which agent has the floor at any given momment via the floor manager.  An in depth description of this approach can be found in [7].  Support for multi-party conversations is still somewhat experimental. Additional features or small changes may be neccessary as the use-cases and patterns for this becomes more mature.
+
+The multi-party conversation paradigm is also a promising to give a framework-free agentic framework where autonomous AI agents collaborate using a shared floor to achieve a goal.   
 
 ### 0.5 Discovery
 
@@ -113,9 +127,9 @@ Agents can ask other agents if they are able to satisfy a certain enquiry or whe
 
 The requesting agent can then choose to invite the proposed agent to the conversation, or simply speak directly to the proposed agent if they already party to the conversation.
 
-The 'find' assistant feature can also be used to ask an agent for a manifest of its own capabilities.
+This feature can also be used to ask an agent for a manifest of its own capabilities.
 
-By combining this discovery mechanism with the delegation and channelling patterns mentioned above rich patterns of agent interaction can emerge. Some agents can specialize as 'discovery agents' whose only role is to provide recommendations of other agents. This provides the conversational equivalent of a web search.  Agents can also recommend themselves for some enquiries and recommend other agents for others. This allows, for example, for a primary assistant to perform day to day tasks and recommend other agents for less common tasks. Agents can ask one or more agents to assist with this search who in turn can ask other agents. 
+By combining this discovery mechanism with the delegation and channelling patterns mentioned above rich patterns of agent interaction can emerge. Some agents can specialize as 'discovery agents' whose only role is to provide recommendations of other agents. This provides the conversational equivalent of a web search.  Agents can also recommend themselves for some enquiries and recommend other agents for others. This allows, for example, for a primary assistant to perform day to day tasks and recommend other agents for less common tasks. Agents can ask one or more agents to assist with this search who in turn can ask other agents.   Planning agents may propose steps to be taken in achieving a plan and then an orchestrating agent can then discover and invite agents to achieve parts of the plan.
 
 ## 0.6 Agent Identity
 
@@ -126,6 +140,8 @@ Agents and human conversants in a conversation need to be able to identify and r
 
 Let's use an analogy to illustrate the difference between the two.   The _serviceUrl_ could be analogous to the exct address that can be used to locate the agent and the _speakerUri_ identifies the specific agent at that address.
 
+The **serviceUrl** should point an end-point that is capable of consuming and generating Open-floor message envelopes.
+
 Agents or human conversants are free to choose any valid URI to identify themselves.  speakerUri's should be unique and ideally remain persistent for the whole lifetime of the agent or user.  Ideally, the speakerUri should be a URN [5] but any valid URI can be used.  The purpose of this URI is to provide a persistent unique key to the identity of the agent.  It is not a requirement that this URI be resolvable to an actual location on the internet.  The _serviceUrl_ is used for this purpose.
 
 Examples of valid speakerURI are given below.
@@ -134,9 +150,9 @@ Examples of valid speakerURI are given below.
 - **urn:isbn:978-3-16-148410-0**:  A URN as per [5]. The isbn scheme is used for books.
 - **mailto:info@example.com**: A URI that specifies an email address asociated with an agent
 - **tel:+1-212-555-1212**: A URI that specifies a phone number associated with an agent
-- **https://ovon.myovonagent.com/agent#3456**: A URI using an http address that could be the same as the agent serviceserviceUrl.
+- **https://openfloor.myopenflooragent.com/agent#3456**: A URI using an http address that could be the same as the agent serviceserviceUrl.
 
-NOTE: This standard is currently agnostic regarding the URI scheme used for an agent. Options for standardizing further might include the regisstration of a specific URN namespace identifier, for example 'urn:ovon' [5].  In the short term Tag URIs [6] represent a pragmatic way to generate a unique idenfifier for an agent.  In this document we use Tag URIs in all examples.
+NOTE: This standard is currently agnostic regarding the URI scheme used for an agent. Options for standardizing further might include the regisstration of a specific URN namespace identifier, for example 'urn:openFloor' [5].  In the short term Tag URIs [6] represent a pragmatic way to generate a unique idenfifier for an agent.  In this document we use Tag URIs in all examples.
 
 ### CHAPTER 1. SPECIFICATION
 
@@ -156,10 +172,10 @@ Authorization, Authentication, Accounting, and Security specifications are outsi
 
 This specification uses ‘camelCase’ (i.e. no spaces with new words being capitalized) for all nominal property names, for example, _eventType_ and _persistentState_.  
 
-#### 1.4 Conversation Envelope Object Structure
+#### 1.4 Message Envelope Structure
 
     {
-      "ovon": {
+      "openFloor": {
 
           "schema": {
               "version": "0.9.4"      
@@ -210,7 +226,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
 
 ##### Figure 3. An example of a conversation envelope #####
 
-Figure 3 shows an example of a conversation envelope.  The envelope is wrapped in an ovon key.   This contains four sections:
+Figure 3 shows an example of a conversation envelope.  The envelope is wrapped in an 'openFloor' key.   This contains four sections:
 
 * schema - the version of the conversation envelope and a schema to validate it against
 * conversation - persistent information related to the current dialog
@@ -222,7 +238,7 @@ All sections are mandatory.
 #### 1.5 Schema Object
 
     {
-      "ovon": {
+      "openFloor": {
         ..
         "schema": { "version": "0.9.4" }
         ..
@@ -234,7 +250,7 @@ All sections are mandatory.
 The _schema_ object specifies the format of the message in this OVON envelope.  It is mandatory. It must contain a valid _version_ number for an OVON envelope.  Figure 4 shows the minimal information that must be present in an OVON-compliant envelope.
 
     {
-      "ovon": {
+      "openFloor": {
         ..
         "schema": {
           "version": "0.9.4",   
@@ -251,7 +267,7 @@ The schema for the version of the envelope specification can be found in **Chapt
 #### 1.6 Conversation Object
 
     {
-      "ovon": {
+      "openFloor": {
         …        
         "conversation": { "id": "jk31050879662407560061859425913208" },
         … 
@@ -265,7 +281,7 @@ The conversation object carries persistent information related to the current co
 As shown in figure 6, the conversation section contains just one piece of mandatory information - the id of the conversation.  The id  should be a unique identifier for the current conversation with the user.  Persistent information relating to this current conversation can be keyed to this id.   The id  can be any arbitrary length character sequence that can be represented as a string in JSON.
 
     {
-      "ovon": {
+      "openFloor": {
         …        
         "conversation": { 
           "id": "jk31050879662407560061859425913208",
@@ -275,7 +291,7 @@ As shown in figure 6, the conversation section contains just one piece of mandat
                 "identification":
                   {
                       "speakerUri" : "tag:dev.buerokratt.ee,2025:0001",
-                      "serviceUrl": "https://dev.buerokratt.ee/ovonr/conversation",
+                      "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation",
                       "organization": "Government of Estonia",
                       "conversationalName": "Buerokratt",
                       "department": "Passport Office",
@@ -310,7 +326,7 @@ There are currently no restrictions currently placed on the content of persisten
 #### 1.7 Sender Object
 
     {
-      "ovon": {
+      "openFloor": {
         …        
         "sender": {
             "speakerUri" : "tag:acmeConvenerAssistant.com,2025:0021",
@@ -327,7 +343,7 @@ Figure 8 shows the elements in the sender object.  _speakerUri_ is mandatory. Th
 #### 1.8 Events Object
 
     {
-      ovon {
+      "openFloor" {
         ..
         "events": [
           {
@@ -421,7 +437,7 @@ The following sections define these event objects in more detail.
 #### 1.10 Utterance Events
 
     {
-      "ovon": {
+      "openFloor": {
         ..
         "events": [
           {
@@ -505,7 +521,7 @@ There are no limitations on the features that are added to a dialog event.  This
 ### 1.12 Context Event
 
     {
-      "ovon": {
+      "openFloor": {
         ..
         "events": [
           {
@@ -537,7 +553,7 @@ Conversants that do not have general purpose AI capability may choose to ignore 
 
 ### 1.13 Invite Event
 
-    "ovon": {
+    "openFloor": {
         "schema": {
           "version": "0.9.4"      
         },
@@ -570,7 +586,7 @@ If the _to_ event is absent, then all recipients of the envelope should consider
 It is possible to invite an agent to a conversation without giving it any other events.  This is termed a bare invite as shown in Figure 15.  The recipient of such a bare invitation is being invited to engage with the user without being given any context.  A suitable response would be to speak a greeting and ask how the agent can help.
 
     {
-      "ovon": {
+      "openFloor": {
         "schema": {
           "version": "0.9.4"      
         },
@@ -637,7 +653,7 @@ Invite events may be accompanied by additional events and contain optional param
 ### 1.14 uninvite Event
 
     {
-      ovon ": {
+      "openFloor": {
         schema ": {
           version ":"0.9.4"
         },
@@ -674,7 +690,7 @@ The following special tokens have particular meaning in this event.
 ### 1.15 declineInvite Event
 
     {
-      ovon ": {
+      "openFloor": {
         schema ": {
           version ":"0.9.4"
         },
@@ -712,7 +728,7 @@ The following special _reason_ tokens have particular meaning in this event.
 ### 1.16 Bye Event
 
     {
-      "ovon": {
+      "openFloor": {
       "schema": {
         "version": "0.9.4"      
       },
@@ -734,7 +750,7 @@ Figure 19. A minimal _bye_ envelope detaching an agent from a conversation.
 
 When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in Figure 19. It has no _parameters_.  The optional _to_ object can be included but it is not neccessary.
 
-    "ovon": {
+    "openFloor": {
       "schema": {
         "version": "0.9.4"      
       },
@@ -789,7 +805,7 @@ The _getManifests_ event has the following optional parameters:
 A _getManifests_ event can also optionally be accompanied by a private utterance event containing a natural language description of the task to be performed.  It can also be accompanied by a _context_ event containing dialog history to assist with the decision.
 
     {
-      "ovon": {
+      "openFloor": {
         "schema": {
           "version": "0.9.4"      
         },
@@ -804,7 +820,7 @@ A _getManifests_ event can also optionally be accompanied by a private utterance
           {
             "eventType": "getManifests",
             "to": { 
-              "serviceUrl" : "https://dev.buerokratt.ee/ovon/conversation"
+              "serviceUrl" : "https://dev.buerokratt.ee/openfloor/conversation"
             }
           }
         ]
@@ -821,7 +837,7 @@ Figure 21 shows a getManifests event that is used to request the manifests of al
 The returned manifest list will be expected to only contain manifests from the target server site - i.e. that have the same serviceUrl that the event is addressed to.   It is at the discretion of the target server to decide how many manifests to return. 
 
     {
-      "ovon": {
+      "openFloor": {
         "schema": {
           "version": "0.9.4"      
         },
@@ -836,7 +852,7 @@ The returned manifest list will be expected to only contain manifests from the t
           {
             "eventType": "getManifests",
             "to": { 
-              "serviceUrl": "https://dev.buerokratt.ee/ovon/conversation"
+              "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation"
             }
             "parameters" : {
               "recommendScope" : "internal"
@@ -845,7 +861,7 @@ The returned manifest list will be expected to only contain manifests from the t
           {
             "eventType": "utterance",
             "to": { 
-              "serviceUrl": "https://dev.buerokratt.ee/ovon/conversation",
+              "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation",
               "private": true
             },
             "parameters": {
@@ -882,7 +898,7 @@ Figure 22 shows the same bot as Figure 21 being asked if it supports a specific 
 The target assistant should return a _publishManifests_ containing any agents that it believes are capable and willing to respond to the private utterance in the given context. In the above example, the _recommendScope is explicitly set to the default value "internal".  
 
     {
-      "ovon": {
+      "openFloor": {
         "schema": {
           "version": "0.9.4"      
         },
@@ -962,7 +978,7 @@ See section 1.18 for more information on _publishManfests_ event behaviors.
 ### 1.18 publishManfests Event
 
     {
-      "ovon": {
+      "openFloor": {
         "schema": {
           "version": "0.9.4"      
         },
@@ -1075,7 +1091,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
 ### 1.19 requestFloor Event [INFORMATIVE]
 
     {
-      "ovon": {
+      "openFloor": {
         "schema": {
           "version": "0.9.4"
         },
@@ -1110,7 +1126,7 @@ The optional _reason_ section can be used to convey the reason for the floor req
 ### 1.20 grantFloor Event [INFORMATIVE]
 
     {
-      ovon ": {
+      "openFloor": {
         schema ": {
           version ":"0.9.4"
         },
@@ -1139,7 +1155,7 @@ In one use case, the _grantFloor_ event can be sent by floor managers in resonse
 
 
     {
-      ovon ": {
+      "openFloor": {
         schema ": {
           version ":"0.9.4"
         },
@@ -1195,7 +1211,7 @@ This event is somewhat experimental and is currently informative not normative a
 ### 1.21 revokeFloor Event
 
     {
-      ovon ": {
+      "openFloor": {
         schema ": {
           version ":"0.9.4"
         },
@@ -1235,7 +1251,7 @@ The optional _reason_ key can be used to convey the reason that the floor has be
 ### 1.22 yieldFloor Event
 
     {
-      ovon ": {
+      "openFloor": {
         schema ": {
           version ":"0.9.4"
         },
@@ -1399,7 +1415,7 @@ This section documents some of the key design decisions that were made by the te
 |'to' destinations|_Question_: There is an urgent need to agree how to express 'to' and discuss exactly how the addressing of events is managed.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: We have added an optional 'to' parameter to all events.  This helps the recipient decide whether they want to ignore it or not.|
 |responseCode|_Question_: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: We decided to deprecate the responseCode and introduce an 'acknowledge' event instead. |
 |discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberately left this out for now, but if we need it, we will consider additional flags on the manifest in some form.|
-|speakerUri uniqueness|_Question_:Who allocates unique SpeakerIDs?  Is it the 'floor' (or client) or the agent server?<br>_Answer_: Agents should have a universal unique SpeakerId. This will be stored in the manifest.  To guarantee uniqueness we propose using the tag: scheme or reserving something like an 'ovon' urn namespace.|
+|speakerUri uniqueness|_Question_:Who allocates unique SpeakerIDs?  Is it the 'floor' (or client) or the agent server?<br>_Answer_: Agents should have a universal unique SpeakerId. This will be stored in the manifest.  To guarantee uniqueness we propose using the tag: scheme or reserving something like an 'openfloor' urn namespace.|
 |private flag in _to_|_Question:_ Should the private flag be inside the _to_ section because it has no meaning if there is no _to_section.<br>_Answer;_ Yes|
 |speakerUris in invites|_Question:_Should we allow/expect speakerUris in invites? <br>_Answer:_ These are optionally allowed. If present it will mean that the inviting agent has either received the manifest or has spoken with the agent previously. The receiving agent can ignore this parameter, especially if it not valid.|
 |speakerUri in _from_|_Question:_ Do we need a speakerUri on the _from_ parameter as well?<br>_Answer:_Yes|
@@ -1419,4 +1435,11 @@ This section documents some of the key design decisions that were made by the te
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
 |0.9.2|2024.07.03|- Added getManifests event</br> - Added publishManfests event</br> - Added requestManifest event</br> - Added publishManifests event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed publishManfests to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _getManifests_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ </br>- created a top-level context event containing a dialogHistory parameter and leaving it open for other random data to be in there. </br>- removed dialogEvent from all sub-events apart from dialogHistory and utterance </br> - re-instated getManifests, publishManfests, describeAssistant (and publishManifests)</br>- retired context in dialogEvent</br>- make it clear in the spec that utterances can be private or not and that private utterances are whispers. </br>- retire requestManifest  </br>- renamed findAssistant to be getManifests. return publishManifests.</br>- made recommendScope default to internal </br>- made -servicingManfests and discoveryManifests optional in publishManifests. </br>- made reason an optional key in all events</br>- defined special reserved key words in the _reason_ key.</br>- specified which reserved _reason_ keywords applied in which events.- Introduced a separate bare event 'declineInvite' </br>
+|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed publishManfests to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _getManifests_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ </br>- created a top-level context event containing a dialogHistory parameter and leaving it open for other random data to be in there. </br>- removed dialogEvent from all sub-events apart from dialogHistory and utterance </br> - re-instated getManifests, publishManfests, describeAssistant (and publishManifests)</br>- retired context in dialogEvent</br>- make it clear in the spec that utterances can be private or not and that private utterances are whispers. </br>- retire requestManifest  </br>- renamed findAssistant to be getManifests. return publishManifests.</br>- made recommendScope default to internal </br>- made -servicingManfests and discoveryManifests optional in publishManifests. </br>- made reason an optional key in all events</br>- defined special reserved key words in the _reason_ key.</br>- specified which reserved _reason_ keywords applied in which events.- Introduced a separate bare event 'declineInvite' </br> - renamed the spec as Open-floor Inter-Agent Message Specification with the key: "openFloor"
+
+# To Do
+Issue 0.9.4
+Update the schema and examples
+Update issues table with issues.
+
+Then issue v 1.0.0
