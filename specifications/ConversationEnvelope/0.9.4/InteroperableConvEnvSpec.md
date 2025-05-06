@@ -178,7 +178,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
       "openFloor": {
 
           "schema": {
-              "version": "0.9.4"      
+              "version": "0.9.4",      
               "serviceUrl": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json"
           },
 
@@ -197,9 +197,9 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
     
           "events": [
               {
-                  "to" : {
-                      "serviceUrl" : "URL of intended recipient A",
-                      "speakerUri" : "Speaker Uri of intended recipient A"
+                  "to": {
+                      "serviceUrl": "URL of intended recipient A",
+                      "speakerUri": "Speaker Uri of intended recipient A"
                   },
                   "eventType": "event type A",
                   "parameters": {
@@ -209,9 +209,9 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
                   }
               },
               {
-                  "to" : {
-                      "serviceUrl" : "URL of intended recipient B",
-                      "speakerUri" : "Speaker Uri of intended recipient B"
+                  "to": {
+                      "serviceUrl": "URL of intended recipient B",
+                      "speakerUri": "Speaker Uri of intended recipient B"
                   },
                   "eventType": "event type B",
                   "parameters": {
@@ -219,7 +219,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
                     … 
                     "parameter n" : { parameter n values }   
                   }
-              },
+              }
           ]
       }
     }
@@ -297,7 +297,7 @@ As shown in figure 6, the conversation section contains just one piece of mandat
                       "department": "Passport Office",
                       "role": "Immigration Specialist",
                       "synopsis": "Immigration specialist as part of the Beurocrat system."
-                  }
+                  },
                   "persistentState": {
                     "uniqueKey1": { .. object .. },
                     "uniqueKey2": { .. object .. } 
@@ -347,13 +347,13 @@ Figure 8 shows the elements in the sender object.  _speakerUri_ is mandatory. Th
         ..
         "events": [
           {
-            "to" : {
-                "speakerUri" : "Speaker Uri of intended recipient A",
-                "serviceUrl" : "URL of intended recipient A",
-                "private" : false
+            "to": {
+                "speakerUri": "Speaker Uri of intended recipient A",
+                "serviceUrl": "URL of intended recipient A",
+                "private": false
             },
             "eventType": "event type A",
-            "reason" : "reason for sending event A",
+            "reason": "reason for sending event A",
             "parameters": {
               "parameter 1" : { parameter 1 values },  
               … 
@@ -361,18 +361,18 @@ Figure 8 shows the elements in the sender object.  _speakerUri_ is mandatory. Th
             }
           },
           {
-            "to" : {
-                "serviceUrl" : "URL of intended recipient A",
-                "speakerUri" : "Speaker Uri of intended recipient A"
+            "to": {
+                "serviceUrl": "URL of intended recipient A",
+                "speakerUri": "Speaker Uri of intended recipient A"
             },
             "eventType": "event type B",
-            "reason" : "reason for sending event B",
+            "reason": "reason for sending event B",
             "parameters": {
               "parameter 1" : { parameter 1 values },
               … 
               "parameter n" : { parameter n values }   
             }
-          },
+          }
         ]
       }
     }
@@ -443,7 +443,7 @@ The following sections define these event objects in more detail.
           {
             "to": { 
               "speakerUri" : "tag:someBotOrPerson.com,2025:0021"
-            }
+            },
             "eventType": "utterance",
             "parameters": {
               "dialogEvent": {
@@ -504,16 +504,16 @@ The current version of this specification mandates only the text feature in each
 There are no limitations on the features that are added to a dialog event.  This enables agents to exchange any media that they wish in addition to the text message.  For example, a video feature intended to represent Video Conversational agent communications (i.e. Avatar communications) could be added as shown in Figure 13.  This example is informative only.
 
       "features": {
-      ...
-      "video": {
-      "mimeType": "video/mpeg",
-      "tokens": [
-        {
-          "valueUrl": http://localhost/xyz1234.m4a
-        }
-      ]
-      },
-      ...
+        ...
+        "video": {
+          "mimeType": "video/mpeg",
+          "tokens": [
+            {
+              "valueUrl": http://localhost/xyz1234.m4a
+            }
+          ]
+        },
+        ...
       }
 
 #### Figure 13. Example video feature, which at present would be considered a custom feature.
@@ -526,7 +526,7 @@ There are no limitations on the features that are added to a dialog event.  This
         "events": [
           {
             "to": { 
-              "speakerUri" : "tag:someBotOrPerson.com,2025:0021"
+              "speakerUri": "tag:someBotOrPerson.com,2025:0021"
             },
             "eventType": "context",
             "parameters": {
@@ -553,25 +553,27 @@ Conversants that do not have general purpose AI capability may choose to ignore 
 
 ### 1.13 Invite Event
 
-    "openFloor": {
-        "schema": {
-          "version": "0.9.4"      
-        },
-        "conversation": {
-          "id": "someUniqueIdCreatedByTheFirstParticipant"
-        },
-        "sender": {
-            "speakerUri": "tag:botThatOfferedTheInvite.com,2025:4567"
-        },
-        "events": [
-            {
-                "eventType": "invite",
-                "to": { 
-                  "serviceUrl" : "https://botsite.botBeingInvited.com",
-                  "speakerUri" : "tag:botBeingInvited.com,2025:1234"
-                }
-            }
-        ]
+    {
+      "openFloor": {
+          "schema": {
+            "version": "0.9.4"      
+          },
+          "conversation": {
+            "id": "someUniqueIdCreatedByTheFirstParticipant"
+          },
+          "sender": {
+              "speakerUri": "tag:botThatOfferedTheInvite.com,2025:4567"
+          },
+          "events": [
+              {
+                  "eventType": "invite",
+                  "to": { 
+                    "serviceUrl": "https://botsite.botBeingInvited.com",
+                    "speakerUri": "tag:botBeingInvited.com,2025:1234"
+                  }
+              }
+          ]
+      }
     }
 
 
@@ -603,11 +605,11 @@ It is possible to invite an agent to a conversation without giving it any other 
             "parameters": {
               "dialogEvent": {
                 "speakerUri": "tag:botThatOfferedTheInvite.com,2025:4567",
-                "span": { "startTime": "2023-06-14 02:06:07+00:00" },
+                "span": { "startTime": "2023-06-14T02:06:07Z" },
                 "features": {                         
                   "text": {
                     "mimeType": "text/plain",
-                    "tokens": [ { "value": "I'll pass you over to my -weather."  } ]
+                    "tokens": [ { "value": "I'll pass you over to my-weather." } ]
                   }
                 }
               }
@@ -616,13 +618,13 @@ It is possible to invite an agent to a conversation without giving it any other 
           {
             "eventType": "invite",
             "to": { 
-              "serviceUrl" : "https://siteof.botThatIsBeingInvited.com",
-              "speakerUri" : "tag:botThatIsBeingInvited.com,2025:1234"
+              "serviceUrl": "https://siteof.botThatIsBeingInvited.com",
+              "speakerUri": "tag:botThatIsBeingInvited.com,2025:1234"
             }
           },
           {
             "to": { 
-              "serviceUrl" : "https://siteof.botThatIsBeingInvited.com",
+              "serviceUrl": "https://siteof.botThatIsBeingInvited.com"
             },
             "eventType": "context",
             "parameters": {
@@ -631,11 +633,11 @@ It is possible to invite an agent to a conversation without giving it any other 
                 { .. utterance dialog event N-1 .. },
                 {
                   "speakerUri": "tag:theUser.com,2025:3456",
-                  "span": { "startTime": "2023-06-14 02:06:07+00:00" },
+                  "span": { "startTime": "2023-06-14T02:06:07Z" },
                   "features": {                         
                     "text": {
                       "mimeType": "text/plain",
-                      "tokens": [ { "value": "What is the weather in Detroit right now?"  } ]
+                      "tokens": [ { "value": "What is the weather in Detroit right now?" } ]
                     }
                   }
                 }
@@ -654,22 +656,22 @@ Invite events may be accompanied by additional events and contain optional param
 
     {
       "openFloor": {
-        schema ": {
-          version ":"0.9.4"
+        "schema": {
+          "version": "0.9.4"
         },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
+        "conversation": {
+          "id": "someUniqueIdForTheConversation"
         },
-        sender ": {
-          "speakerUri":"tag:some_Convener.com,2025:"
+        "sender": {
+          "speakerUri": "tag:some_Convener.com,2025:"
         },
-        "events ": [
+        "events": [
           {
-            "eventType":""uninvite",
-            "to" : {
-              "speakerUri" : "tag:agentBeingUnivited,2025:1234"
+            "eventType": "uninvite",
+            "to": {
+              "speakerUri": "tag:agentBeingUnivited,2025:1234"
             },
-            "reason" : "@brokenPolicy: agents should not contain content that is offensive or encourages illegal activity"
+            "reason": "@brokenPolicy: agents should not contain content that is offensive or encourages illegal activity"
           }
         ]
       }
@@ -691,20 +693,20 @@ The following special tokens have particular meaning in this event.
 
     {
       "openFloor": {
-        schema ": {
-          version ":"0.9.4"
+        "schema": {
+          "version": "0.9.4"
         },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
+        "conversation": {
+          "id": "someUniqueIdForTheConversation"
         },
-        sender ": {
-          "speakerUri" : "tag:agentBeingUnivited,2025:1234"
+        "sender": {
+          "speakerUri": "tag:agentBeingUnivited,2025:1234"
         },
-        "events ": [
+        "events": [
           {
             "eventType": "declineInvite",
-            "to" : {
-              "speakerUri":"tag:some_Convener.com,2025:"
+            "to": {
+              "speakerUri": "tag:some_Convener.com,2025:"
             },
             "reason": "@unavailable to support this request due to lack of resources"
           }
@@ -729,18 +731,18 @@ The following special _reason_ tokens have particular meaning in this event.
 
     {
       "openFloor": {
-      "schema": {
-        "version": "0.9.4"      
-      },
-      "conversation": {
+        "schema": {
+          "version": "0.9.4"      
+        },
+        "conversation": {
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "speakerUri" : "tag:botThatOfferedTheBye.com/7890"
+          "speakerUri": "tag:botThatOfferedTheBye.com/7890"
         },
         "events": [
           {
-            "eventType" : "bye"
+            "eventType": "bye"
           }
         ]
       }
@@ -750,38 +752,39 @@ Figure 19. A minimal _bye_ envelope detaching an agent from a conversation.
 
 When an agent wants to leave the conversation it sends a _bye_ event.  This message indicates that the agent is leaving the dialog, and if it currently has control it also relinquishes the floor.   An example of the _bye_ event is shown in Figure 19. It has no _parameters_.  The optional _to_ object can be included but it is not neccessary.
 
-    "openFloor": {
-      "schema": {
-        "version": "0.9.4"      
-      },
-      "conversation": {
-        "id": "31050879662407560061859425913208"
-      },
-      "sender": {
-        "serviceUrl": "https://siteof.someBot.com",
-        "speakerUri": "tag:siteof.someBot.com,2025:1234"
-      },
-      "events": [
-        {
-          "eventType": "utterance",
-          "parameters": {
-            "dialogEvent": {
-              "speakerUri": "tag:siteof.someBot.com,2025:1234"
-              "span": { "startTime": "2023-06-14 02:06:07+00:00" },
+    {
+      "openFloor": {
+        "schema": {
+          "version": "0.9.4"      
+        },
+        "conversation": {
+          "id": "31050879662407560061859425913208"
+        },
+        "sender": {
+          "serviceUrl": "https://siteof.someBot.com",
+          "speakerUri": "tag:siteof.someBot.com,2025:1234"
+        },
+        "events": [
+          {
+            "eventType": "utterance",
+            "parameters": {
+              "dialogEvent": {
+                "speakerUri": "tag:siteof.someBot.com,2025:1234",
+                "span": { "startTime": "2023-06-14 02:06:07+00:00" },
                 "features": {
                   "text": {
                     "mimeType": "text/plain",
-                    "tokens": [ { "value": "Thank you! I am glad I could help."  } ]
+                    "tokens": [ { "value": "Thank you! I am glad I could help." } ]
                   }
                 }
               }
             }
+          },
+          {
+            "eventType": "bye"
           }
-        },
-        {
-          "eventType" : "bye"
-        }
-      ]
+        ]
+      }
     }
 
 Figure 20. A _bye_ event with a voiced farewell.
@@ -820,7 +823,7 @@ A _getManifests_ event can also optionally be accompanied by a private utterance
           {
             "eventType": "getManifests",
             "to": { 
-              "serviceUrl" : "https://dev.buerokratt.ee/openfloor/conversation"
+              "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation"
             }
           }
         ]
@@ -853,9 +856,9 @@ The returned manifest list will be expected to only contain manifests from the t
             "eventType": "getManifests",
             "to": { 
               "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation"
-            }
-            "parameters" : {
-              "recommendScope" : "internal"
+            },
+            "parameters": {
+              "recommendScope": "internal"
             }
           },
           {
@@ -881,9 +884,9 @@ The returned manifest list will be expected to only contain manifests from the t
             "eventType": "context",
             "parameters": {
               "dialogHistory": [
-                { "utterance dialog event N-2": {} },
-                { "utterance dialog event N-1": {} },
-                { "utterance dialog event N": {} }
+                { utterance dialog event N-2 },
+                { utterance dialog event N-1 },
+                { utterance dialog event N }
               ]
             }
           }
@@ -914,9 +917,9 @@ The target assistant should return a _publishManifests_ containing any agents th
             "eventType": "getManifests",
             "to": { 
               "serviceUrl": "https://myFavoriteDiscoveryBot.com"
-            }
-            "parameters" : {
-              "recommendScope" : "external"
+            },
+            "parameters": {
+              "recommendScope": "external"
             }
           },
           {
@@ -942,8 +945,8 @@ The target assistant should return a _publishManifests_ containing any agents th
             "eventType": "context",
             "parameters": {
               "dialogHistory": [
-                { "utterance dialog event N-2": {} },
-                { "utterance dialog event N-1": {} },
+                { utterance dialog event N-2 },
+                { utterance dialog event N-1 },
                 {
                   "speakerUri": "tag:someuser.com,2025:4567",
                   "span": { "startTime": "2023-06-14 02:06:07+00:00" },
@@ -986,22 +989,22 @@ See section 1.18 for more information on _publishManfests_ event behaviors.
           "id": "31050879662407560061859425913208"
         },
         "sender": {
-          "speakerUri": tag://myFavoriteDiscoveryBot.com,2025:0001"
+          "speakerUri": "tag://myFavoriteDiscoveryBot.com,2025:0001"
         },
         "events": [
           { 
             "to": {
               "serviceUrl": "https://someBotThatAskedForIt.com",
-              "speakerUri" : "tag:someBotThatAskedForIt.com,2025:1234"
+              "speakerUri": "tag:someBotThatAskedForIt.com,2025:1234"
             },
             "eventType": "publishManfests",
             "parameters": {
-              "servicingManifests" : [
+              "servicingManifests": [
                   {
                     "identification": {
                       "serviceUrl": "https://findMyAIAssistant.com",
-                      "speakerUri" : "tag:findMyAIAssistant.com,2025:xykz",
-                      "synopsis" : "A bot for those who love reading."
+                      "speakerUri": "tag:findMyAIAssistant.com,2025:xykz",
+                      "synopsis": "A bot for those who love reading."
                       ...
                     },
                     "capabilities": {
@@ -1012,8 +1015,8 @@ See section 1.18 for more information on _publishManfests_ event behaviors.
                   {
                     "identification": {
                       "serviceUrl": "https://nationalLibraryArchive.org",
-                      "speakerUri" : "tag:nationalLibraryArchive.org,2025:0564",
-                      "synopsis" : "A government catalog of every book published in the USA."
+                      "speakerUri": "tag:nationalLibraryArchive.org,2025:0564",
+                      "synopsis": "A government catalog of every book published in the USA."
                       ...
                     },
                     "capabilities": {
@@ -1024,8 +1027,8 @@ See section 1.18 for more information on _publishManfests_ event behaviors.
                   {
                     "identification": {
                       "serviceUrl": "https://booksRUs.com",
-                      "speakerUri" : "tag:booksRUs.com,2025:jkl12",
-                      "synopsis" : "Browse, sample and buy any book you desire."
+                      "speakerUri": "tag:booksRUs.com,2025:jkl12",
+                      "synopsis": "Browse, sample and buy any book you desire."
                       ...
                     },
                     "capabilities": {
@@ -1038,8 +1041,8 @@ See section 1.18 for more information on _publishManfests_ event behaviors.
                   {
                     "identification": {
                       "serviceUrl": "https://findMyAIAssistant.com",
-                      "speakerUri" : "tag:findMyAIAssistant.com,2025:searchInstance1567",
-                      "synopsis" : "Finds assistants anywhere in the world"
+                      "speakerUri": "tag:findMyAIAssistant.com,2025:searchInstance1567",
+                      "synopsis": "Finds assistants anywhere in the world"
                       ...
                     },
                     "capabilities": {
@@ -1105,7 +1108,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
           {
             "eventType": "requestFloor",
             "to": {
-              "speakerUri": "tag:some_Convener.com,2025:"
+              "speakerUri": "tag:some_Convener.com,2025:1234"
             },
             "reason": "more information to add"
           }
@@ -1127,20 +1130,20 @@ The optional _reason_ section can be used to convey the reason for the floor req
 
     {
       "openFloor": {
-        schema ": {
-          version ":"0.9.4"
+        "schema": {
+          "version": "0.9.4"
         },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
+        "conversation": {
+          "id": "someUniqueIdForTheConversation"
         },
-        sender ": {
-          "speakerUri":"tag:some_Convener.com,2025:1234"
+        "sender": {
+          "speakerUri": "tag:some_Convener.com,2025:1234"
         },
-        "events ": [
+        "events": [
           {
-            "eventType":""grantFloor"
+            "eventType": "grantFloor",
             "to": {
-              "speakerUri":"tag:agentBeingGrantedTheFloor.com,2025:1234"
+              "speakerUri": "tag:agentBeingGrantedTheFloor.com,2025:1234"
             }
           }
         ]
@@ -1153,41 +1156,40 @@ The _grantFloor_ event is used to grant the conversational floor to agents.   Th
 
 In one use case, the _grantFloor_ event can be sent by floor managers in resonse to a _requestFloor_ event from an agent. Figure 25 shows a bare _grantFloor_ envelope which might be used for this purpose.  Once this message is recieved by an agent is free to send Utterance events to the floor with the expectation that they will be delivered to the designated destination.
 
-
     {
       "openFloor": {
-        schema ": {
-          version ":"0.9.4"
+        "schema": {
+          "version": "0.9.4"
         },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
+        "conversation": {
+          "id": "someUniqueIdForTheConversation"
         },
-        sender ": {
-          "speakerUri":"tag:some_Convener.com,2025:1234"
+        "sender": {
+          "speakerUri": "tag:some_Convener.com,2025:1234"
         },
-        "events ": [
+        "events": [
           {
-            "eventType":"grantFloor"
+            "eventType": "grantFloor",
             "to": {
-              "speakerUri":"tag:agentBeingInvitedToTakeTheFloor.com,2025:1234"
+              "speakerUri": "tag:agentBeingInvitedToTakeTheFloor.com,2025:1234"
             }
           },
           {
-            "eventType": "utterance"
+            "eventType": "utterance",
             "to": {
-              "speakerUri":"tag:agentBeingInvitedToTakeTheFloor.com,2025:1234",
-              "private" : true
-            },    
-            "reason":"new request"       
+              "speakerUri": "tag:agentBeingInvitedToTakeTheFloor.com,2025:1234",
+              "private": true
+            },
+            "reason": "new request",
             "parameters": {
-              "dialogEvent ": {
-                "speakerUri ": "tag:someConvener.com,2025:1234",
-                "span ": { "startTime ": "2025-01-31T10:05:00Z"} ,
-                "features ": {
-                  "text ": {
-                    "mimeType ": "text / plain ",
-                    "tokens ": [
-                      { "value ": "Go ahead an book a meeting at six o'clock for the user."}
+              "dialogEvent": {
+                "speakerUri": "tag:someConvener.com,2025:1234",
+                "span": { "startTime": "2025-01-31T10:05:00Z" },
+                "features": {
+                  "text": {
+                    "mimeType": "text/plain",
+                    "tokens": [
+                      { "value": "Go ahead an book a meeting at six o'clock for the user." }
                     ]
                   }
                 }
@@ -1212,22 +1214,22 @@ This event is somewhat experimental and is currently informative not normative a
 
     {
       "openFloor": {
-        schema ": {
-          version ":"0.9.4"
+        "schema": {
+          "version": "0.9.4"
         },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
+        "conversation": {
+          "id": "someUniqueIdForTheConversation"
         },
-        sender ": {
-          "speakerUri":"tag:some_Convener.com,2025:"
+        "sender": {
+          "speakerUri": "tag:some_Convener.com,2025:1234"
         },
-        "events ": [
+        "events": [
           {
-            "eventType":""revokeFloor",
+            "eventType": "revokeFloor",
             "to": {
-              "speakerUri":"tag:agentBeingRevoked,2025:1234"
+              "speakerUri": "tag:agentBeingRevoked,2025:1234"
             },
-            "reason" : "@override"
+            "reason": "@override"
           }
         ]
       }
@@ -1252,19 +1254,20 @@ The optional _reason_ key can be used to convey the reason that the floor has be
 
     {
       "openFloor": {
-        schema ": {
-          version ":"0.9.4"
+        "schema": {
+          "version": "0.9.4"
         },
-        conversation ": {
-          id ":"someUniqueIdForTheConversation"
+        "conversation": {
+          "id": "someUniqueIdForTheConversation"
         },
-        sender ": {
-          "from ":" https://som_agent_that_has_floor.com"
-        } ,
-        "events ": [
+        "sender": {
+          "speakerUri": "tag:som_agent_that_has_floor.com,2025:1234",
+          "serviceUrl": "https://som_agent_that_has_floor.com"
+        },
+        "events": [
           {
-            "eventType":""yieldFloor",
-            "reason" : "@complete"
+            "eventType": "yieldFloor",
+            "reason": "@complete"
           }
         ]
       }
