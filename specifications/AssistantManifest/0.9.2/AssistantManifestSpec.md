@@ -47,14 +47,14 @@ The Assistant Manifest is a structured description of the key characteristics an
 #### 0.3 Approach and Potential Uses
 The Assistant Manifest intentionally avoids the use of any domain-specific schemas or ontologies.  This follows the philosophy of the Open Voice Interoperability Initiative regarding a dependence on natural language to give the loosest possible linkage between components.
 
-The Assistant Manifest is a standardized data structure that intended to be used as a component of other specifications; it is not a stand-alone document.  Having said that, target uses for this manifest are as follows:
+The Assistant Manifest is a standardized data structure that is intended to be used as a component of other specifications; it is not a stand-alone document.  Having said that, target uses for this manifest are as follows:
 
 - Enable discovery agents to compile static indexes for rapid searching of a large number of agents.
 - Enable discovery agents to use language model technology to rank agents for recommendation without asking specific questions of the target agents
 - Provide information on request to potential user-agents to assist with their own ranking of candidate agents for a specific task.
-- Provide vocalizable information that allow other agents to know how to address this agent in a conversation (e.g. what name to address the agent by)
+- Provide vocalizable information that allows other agents to know how to address this agent in a conversation (e.g. what name to address the agent by)
 
-One standard that uses this document format is [[3] Interoperable Conversation Envelope Specification Version 0.9.4](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.4/InteroperableConvEnvSpec.md ). That specification defines a number if events types that are designed to help conversational agents discover other agents for certain tasks.  There are events for requesting and publishing manifests, and also events for finding and recommending agents for certain tasks.  These events make use of all or part of the contents of the Assistant Manifest. 
+One standard that uses this document format is [[3] Interoperable Conversation Envelope Specification Version 0.9.4](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.4/InteroperableConvEnvSpec.md ). That specification defines a number of events types that are designed to help conversational agents discover other agents for certain tasks.  There are events for requesting and publishing manifests, and also events for finding and recommending agents for certain tasks.  These events make use of all or part of the contents of the Assistant Manifest. 
 
 ### CHAPTER 1. SPECIFICATION
 #### 1.1 Representation
@@ -84,7 +84,7 @@ This specification uses `camelCase` (i.e., no spaces with new words capitalized)
             "conversationalName": "Buerokratt",
             "department": "Passport Office",
             "role": "Immigration Specialist",
-            "synopsis": "Immigration specialist as part of the Beurocrat system."
+            "synopsis": "Immigration specialist as part of the Buerokratt system."
         },
 
         "capabilities": [
@@ -197,7 +197,7 @@ mandatory elements|The mandatory elements that are required in the various eleme
 |Issue|Description|
 |--|--|
 |Conversant or Assistant Manifest|Question: Is the manifest only for conversants with the role of an 'assistant' or should it be named a 'Conversant Manifest' and be capable of representing the identity and capabilities of all participants of a conversation including a user? </br> Answer: The manifest is intended to describe anything that can be a conversational endpoint. This could be a typical informational assistant, a discovery agent, or a user represented by a user proxy agent.  We decided to keep the term 'assistant' to cover all of these cases because it is sufficiently ambiguous, and the dominant use case will not be to describe human users. |
-|Authentication|Question: The Assistant Manifest specification specifically excludes the authentication of users/agents. Authentication is not only needed to know who the user is and if she is allowed to use the service provided by the assistant. Moreover, it is possible that the service an agent offers depend on subsrcriptions and may differ for different users.Answer: Later versions of the specification may need to directly address who is allowed to know what about each agent. Also the manifest may represent a good place to store information regarding the verifyable identity of the agents as a conversant.|
+|Authentication|Question: The Assistant Manifest specification specifically excludes the authentication of users/agents. Authentication is not only needed to know who the user is and if she is allowed to use the service provided by the assistant. Moreover, it is possible that the service an agent offers depend on subscriptions and may differ for different users.Answer: Later versions of the specification may need to directly address who is allowed to know what about each agent. Also the manifest may represent a good place to store information regarding the verifyable identity of the agents as a conversant.|
 
 ### Chapter 6. Document Change Log
 
