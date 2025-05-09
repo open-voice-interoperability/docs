@@ -39,7 +39,7 @@ Status: Issued
 #### 1.15 declineInvite Event
 #### 1.16 bye Event
 #### 1.17 getManifests Event
-#### 1.18 publishManfests Event
+#### 1.18 publishManifests Event
 #### 1.19 requestFloor Event
 #### 1.20 grantFloor Event
 #### 1.21 revokeFloor Event
@@ -77,23 +77,23 @@ The Open-Floor Message format is a universal JSON structure whose purpose is to 
 
 Collaboration between agents and human users is modelled upon a conversation between peers gathering around a shared 'floor'.  As with normal human-human conversation, agents (users or conversational assistants) communicate with each other by exchanging 'utterances'.  In many ways the 'floor' is analogous to a  conference bridge that joins participants in a conversation.  Also, as with normal conversation, the participants in the conversation collaborate to achieve a goal together. In some cases a convener agent may also be present to mediate the conversation on the floor in a manner analogous to a chair moderating a meeting.
 
-A conversation can consist of multiple conversants, who may be any arbitrary mixture of human or autonomous agents.  The simplicity of the interface means that the messages can also be used as a platform indepent interface between a chat client and AI chat agents.
+A conversation can consist of multiple conversants, who may be any arbitrary mixture of human or autonomous agents.  The simplicity of the interface means that the messages can also be used as a platform independent interface between a chat client and AI chat agents.
 
 Figure 1 shows a simple schematic showing a user interacting at various points with three Open-floor compliant dialog assistants, via a user proxy agent, and a conversation floor manager.  Let's assume for now that there is a single user who remains constant for the duration of the conversation.  This user engages with a number of dialog agents, one at a time,  during the course of the conversation in a sequential manner.
 
-The proxy agent acts as a media gateway with the user - converting whatever media interface the user is interacting with into standard interoperable messaging.  The conversational floor manager acts as a hub to coordinate the conversation.
+The proxy agent acts as a media gateway with the user - converting whatever media interface the user is interacting with into standard interoperable messaging. The conversational floor manager acts as a hub to coordinate the conversation.
 
 In the example shown in Figure 1, the user proxy agent and the conversation manager can be combined.   This combined function is termed an 'Open-Floor Compliant Host Browser'.
 
 In its simplest form, the user proxy agent might present a text-based chat interface to the user.  For spoken interaction, the proxy agent will likely also contain speech-to-text and text-to-speech facilities but other configurations are also anticipated including support for images, video and document attachments.  The proxy agent may have conversational ability in its own right but in many cases, it may only provide rudimentary capabilities such as wake-word detection.
 
-Messages that pass between Open-floor agents are termed 'conversation envelopes'.  Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single message envelope.   Each conversant can 'hear' things said to it or 'say' things by making an 'utterance'.   They can also 'whisper' to each other behind the scenes by sending private utterances to each other.   Conversants may also invite other agents to join the conversation or they might ask other agents if they are capabale of a certain activity or would like recommend another agent for a certain task.
+Messages that pass between Open-floor agents are termed 'conversation envelopes'.  Each arrow in the diagram denotes a message passing from one agent to another.  Each of these messages will comprise a single message envelope.   Each conversant can 'hear' things said to it or 'say' things by making an 'utterance'.   They can also 'whisper' to each other behind the scenes by sending private utterances to each other.   Conversants may also invite other agents to join the conversation or they might ask other agents if they are capable of a certain activity or would like recommend another agent for a certain task.
 
 #### 0.3 Delegation, Channeling and Mediation
 
 The floor manager is in control of which conversants are engaged in a conversation at any given moment.
 
-To start a conversation, the proxy agent invites a specific dialog agent (e.g. Dialog Assistant A) to take part in a conversation with the user.   Once engaged, the assistnat receives an open-floor message containing a user utterance and sends an utterance back to the user in response.  Once the assistant is done with the interaction they can simply end the interaction or, via the floor, invite another agent to enter the conversation (e.g. Dialogue Assistant B in the diagram).   The change of control of a dialog between two agents is called 'delegation'.
+To start a conversation, the proxy agent invites a specific dialog agent (e.g. Dialog Assistant A) to take part in a conversation with the user.   Once engaged, the assistantt receives an open-floor message containing a user utterance and sends an utterance back to the user in response.  Once the assistant is done with the interaction they can simply end the interaction or, via the floor, invite another agent to enter the conversation (e.g. Dialogue Assistant B in the diagram).   The change of control of a dialog between two agents is called 'delegation'.
 
 Dialog Assistants may also engage the services of another dialog assistant behind the scenes to assist with the conversation (e.g. Assistant A engages the services of assistant C to support it in its interaction with the user.)    The controlling agent might choose to pass utterances unaltered to the target agent and may in return pass the target agent's responses unaltered to the user.  This pattern is termed 'channeling'. It is in many ways functionally equivalent to delegating the conversation but the channeling agent passes the messages on or can intervene or override the contribution of the agent to which the conversation is being channeled.  For example, a channelling agent may decide to keep the intent of the utterance but change how the content is rendered.  In a voice interface this might involve things like increasing the volume for the hard of hearing, decreasing the speed of presentation for the cognitively challenged or for non-native speakers, change the voice characteristics of the presentation, or change the language, or change visual characteristics if these are present.
 
@@ -110,11 +110,11 @@ The patterns described above allow for conversation between one user and multipl
 \
 **Figure 2.  Multi-party conversations hosted by a floor manager and a converner agent.**\
 \
-This specification also contains extensions to support the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows how this might work.  It extends Figure 1 to show mutliple agents taking part in a conversations simultaneously.  As in Figure 1, the floor manager manages the conversational interaction.  In a multi-party conversation the floor will optionally invite a 'Convener' agent to the conversation. This will be compliant agent but with special privileges.  Message envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   
+This specification also contains extensions to support the implementation of simultaneous multi-party conversation where multiple users and agents may be listening to the conversation simultaneously and take turns to speak or even speak over one another. Figure 2 shows how this might work.  It extends Figure 1 to show multiple agents taking part in a conversations simultaneously.  As in Figure 1, the floor manager manages the conversational interaction.  In a multi-party conversation the floor will optionally invite a 'Convener' agent to the conversation. This will be a compliant agent but with special privileges.  Message envelopes that are sent to the floor by an agent are copied to all members present in the current conversation (with the exception of certain private messages discussed later).   
 
-The convener manages which agent has the floor at any given momment via the floor manager.  An in depth description of this approach can be found in [7].  Support for multi-party conversations is still somewhat experimental. Additional features or small changes may be neccessary as the use-cases and patterns for this becomes more mature.
+The convener manages which agent has the floor at any given moment via the floor manager.  An in depth description of this approach can be found in [7].  Support for multi-party conversations is still somewhat experimental. Additional features or small changes may be necessary as the use-cases and patterns for this becomes more mature.
 
-The multi-party conversation paradigm is also a promising to give a framework-free agentic framework where autonomous AI agents collaborate using a shared floor to achieve a goal.   
+The multi-party conversation paradigm is also promising to give a framework-free agentic framework where autonomous AI agents collaborate using a shared floor to achieve a goal.   
 
 ### 0.5 Discovery
 
@@ -125,7 +125,7 @@ Agents can ask other agents if they are able to satisfy a certain enquiry or whe
 - Proposing one or more agents to help 'find' an agent for the task (i.e. recommend another discovery agent)
 - Proposing no agents (i.e. the agent cannot do the task or recommend any other agent)
 
-The requesting agent can then choose to invite the proposed agent to the conversation, or simply speak directly to the proposed agent if they already party to the conversation.
+The requesting agent can then choose to invite the proposed agent to the conversation, or simply speak directly to the proposed agent if they are already party to the conversation.
 
 This feature can also be used to ask an agent for a manifest of its own capabilities.
 
@@ -138,9 +138,9 @@ Agents and human conversants in a conversation need to be able to identify and r
 - **serviceUrl** - The URL of the server that hosts the agent.  
 - **speakerUri** - A unique string that uniquely identifies the agent in URI syntax. 
 
-Let's use an analogy to illustrate the difference between the two.   The _serviceUrl_ could be analogous to the exct address that can be used to locate the agent and the _speakerUri_ identifies the specific agent at that address.
+Let's use an analogy to illustrate the difference between the two.   The _serviceUrl_ could be analogous to the exact address that can be used to locate the agent and the _speakerUri_ identifies the specific agent at that address.
 
-The **serviceUrl** should point an end-point that is capable of consuming and generating Open-floor message envelopes.
+The **serviceUrl** should point to an end-point that is capable of consuming and generating Open-floor message envelopes.
 
 Agents or human conversants are free to choose any valid URI to identify themselves.  speakerUri's should be unique and ideally remain persistent for the whole lifetime of the agent or user.  Ideally, the speakerUri should be a URN [5] but any valid URI can be used.  The purpose of this URI is to provide a persistent unique key to the identity of the agent.  It is not a requirement that this URI be resolvable to an actual location on the internet.  The _serviceUrl_ is used for this purpose.
 
@@ -152,7 +152,7 @@ Examples of valid speakerURI are given below.
 - **tel:+1-212-555-1212**: A URI that specifies a phone number associated with an agent
 - **https://openfloor.myopenflooragent.com/agent#3456**: A URI using an http address that could be the same as the agent serviceserviceUrl.
 
-NOTE: This standard is currently agnostic regarding the URI scheme used for an agent. Options for standardizing further might include the regisstration of a specific URN namespace identifier, for example 'urn:openFloor' [5].  In the short term Tag URIs [6] represent a pragmatic way to generate a unique idenfifier for an agent.  In this document we use Tag URIs in all examples.
+NOTE: This standard is currently agnostic regarding the URI scheme used for an agent. Options for standardizing further might include the regisstration of a specific URN namespace identifier, for example, 'urn:openFloor' [5].  In the short term Tag URIs [6] represent a pragmatic way to generate a unique idenfifier for an agent.  In this document we use Tag URIs in all examples.
 
 ### CHAPTER 1. SPECIFICATION
 
@@ -278,7 +278,7 @@ The schema for the version of the envelope specification can be found in **Chapt
 
 The conversation object carries persistent information related to the current conversation.  It should be passed on from agent to agent.
 
-As shown in figure 6, the conversation section contains just one piece of mandatory information - the id of the conversation.  The id  should be a unique identifier for the current conversation with the user.  Persistent information relating to this current conversation can be keyed to this id.   The id  can be any arbitrary length character sequence that can be represented as a string in JSON.
+As shown in Figure 6, the conversation section contains just one piece of mandatory information - the id of the conversation.  The id  should be a unique identifier for the current conversation with the user.  Persistent information relating to this current conversation can be keyed to this id.   The id  can be any arbitrary length character sequence that can be represented as a string in JSON.
 
     {
       "openFloor": {
@@ -317,9 +317,9 @@ The _conversants_ section is optional and if present should contain a list of al
 
 The _identification_ section should be a copy of the _identification_ section of the agent's manifest as defined in [4].   
 
-The _persistentState_ is optional and consists of key-value pairs where the values can be any arbitrary JSON object.  The purpose of this is to enable agents to persist information that is important to maintaining internal state in the conversation.  Message senders should only add new key-valuep pairs to their own conversant object.
+The _persistentState_ is optional and consists of key-value pairs where the values can be any arbitrary JSON object.  The purpose of this is to enable agents to persist information that is important to maintaining internal state in the conversation.  Message senders should only add new key-value pairs to their own conversant object.
 
-All message handlers should persist the data in this section when replying to a message.  Agents are encouraged to remove themselves from the _conversant_ section when sending a 'bye' event.  It is encumbent on floor managers to also do basic housekeeping on the _conversation_ section.
+All message handlers should persist the data in this section when replying to a message.  Agents are encouraged to remove themselves from the _conversant_ section when sending a 'bye' event.  It is incumbent on floor managers to also do basic housekeeping on the _conversation_ section.
 
 There are currently no restrictions currently placed on the content of persistent objects.   Privacy and security issues apply here. It is suggested that the data in these sections is encrypted but this is not mandatory.  Consideration should also be given to the size of any objects in this section as this might affect the downstream performance of the remaining conversation.
 
@@ -385,7 +385,7 @@ Each event object must have an _eventType_, which is a string.  Other parameters
 
 The optional _to_ section contains two parameters. The first is a _speakerUri_ of the target recipient.  The second is the _serviceUrl_ which is a valid URL of the assistant that the message is intended for.   The _to_ section is optional. If it is present then it must contain a _ServiceUrl_ or a _speakerUri_ or both.  If the _to_ section is not present then is can be assumed that the event is intended for all recipients of the envelope.  
 
-The _to_ section also contains a _private_ boolean parameter which, when set to true, indicates that the event is only intended for the _to_ agent alone.  If true then the event should not be copied by any intermediary agent to any other agents in a multi-participant conversation.  If it is not defined it is assumed to be _false_ i.e. any message intented for another recipient can be copied to other participants in the conversation for context. If there is not a _to_ section then the event is by default assumed to be public.
+The _to_ section also contains a _private_ boolean parameter which, when set to true, indicates that the event is only intended for the _to_ agent alone.  If true then the event should not be copied by any intermediary agent to any other agents in a multi-participant conversation.  If it is not defined it is assumed to be _false_ i.e. any message intended for another recipient can be copied to other participants in the conversation for context. If there is not a _to_ section then the event is by default assumed to be public.
 
         "events ": [
           ...
@@ -403,7 +403,7 @@ The _to_ section also contains a _private_ boolean parameter which, when set to 
 
 ##### Figure 10. Example of "reason" section containing a special token @timedOut.
 
-The optional _reason_ section is a string which can be used to convey the reason that the event is being sent.  This text can contain natural language in any language but by convention special tokens can be included which have special meaning for the event.   These are prefaced by an '@' sign, for example '@timedOut'.  Special tokens cannot contain anything that could be considered to be a word break such as white space or punctuation. For clarity, a special token is defined as any substring in the _reason_ text that matches the  regular expression: `@[a-zA-Z0-9_]+`
+The optional _reason_ section is a string which can be used to convey the reason that the event is being sent.  This text can contain natural language in any language but by convention special tokens can be included which have special meaning for the event.   These are prefaced by an '@' sign, for example, '@timedOut'.  Special tokens cannot contain anything that could be considered to be a word break such as white space or punctuation. For clarity, a special token is defined as any substring in the _reason_ text that matches the  regular expression: `@[a-zA-Z0-9_]+`
 
 Figure 10 shows an example of this.
 
@@ -424,13 +424,13 @@ The following are valid values for _eventTypes_.
   * _describeAssistant_ - Ask an agent to return a list of manifests of their own capabilities.
   * _publishManifests_ - Return a list of manifests for the current assistant.
   * _getManifests_ - Ask an agent to recommend themself or another agent for a task.
-  * _publishManfests_ - Return a list of recommended agents for a task.
+  * _publishManifests_ - Return a list of recommended agents for a task.
 
 * **managing who has the conversational floor** (support for multi-party conversations and floor passing between agents)
   * _requestFloor_ - Used by a conversant to request the floor.
   * _grantFloor_ - Used by a convener agent to offer the floor to another conversant. 
   * _revokeFloor_ - Used by a convener agent to revoke the floor from another conversant. 
-  * _yieldFloor_ - Used by a conversant to yeild the floor to another conversant.
+  * _yieldFloor_ - Used by a conversant to yield the floor to another conversant.
 
 The following sections define these event objects in more detail.
 
@@ -545,9 +545,9 @@ There are no limitations on the features that are added to a dialog event.  This
 
 #### Figure 14. Typical context event
 
-The purpose of the _context_ event is to give additional information to receipient agents.   This event is intended primarily to support context for general purpose AIs. For this reason it can have any structure and content and will typically be sent alongside other events as well.   The _context_ event can also contain an optional _dialogHistory_ parameter to convey dialog history in a standard format.  If media other than text is to be included in the _context_ object it is recommended that parameters with the format of a dialogEvent are used with meaningful key names.
+The purpose of the _context_ event is to give additional information to recipient agents.   This event is intended primarily to support context for general purpose AIs. For this reason it can have any structure and content and will typically be sent alongside other events as well.   The _context_ event can also contain an optional _dialogHistory_ parameter to convey dialog history in a standard format.  If media other than text is to be included in the _context_ object it is recommended that parameters with the format of a dialogEvent are used with meaningful key names.
 
-The _dialogHistory_ parameter is simple list of dialog events which should contain all, some or all of the utterances in the dialog.  It is good practice to order these in startTime order (in universal time) with the most recent event being the last item in the list. It is at the discretion of the sender of the _invite_ to decide how much history to include and whether the omit or anonymize certain dialogEvents in order to maintain security and confidentiality. For example, the conversational floor may decide to send the last 'N' (e.g. N=4) events in the dialog as if the invited agent had been at the floor for those N dialog turns.  If the agents had not been entitled to receive some of those events then these would also be omitted from the dialogHistory array or anonymized or redacted in some fashion.
+The _dialogHistory_ parameter is a simple list of dialog events which should contain some or all of the utterances in the dialog.  It is good practice to order these in startTime order (in universal time) with the most recent event being the last item in the list. It is at the discretion of the sender of the _invite_ to decide how much history to include and whether to omit or anonymize certain dialogEvents in order to maintain security and confidentiality. For example, the conversational floor may decide to send the last 'N' (e.g. N=4) events in the dialog as if the invited agent had been at the floor for those N dialog turns.  If the agents had not been entitled to receive some of those events then these would also be omitted from the dialogHistory array or anonymized or redacted in some fashion.
 
 Conversants that do not have general purpose AI capability may choose to ignore the context event.
 
@@ -650,7 +650,7 @@ It is possible to invite an agent to a conversation without giving it any other 
 
 ##### Figure 16. A typical dialog envelope for an invite, including a voiced transfer prompt, and a context object containing dialog history including the request from the user as the last dialog event in the history.
 
-Invite events may be accompanied by additional events and contain optional parameters.  Figure 16 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then invite event issues the invitation, accompanied by a context event which conveys the dialog history up to the point of the invite to help the invited bot respond appropriately.
+Invite events may be accompanied by additional events and contain optional parameters.  Figure 16 shows a conversation envelope where the inviting agent tells the user that they are inviting another agent to speak with them.  Then the invite event issues the invitation, accompanied by a context event which conveys the dialog history up to the point of the invite to help the invited bot respond appropriately.
 
 ### 1.14 uninvite Event
 
@@ -669,7 +669,7 @@ Invite events may be accompanied by additional events and contain optional param
           {
             "eventType": "uninvite",
             "to": {
-              "speakerUri": "tag:agentBeingUnivited,2025:1234"
+              "speakerUri": "tag:agentBeingUninvited,2025:1234"
             },
             "reason": "@brokenPolicy: agents should not contain content that is offensive or encourages illegal activity"
           }
@@ -677,7 +677,7 @@ Invite events may be accompanied by additional events and contain optional param
       }
     }
 
-##### Figure 17. A typical univite event 
+##### Figure 17. A typical uninvite event 
 
 The _uninvite_ event is the opposite of an _invite_ event and informs an agent that they have been removed from a conversation.  In the absence of a new _invite_ event, the agent should not expect to receive any more envelopes from this conversation.
 
@@ -686,7 +686,7 @@ The following special tokens have particular meaning in this event.
 |Reason Token|Description|
 |------|-----------|
 |@timedOut|The floor manager or convener is removing the agent from the conversation because it believes that the agent has taken too long to respond.|
-|@brokenPolicy|The floor manager or convener is removing the agent from the conversation because the agent has not met certain policy standards. This may be for example due to unsolicited or offensive contributions to the conversation.|
+|@brokenPolicy|The floor manager or convener is removing the agent from the conversation because the agent has not met certain policy standards. This may be, for example, due to unsolicited or offensive contributions to the conversation.|
 |@error|The floor manager or convener is removing the agent from the conversation because some kind of error has ocurred which means it is not longer meaningful for the agent to continue being part of the conversation.|
 
 ### 1.15 declineInvite Event
@@ -700,7 +700,7 @@ The following special tokens have particular meaning in this event.
           "id": "someUniqueIdForTheConversation"
         },
         "sender": {
-          "speakerUri": "tag:agentBeingUnivited,2025:1234"
+          "speakerUri": "tag:agentBeingUninvited,2025:1234"
         },
         "events": [
           {
@@ -799,7 +799,7 @@ The _getManifests_ event can be used to ask an assistant about the services it p
 2. Asking a site or assistant (or human agent) if they are willing and able to support a specific task.
 3. Asking a site or assistant (or human agent) to recommend one or more assistants that can help with a certain task.
 
-A _publishManfests_ event will be returned in response to the _getManifests_ event as defined in section 1.18.  This will contain one or more manifests [4] each defining the location, identity, and services provided by a specific assistant.   The returned manifests will be classified as either _servicingManfests_ or _discoveryManifests_ depending on whether these agents are primarily servicing assistants or discovery assistants.
+A _publishManifests_ event will be returned in response to the _getManifests_ event as defined in section 1.18.  This will contain one or more manifests [4] each defining the location, identity, and services provided by a specific assistant.   The returned manifests will be classified as either _servicingManifests_ or _discoveryManifests_ depending on whether these agents are primarily servicing assistants or discovery assistants.
 
 The _getManifests_ event has the following optional parameters:
 
@@ -894,7 +894,7 @@ The returned manifest list will be expected to only contain manifests from the t
       }
     }
 
-##### Figure 22. Use Case #2. Asking and assistant if they are willing and able to support a specific task.
+##### Figure 22. Use Case #2. Asking an assistant if they are willing and able to support a specific task.
 
 Figure 22 shows the same bot as Figure 21 being asked if it supports a specific task.  The extra _context_ and private _utterance_ events are used to communicate the specific task that is being requested.  It is this which distinguishes use case #1 from use case #2.   
 
@@ -966,19 +966,19 @@ The target assistant should return a _publishManifests_ containing any agents th
 
 ##### Figure 23. Use case #3. Asking a site or assistant to recommend one or more assistants that can help with a certain task. 
 
-Finally, Figure 23 shows use case #3 where a discovery agent is being asked to recommend some other agent to service a specific request.  The returned _proposeAssitant_ event should contain the manifests of any recommended assistants for the task.  
+Finally, Figure 23 shows use case #3 where a discovery agent is being asked to recommend some other agent to service a specific request.  The returned _proposeAssistant_ event should contain the manifests of any recommended assistants for the task.  
 
 In this example the parameter _recommendScope_ has the value "external" which indicates that the assistant is not being invited to recommend itself for the task.  
 
-In the most general case, when requested, assitants can also recommend their own services and/or the services of other agents.  The _recommendScope_ "all" is used to inidcate this. 
+In the most general case, when requested, assistants can also recommend their own services and/or the services of other agents.  The _recommendScope_ "all" is used to indicate this. 
 
-The optional _to_ object can be used to indicate which agent is the intended recipient of the event.  If absent then all recipients should consider the request directed at them, for all the assistants in the conversation could be simulataneously asked to to supply their own manifests or make recommendations.
+The optional _to_ object can be used to indicate which agent is the intended recipient of the event.  If absent then all recipients should consider the request directed at them, for all the assistants in the conversation could be simultaneously asked to to supply their own manifests or make recommendations.
 
-As with the invite event, there is no requirement for a _speakerUri_ on a _getManifests_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.  If the event is addressed to a _serviceUrl_ without an _speakerUri_ then it is best practice to return all the manfests associated with that _serviceUrl_.  If a _speakerUri_ is sent then it is best practice to return only the manifest associated with just that _speakerUri_. If the _speakerUri_ does match then it is best practice to return return an empty manifest list.  It may however be helpful for a discovery agent to return manifests of other disovery agents that it thinks might be able to help with the request.
+As with the invite event, there is no requirement for a _speakerUri_ on a _getManifests_ event.  If one is provided then it up to the receiving agent to decide how to take it into account.  If the event is addressed to a _serviceUrl_ without an _speakerUri_ then it is best practice to return all the manifests associated with that _serviceUrl_.  If a _speakerUri_ is sent then it is best practice to return only the manifest associated with just that _speakerUri_. If the _speakerUri_ does match then it is best practice to return an empty manifest list.  It may however be helpful for a discovery agent to return manifests of other discovery agents that it thinks might be able to help with the request.
 
-See section 1.18 for more information on _publishManfests_ event behaviors.
+See section 1.18 for more information on _publishManifests_ event behaviors.
 
-### 1.18 publishManfests Event
+### 1.18 publishManifests Event
 
     {
       "openFloor": {
@@ -997,7 +997,7 @@ See section 1.18 for more information on _publishManfests_ event behaviors.
               "serviceUrl": "https://someBotThatAskedForIt.com",
               "speakerUri": "tag:someBotThatAskedForIt.com,2025:1234"
             },
-            "eventType": "publishManfests",
+            "eventType": "publishManifests",
             "parameters": {
               "servicingManifests": [
                   {
@@ -1057,27 +1057,27 @@ See section 1.18 for more information on _publishManfests_ event behaviors.
       }
     }
 
-##### Figure 24. A typical publishManfests event 
+##### Figure 24. A typical publishManifests event 
 
-The _publishManfests_ event is sent when one agent would like to publish the capability of itself or other agents.   This will usually be in response to a _getManifests_ event (See section 1.17) but can also be used to make a delegation suggestion in response to an _utterance_ (Section 1.10).
+The _publishManifests_ event is sent when one agent would like to publish the capability of itself or other agents.   This will usually be in response to a _getManifests_ event (See section 1.17) but can also be used to make a delegation suggestion in response to an _utterance_ (Section 1.10).
 
 Once an agent receives a _getManifests_ event it can do a combination of the following:
 
 - Recommend one or more agents (including itself) to service this request.
 - Recommend one or more agents to help find who can service this request.
 
-In order to support this the _publishManfests_ event has two optional parameters:
+In order to support this the _publishManifests_ event has two optional parameters:
 
 - _servicingManifests_ - A list of agents that can service this request.
 - _discoveryManifests_ - A list of agents that can recommend other agents to service this request.
 
-A common response from the receiver of this event will be to examine the returned manifests to decide whether to issue an _invite_ to that agent.  This _invite_ event would often be accompanied by the any _uuterance_ and _context_ events that were sent with the _getManifests_ event, suitably re-addressed to the agent that is being invited. 
+A common response from the receiver of this event will be to examine the returned manifests to decide whether to issue an _invite_ to that agent.  This _invite_ event would often be accompanied by any _uuterance_ and _context_ events that were sent with the _getManifests_ event, suitably re-addressed to the agent that is being invited. 
 
-If an agent receives any other event that it does not feel capable of servicing, it can also return a _publishManfests_ event as a recommendation to use the services of a different agent.   This is a soft form of delegation.  
+If an agent receives any other event that it does not feel capable of servicing, it can also return a _publishManifests_ event as a recommendation to use the services of a different agent.   This is a soft form of delegation.  
 
 The optional _to_ can be used to indicate a specific agent to which the manifest is addressed.  Otherwise any recipient should consider the proposal addressed to themselves.
 
-There is no requirement for a _speakerUri_ in the _from_ section in a _publishManfests_ event.  If one is provided then it is good practice for the receiving agent to pass this speakerUri along in any subsequent _invite_ event to this agent.
+There is no requirement for a _speakerUri_ in the _from_ section in a _publishManifests_ event.  If one is provided then it is good practice for the receiving agent to pass this speakerUri along in any subsequent _invite_ event to this agent.
 
 Each list item in the recommendation should be in the manifest format as specified in [4].  In addition to the keys specified in that document, the manifest object can contain one additional optional key that is not present in the manifest specification:
 
@@ -1120,7 +1120,7 @@ The recommending agent is free to use any mechanism it wants to generate the _sc
 
 The _requestFloor_ event is used by agents that do not currently have the conversational floor to request it.  Figure 24 shows a typical _requestFloor_ envelope.
 
-This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor  [7].
+This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support multi-agent mixed-initiative conversations where a convener agent it present to co-ordinate the floor  [7].
 
 This event is somewhat experimental and is currently informative not normative and may be subject to change.  Compliant agents do not need to support this event yet and servicing agents may send this event but they are not expected to receive it and can safely ignore it if they do (See section 2.1). 
 
@@ -1154,7 +1154,7 @@ Figure 25. A bare grantFloor event
 
 The _grantFloor_ event is used to grant the conversational floor to agents.   This event is not needed in conversations between a single user and an agent or in situations where agents are responsive only to utterance events directed to them specifically.   This event has been added to support mutli-agent mixed-initiative conversations where a convener agent is present to co-ordinate the floor [7].
 
-In one use case, the _grantFloor_ event can be sent by floor managers in resonse to a _requestFloor_ event from an agent. Figure 25 shows a bare _grantFloor_ envelope which might be used for this purpose.  Once this message is recieved by an agent is free to send Utterance events to the floor with the expectation that they will be delivered to the designated destination.
+In one use case, the _grantFloor_ event can be sent by floor managers in resonse to a _requestFloor_ event from an agent. Figure 25 shows a bare _grantFloor_ envelope which might be used for this purpose.  Once this message is received by an agent it is free to send Utterance events to the floor with the expectation that they will be delivered to the designated destination.
 
     {
       "openFloor": {
@@ -1248,7 +1248,7 @@ The optional _reason_ key can be used to convey the reason that the floor has be
 |@timedOut|The convener is removing the agent's floor rights because the convener believes that the agent has taken too long to respond|
 |@brokenPolicy|The convener is removing the agent's floor rights because the agent has not met certain policy standards|
 |@override|The convener is removing the agent's floor rights because it is granting floor rights to another agent with higher precedence|
-|@error|The convener is removing the agent's floor rights because some kind of error has ocurred which means it is not longer meaningful for the agent to continue interacting.|
+|@error|The convener is removing the agent's floor rights because some kind of error has ocurred which means it is no longer meaningful for the agent to continue interacting.|
 
 ### 1.22 yieldFloor Event
 
@@ -1283,10 +1283,10 @@ The following special _reason_ tokens are supported by this event type:
 
 |Reason|Description|
 |------|-----------|
-|@outOfDomain|The agent is yeilding the floor because it cannot support the request addressed to it (and by inference another agent is needed to respond)|
+|@outOfDomain|The agent is yielding the floor because it cannot support the request addressed to it (and by inference another agent is needed to respond)|
 |@complete|The agent is yielding the floor because it believes it has completed the request|
 |@timedOut|The agent is yielding the floor because it has time out waiting for responses and feels unable to help any further|
-|@refused|The agent is yeilding the floor because it is not willing to handle this request|
+|@refused|The agent is yielding the floor because it is not willing to handle this request|
 |@error|The agent is yielding the floor because it has encountered an error from which it cannot recover|
 
 
@@ -1294,7 +1294,7 @@ The following special _reason_ tokens are supported by this event type:
 
 #### 2.1 Minimal Servicing Assistant Behaviors (on Receipt of Events) [INFORMATIVE]
 
-OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant if the agent. These guidelines are informative not normative.
+OVON-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an OVON-compliant dialog assistant. These guidelines are informative not normative.
 
 If any events contain a _to_ that is not addressed to the agent, then ignore the event.
 
@@ -1305,17 +1305,17 @@ If the _to_ section is addressed to the agent (or is absent) then the following 
 
 * agent control events  - structure control messages
   * _invite_ - Send a 'hello' _utterance_ and respond to any accompanying _context_ or _utterance_ events or send _declineInvite_ event.
-  * _declineInvite_ - Ignroe this event from another assistant unless you were the agent that sent the _invite_.
+  * _declineInvite_ - Ignore this event from another assistant unless you were the agent that sent the _invite_.
   * _bye_ - Ignore this event from another assistant.
   * getManifests
       - if the _to_ is addressed to you:
-        - If the scope is 'internal' or 'all' - return your own manifest(s) in the _servicingManfiests_ section of a _publishManfests_ event.
+        - If the scope is 'internal' or 'all' - return your own manifest(s) in the _servicingManfiests_ section of a _publishManifests_ event.
         - If the scope is 'external' - ignore this event (if you are a servicing agent and not a discovery agent)
       - if the _to_ section is not specified: 
         - If the scope is 'internal' or 'all'
-          - Consider whether the contents of the envelope is something you want to service.  If you are not sure, ignore this event. Otherwise return a servicingManifests in a _publishManfests_ event containing the relevant manifests of the services you offer that can meet the request.
+          - Consider whether the contents of the envelope is something you want to service.  If you are not sure, ignore this event. Otherwise return a servicingManifests in a _publishManifests_ event containing the relevant manifests of the services you offer that can meet the request.
         - if the scope is 'external' - ignore this event.
-  * _publishManfests_ - Ignore this event if you did not ask for mandates from another agent.
+  * _publishManifests_ - Ignore this event if you did not ask for mandates from another agent.
   * _uninvite_ - Leave this conversation (i.e. stop responding to all events from this conversation_id)
   
 * floor management events - giving and taking the floor
@@ -1324,7 +1324,7 @@ If the _to_ section is addressed to the agent (or is absent) then the following 
   * _revokeFloor_ - If this is addressed to you, cease sending events and wait for either a _grantFloor_ or an _utterance_ directed specifically to you as an agent before sending any more events.  
   * _yieldFloor_ - Ignore this.
 
-#### 2.2 Minimal Conversation Floor Manager Behaviors (on Recept of Events) [INFORMATIVE]
+#### 2.2 Minimal Conversation Floor Manager Behaviors (on Receipt of Events) [INFORMATIVE]
 
 The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can, for example, include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation when needed, and deciding when to terminate a conversation with the user.  
 
@@ -1341,16 +1341,16 @@ A minimal floor manager will therefore exhibit the following behaviours.
   * _describeAssistant_  - Forward to intended recipient. 
   * _publishManifests_ - Forward to intended recipient. 
   * _getManifests_  - Forward to intended recipient. 
-  * _publishManfests_  - Forward to intended recipient. 
+  * _publishManifests_  - Forward to intended recipient. 
   * _bye_ - Forward to intended recipient. Also remove this agent from the current register of active conversants.
   * _requestFloor_ - Return a _grantFloor_ 
   * _grantFloor_ - Forward to intended recipient. 
   * _revokeFloor_ - Forward to intended recipient. 
   * _yieldFloor_ - Do nothing.
 
-#### 2.3 Ignoring events with prototols that require a response
+#### 2.3 Ignoring events with protocols that require a response
 
-If the messaging protocol that sent the envelope requires a response (e.g. HTTP POST) and your agent has no need to respond to any of the events in the envelope (i.e. the agent is ingoring it) then return an envelope with an _event_ object containing an empty array.(i.e. an array with no events in it).
+If the messaging protocol that sent the envelope requires a response (e.g. HTTP POST) and your agent has no need to respond to any of the events in the envelope (i.e. the agent is ignoring it) then return an envelope with an _event_ object containing an empty array.(i.e. an array with no events in it).
 
 ## Chapter 3. JSON Envelope Schema
 
@@ -1370,7 +1370,7 @@ The structure of a JSON conversation envelope is defined as a JSON Schema locate
 
 |Term|Definition|
 |-|-|
-|channeling|A conversational assistant acts as an intermediary between a user and another conversational assistant, passing through requests and returning responses. The intermediary assistant will often make no modifications to the requests or the responses but may do so, for example increasing the speed or volume or even translating between languages.   
+|channeling|A conversational assistant acts as an intermediary between a user and another conversational assistant, passing through requests and returning responses. The intermediary assistant will often make no modifications to the requests or the responses but may do so, for example, increasing the speed or volume or even translating between languages.   
 |confidence |A number representing a measure of the confidence that the information contained in the associated value is ‘correct’.
 |conversation floor manager|A component that manages which conversants are active in a given conversation and which agent is the current focal agent. 
 |delegation|A conversational assistant passes control and management of the dialog to another conversational assistant, along with a negotiated amount of context and dialog history. 
@@ -1404,17 +1404,17 @@ This section documents some of the key design decisions that were made by the te
 |-|-|
 |Using JSON rather than other representations.|_Question:_ Why JSON and not other formats? (i.e. XML). </br>_Answer:_ JSON is Open and Human Readable Standard format for Data Exchange well suited for API designed for communications. JSON is a data format that extends from JavaScript. It does not use tags, which makes it more compact and easier to read for humans. JSON can represent the same data in a smaller file size for faster data transfer.  Furthermore JSON parsing is safer than XML, which leads JSON as the preferred format for secure communications among Conversational agents.
 |Addressing Multiple Targets|_Question_: How might envelopes address more than one target? We are trying to use the envelopes to allow one agent to send events to more than one destination.</br>_Answer:_ This needs to be addressed in subsequent versions of the specification.
-|Go-Back|_Question:_ How can control be passed back to a previous agent?</br>_Answer:_ There is no explicit 'go-back' event or concept.   Control can be explicitly passed back to a previous agent through an explicit invite from the current focal agent.  Alternatively, the conversation floor manager can generate an invite to bring a 'favored' agent into the conversation, for example where the current focal agent is not meeting expectations for conversational interaction.  In a future version of this document, we may consider explicitly supporting requests from one agent to ‘go-back’ to the previous focal agent.
+|Go-Back|_Question:_ How can control be passed back to a previous agent?</br>_Answer:_ There is no explicit 'go-back' event or concept.   Control can be explicitly passed back to a previous agent through an explicit invite from the current focal agent.  Alternatively, the conversation floor manager can generate an invite to bring a 'favored' agent into the conversation, for example, where the current focal agent is not meeting expectations for conversational interaction.  In a future version of this document, we may consider explicitly supporting requests from one agent to ‘go-back’ to the previous focal agent.
 |Control flow and exceptions|_Question:_ How do we handle timeouts and what is responsible for them?</br>_Answer:_ There is no mandated behavior regarding timeouts and exceptions.   Each conversation floor manager can choose the behavior in this regard.  Later incarnations of this specification are likely to address common exception conditions where standardization of behavior becomes important for interoperability.
 |Host Browsers and User Proxies|_Question:_ Is the host browser a user proxy or does it have unique responsibilities for control?</br>_Answer:_ The host browser is a close coupling of a user proxy and a conversation floor manager.  It is anticipated that user proxies and floor managers can be implemented separately and communicate using dialog envelopes.  This has not been fully proven yet and there are likely to be additional control structures needed to fully support the separation.  We anticipate that early adoption of this standard will require a unified host browser.
 |responseCodes|_Question:_ Are responseCodes optional or mandatory</br>_Answer:_ It was agreed that this section is optional in the envelope.|
 |location of schemas|_Question:_ Where should we publish the schema?</br>_Answer:_ Let's use https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas, but add a new subfolder for each version (e.g. "0.9.4" for the current schemas).
 |reply_to |_Question_: Should reply_to be optional, mandatory (or removed)?</br>_Answer:_ The reply_to element appears to have become redundant and was retired out of the specification in version 9.9.2.  
 |Returning Control|_Question_:Have we fully addressed what happens on handing back control? Need to discuss control on 'bye' and 'invite'.</br>_Answer:_ Minimal behaviors for 'bye' and 'invite' are defined in this specification with the introduction of a 'focal agent'.  Subsequent incarnations of this specification are likely to formalize these further in order to support multi-participant conversations.
-|How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
-|Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
+|How are conversations started?|_Question:_ There is nothing in the envelope spec to allow a conversant to initiate a conversation.  How do conversations start?</br>_Answer:_ It is envisaged that a 'start' event (or some similar name) will be added in later versions of the specification.  Such an event would for example, come from the proxy agent to the conversation floor manager and result in the creation of a conversationId.   It is also possible that an Invite could be used for this purpose and a new event is not needed.  For now, it is assumed that implementation of the current version of the specification will have a combined proxy agent and conversation floor manager and the initiation of a dialog will be a proprietary feature of that combined component.
+|Interruptions and Univiting agents.|_Question:_ How does one conversation stop the operation of another conversant?  For example, how might a user tell an agent to be quiet?  </br>_Answer:_ We anticipate that later versions of this specification will require more explicit floor management and control features, including the ability to 'uninvite' conversants.    In the meantime, interruption of real-time streaming of audio to the user can only happen in the user-proxy-agent, for example, under the control of a barge-in mechanism.  The conversation floor manager can also choose to 'uninvite' an agent by simply stopping communication with it.  That agent will need to infer that it is no longer part of the conversation by the use of heuristic time-outs.
 |Multi-conversant support|_Question:_ How might this specification be extended to support multiple conversant support?   The most pressing need for this is to enable a 'favored' agent to be able to respond to interruption messages from the user.   After that, use cases could include having multiple users on a single conversation and multiple agents competing for the floor - i.e. a conference call involving multiple users and/or agents.</br>_Answer:_  This specification fully anticipates that the conversation floor manager could support multiple conversants.   The group has identified the following features that will probably be needed to support this.</br> - Uninviting conversants (See above)</br> - Adding targetSpeakerID to dialog events (to allow one conversant to specifically address another specific conversant).</br> - Adding a speakers section to the conversation object to keep track of the speakers in the conversation including their speakerUris, URLs, displayNames, and spokenNames.
-|candidateAssistants|_Question_: should we rename this to be _publishManfests_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: It was agreed to rename this _publishManfests_.|
+|candidateAssistants|_Question_: should we rename this to be _publishManifests_ to follow the pattern that events are generally a verb phrase not a noun phrase?<br>_Answer_: It was agreed to rename this _publishManifests_.|
 |'to' destinations|_Question_: There is an urgent need to agree how to express 'to' and discuss exactly how the addressing of events is managed.  We have removed 'to' from the Invite but not put it anywhere else. <br>_Answer_: We have added an optional 'to' parameter to all events.  This helps the recipient decide whether they want to ignore it or not.|
 |responseCode|_Question_: This is anachronistic and may not be useful. We need to know how current users are using this parameter and considering retiring it.<br>_Answer_: We decided to deprecate the responseCode and introduce an 'acknowledge' event instead. |
 |discovery or servicing agent in manifest|_Question_: Should manifests have explicit coding for whether an agent can provide discovery services or not? </br> _Answer_: We have deliberately left this out for now, but if we need it, we will consider additional flags on the manifest in some form.|
@@ -1422,9 +1422,9 @@ This section documents some of the key design decisions that were made by the te
 |private flag in _to_|_Question:_ Should the private flag be inside the _to_ section because it has no meaning if there is no _to_section.<br>_Answer;_ Yes|
 |speakerUris in invites|_Question:_Should we allow/expect speakerUris in invites? <br>_Answer:_ These are optionally allowed. If present it will mean that the inviting agent has either received the manifest or has spoken with the agent previously. The receiving agent can ignore this parameter, especially if it not valid.|
 |speakerUri in _from_|_Question:_ Do we need a speakerUri on the _from_ parameter as well?<br>_Answer:_Yes|
-|keeping _dialogHistory_ safe|_Question_: To what extent is it safe to put dialog history into invites and findAssitant messages?<br>_Answer_:  This is left to the discretion of the sender just as it might be in warm transfer in a real telephone conversation. The consensus was that it is probably safe to pass on the last few turns as-if the target agent had been at the table. i.e. obscure any messages that this agent is not cleared to have visibility of , for example because they were private.  More discussion will probably be needed on this issue as use cases emerge.|
+|keeping _dialogHistory_ safe|_Question_: To what extent is it safe to put dialog history into invites and findAssistant messages?<br>_Answer_:  This is left to the discretion of the sender just as it might be in warm transfer in a real telephone conversation. The consensus was that it is probably safe to pass on the last few turns as-if the target agent had been at the table. i.e. obscure any messages that this agent is not cleared to have visibility of , for example, because they were private.  More discussion will probably be needed on this issue as use cases emerge.|
 |whispers or private utterances|_Question_:Now that _dialogEvent_ parameters are embedded in events such as _invite_ and there is support for the _private_ parameter in the _to_ section of an _utterance_ event, can we retire _whisper_ in favor of private _utterance_ events instead??<br>_Answer:_ Yes. The _whisper_ event has been removed.|
-|_context_ in dialogEvents|_Question:_ We added -context- into dialog events to support context on utterances. The intention was that this would allow the passing of context in such a way that things like language type and dialect were fully supported. However it is located outside of the 'text' feature so that is not correct.   Would we not be better simply removing _context_ as a specific extension to dialog events and considering adding 'instruct' and 'context' dialogEvent parameters to events like _invite_ rather than the generic _dialogEvent_?   That way we can more directly support the established LLM paradigm of instructions and context in all messages where _dialogEvents_ are used to conveny instructions from one agent to another.<br>_Answer:_ TO BE DISCUSSED| 
+|_context_ in dialogEvents|_Question:_ We added -context- into dialog events to support context on utterances. The intention was that this would allow the passing of context in such a way that things like language type and dialect were fully supported. However it is located outside of the 'text' feature so that is not correct.   Would we not be better simply removing _context_ as a specific extension to dialog events and considering adding 'instruct' and 'context' dialogEvent parameters to events like _invite_ rather than the generic _dialogEvent_?   That way we can more directly support the established LLM paradigm of instructions and context in all messages where _dialogEvents_ are used to convey instructions from one agent to another.<br>_Answer:_ TO BE DISCUSSED| 
 |_to_ on _utterance_ gives away floor?|_Question:_Does _to_ on an utterance imply giving the floor to the receiver?<br>_Answer:_ TO BE DISCUSSED|
 |Size of conversation object|_Question:_ Do we need to worry about the size of the conversation object and should we allow full manifests and unlimited persistentState objects etc.|
 |persistentState|_Question:_ Do we need to keep the persistent state? Should clients modify it directly or should there be a separate event and use the floor to modify it?<br>_Answer:_ TO BE DISCUSSED|
@@ -1436,9 +1436,9 @@ This section documents some of the key design decisions that were made by the te
 |-|-|-|
 |0.9.0|2024.01.16|Initial Published Draft|
 |0.9.1|2024.04.16|- Added a new section introducing discovery</br>- Merged the 'Representation' section into the 'Syntax and Protocol' section. </br>- Replaced code example images with text</br>- Added PersistentState which was accidentally omitted from 0.9.0| 
-|0.9.2|2024.07.03|- Added getManifests event</br> - Added publishManfests event</br> - Added requestManifest event</br> - Added publishManifests event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
+|0.9.2|2024.07.03|- Added getManifests event</br> - Added publishManifests event</br> - Added requestManifest event</br> - Added publishManifests event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
-|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed publishManfests to return full array of manfests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _getManifests_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ </br>- created a top-level context event containing a dialogHistory parameter and leaving it open for other random data to be in there. </br>- removed dialogEvent from all sub-events apart from dialogHistory and utterance </br> - re-instated getManifests, publishManfests, describeAssistant (and publishManifests)</br>- retired context in dialogEvent</br>- make it clear in the spec that utterances can be private or not and that private utterances are whispers. </br>- retire requestManifest  </br>- renamed findAssistant to be getManifests. return publishManifests.</br>- made recommendScope default to internal </br>- made -servicingManfests and discoveryManifests optional in publishManifests. </br>- made reason an optional key in all events</br>- defined special reserved key words in the _reason_ key.</br>- specified which reserved _reason_ keywords applied in which events.- Introduced a separate bare event 'declineInvite' </br> - renamed the spec as Open-floor Inter-Agent Message Specification with the key: "openFloor"
+|0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed publishManifests to return full array of manifests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _getManifests_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ </br>- created a top-level context event containing a dialogHistory parameter and leaving it open for other random data to be in there. </br>- removed dialogEvent from all sub-events apart from dialogHistory and utterance </br> - re-instated getManifests, publishManifests, describeAssistant (and publishManifests)</br>- retired context in dialogEvent</br>- make it clear in the spec that utterances can be private or not and that private utterances are whispers. </br>- retire requestManifest  </br>- renamed findAssistant to be getManifests. return publishManifests.</br>- made recommendScope default to internal </br>- made -servicingManifests and discoveryManifests optional in publishManifests. </br>- made reason an optional key in all events</br>- defined special reserved key words in the _reason_ key.</br>- specified which reserved _reason_ keywords applied in which events.- Introduced a separate bare event 'declineInvite' </br> - renamed the spec as Open-floor Inter-Agent Message Specification with the key: "openFloor"
 
 # To Do
 Issue 0.9.4
