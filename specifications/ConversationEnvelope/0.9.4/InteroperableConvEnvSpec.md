@@ -1,6 +1,6 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Open-Floor Inter-Agent Message Specification Version 0.9.4
+# Open Floor Inter-Agent Message Specification Version 0.9.4
 
 The Open Floor Project\
 Open Voice Interoperability Initiative - LF AI & Data Foundation
@@ -15,7 +15,7 @@ Status: Issued
 ## TABLE OF CONTENTS
 ### CHAPTER 0. SCOPE AND INTRODUCTION
 #### &nbsp; 0.1 Document Scope
-#### &nbsp; 0.2 Open Floor Message Envelopes
+#### &nbsp; 0.2 Open-Floor Message Envelopes
 #### &nbsp; 0.3 Delegation, Channeling and Mediation
 #### &nbsp; 0.4 Multi-Party Conversations
 #### &nbsp; 0.5 Discovery
@@ -160,9 +160,9 @@ NOTE: This standard is currently agnostic regarding the URI scheme used for an a
 
 A conversation envelope will be represented as a JSON [1] object in a string format.  The JSON conversation envelope is expected to be a stand-alone document or object but there is no reason that it cannot be part of a larger JSON document.
 
-JSON was chosen for the Open Floor conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.  Supported protocols and the mechanisms by which two agents agree on a protocol to be used are currently outside the scope of this document.\
+JSON was chosen for the Open-Floor conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.  Supported protocols and the mechanisms by which two agents agree on a protocol to be used are currently outside the scope of this document.\
 \
-For the sake of simplicity, it is anticipated that Open Floor implementations will initially use HTTPS as underlying communication protocol, but could include several other ones currently available (i.e. SIP, Websockets, WebRTC, etc) or any future available ones (i.e, HTTP/3, etc).
+For the sake of simplicity, it is anticipated that Open-Floor implementations will initially use HTTPS as underlying communication protocol, but could include several other ones currently available (i.e. SIP, Websockets, WebRTC, etc) or any future available ones (i.e, HTTP/3, etc).
 
 #### 1.2 AAA & Security
 
@@ -231,7 +231,7 @@ Figure 3 shows an example of a conversation envelope.  The envelope is wrapped i
 * schema - the version of the conversation envelope and a schema to validate it against
 * conversation - persistent information related to the current dialog
 * sender - details of the sender of the envelope
-* events - a list of Open Floor 'events'
+* events - a list of Open-Floor 'events'
 
 All sections are mandatory.
 
@@ -247,7 +247,7 @@ All sections are mandatory.
 
 ##### Figure 4. Mandatory elements of the _schema_ object.
 
-The _schema_ object specifies the format of the message in this Open Floor envelope.  It is mandatory. It must contain a valid _version_ number for an Open Floor envelope.  Figure 4 shows the minimal information that must be present in an Open Floor-compliant envelope.
+The _schema_ object specifies the format of the message in this Open-Floor envelope.  It is mandatory. It must contain a valid _version_ number for an Open-Floor envelope.  Figure 4 shows the minimal information that must be present in an Open-Floor-compliant envelope.
 
     {
       "openFloor": {
@@ -463,7 +463,7 @@ The following sections define these event objects in more detail.
       }
     }
 
-Figure 11. Example of an Open Floor _utterance_ event.
+Figure 11. Example of an Open-Floor _utterance_ event.
 
 The utterance event is the message that is for assistants or users to 'speak' to each other.
 They can contain media of any type.  dialogEvent objects must contain a 'text' feature.
@@ -477,7 +477,7 @@ A private utterance event is also termed a 'whisper'.  These can be used to conv
 
 The _dialogEvent_ element must contain a valid dialog event object as specified in [Interoperable Dialog Event Object Specification Version 1.0](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0/edit?userstoinvite=jim42%40larson-tech.com&sharingaction=manageaccess&role=writer#bookmark=id.mnvmxlp2vaay ).
 
-Compliant Open Floor dialog agents do not need to respond to any unsupported features or keys in the dialog event..   
+Compliant Open-Floor dialog agents do not need to respond to any unsupported features or keys in the dialog event..   
 
 ##### 1.10.1 dialogEvent Text Feature
 
@@ -1087,7 +1087,7 @@ Any assistant that is returned in the _servicingManifests_ can be considered sui
 
 Any assistant that is returned in the _discoveryManifests_ can be considered by the client as suitable to be re-sent the _getManifests_ event with the same accompanying utterances and context.  This allows an agent to recommend that the client uses another discovery agent to find a solution.  An agent should not recommend itself in the _discoveryManifests_.  This could lead to infinite regress.
 
-Note that there is no requirement in the Open Floor framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.  There is also nothing to stop an agent recommending servicing agents and discovery agents in its response or recommending the same agent as both a discovery agent and a servicing agent simultaneously.
+Note that there is no requirement in the Open-Floor framework for an assistant to be exclusively either a discovery agent or a servicing agent. They can be both and the requesting assistant should be prepared to support both use case 1 or 2 - i.e. prepared for an agent to recommend itself for a task or recommend another agent for a task.  There is also nothing to stop an agent recommending servicing agents and discovery agents in its response or recommending the same agent as both a discovery agent and a servicing agent simultaneously.
 
 The recommending agent is free to use any mechanism it wants to generate the _score_.   
 
@@ -1294,7 +1294,7 @@ The following special _reason_ tokens are supported by this event type:
 
 #### 2.1 Minimal Servicing Assistant Behaviors (on Receipt of Events) [INFORMATIVE]
 
-Open Floor-compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an Open Floor-compliant dialog assistant. These guidelines are informative not normative.
+Open-Floor compliant dialog assistants must support all event types in order to be considered fully compliant.  This section documents the minimal behavior expected from an Open-Floor compliant dialog assistant. These guidelines are informative not normative.
 
 If any events contain a _to_ that is not addressed to the agent, then ignore the event.
 
@@ -1328,7 +1328,7 @@ If the _to_ section is addressed to the agent (or is absent) then the following 
 
 The conversation floor manager retains ultimate responsibility for deciding which conversants are currently considered to be active in the conversation and which agent is the current focal agent.  This can, for example, include removing agents from the conversation if they do not respond within an allotted time, inviting trusted agents to the conversation when needed, and deciding when to terminate a conversation with the user.  
 
-Open Floor-compliant conversation floor managers (including host browsers) agents must support all normative event types in order to be considered fully compliant.
+Open-Floor compliant conversation floor managers (including host browsers) agents must support all normative event types in order to be considered fully compliant.
 
 A simple floor manager will generally forward all events to the intended recipient designated by the _to_ section of each event. If there is no _to_ section it will forward the event to all participants apart from the sender.
 
@@ -1387,14 +1387,14 @@ The structure of a JSON conversation envelope is defined as a JSON Schema locate
 |focal agent|The agent that is currently tasked with responding to agent input.
 |JSON path |An unambiguous reference to part of a JSON object.
 |language code|A code representing the language (e.g., American English, British English, New Norsk, etc.)
-|mandatory elements|The mandatory elements that are required in the various elements of the envelope in order to be Open Floor compliant.  These elements are enough to allow basic no-frills interoperation between agents.
+|mandatory elements|The mandatory elements that are required in the various elements of the envelope in order to be Open-Floor compliant.  These elements are enough to allow basic no-frills interoperation between agents.
 |mediation|A conversational assistant acting as a user, has a conversation with another conversational assistant behind the scenes using dialog – semantic or linguistic – interfaces to achieve a goal and return to the user.
 |stand-off-annotation |A method of feature layering and cross-referencing that permits the different features of an utterance or linguistic event to be kept separate but also linked logically and temporally with each other.  
 |token encoding|The specific encoding used to represent text in a token.
 |token link|A link from one token in a feature to part or all of another token in a feature used to implement stand-off annotation.
 |token object|A JSON object representing a feature token which defines the value of the feature and other associated information such as its span and how it links to other feature tokens.
 |token span|Identifies the span of time for an individual token object
-|user proxy agent|A component that implements converts between a human user interacting via certain media into Open Floor-compliant dialog envelopes and renders utterances from other conversants back to the human user in the appropriate media.
+|user proxy agent|A component that implements converts between a human user interacting via certain media into Open-Floor-compliant dialog envelopes and renders utterances from other conversants back to the human user in the appropriate media.
 
 ## Chapter 6. Decision Log
 

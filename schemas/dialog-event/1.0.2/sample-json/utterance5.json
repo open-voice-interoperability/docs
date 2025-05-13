@@ -1,0 +1,23 @@
+{
+    "id": "user-utterance-45",
+    "speakerUri": "tag:userproxy.com,2025:aexb0067",
+    "previousId": "user-utterance-44",
+    
+    "span": {
+        "startTime": "2022-12-20 15:59:01.246500+00:00",
+        "endOffset": "PT2.906"
+    },
+    
+    "features": {
+        "user-request-text": {
+            "mimeType": "text/plain",
+            "lang": "en",
+            "encoding": "utf-8",
+            "tokens" : [
+                {
+                    "value": "what is the weather forecast for tomorrow?"
+                }
+            ]
+        }
+    }
+}
