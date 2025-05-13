@@ -179,7 +179,7 @@ This specification uses ‘camelCase’ (i.e. no spaces with new words being cap
 
           "schema": {
               "version": "0.9.4",      
-              "serviceUrl": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json"
+              "url": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json"
           },
 
           "conversation": {

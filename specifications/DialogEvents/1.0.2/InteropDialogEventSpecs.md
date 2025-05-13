@@ -2,8 +2,7 @@
 
 # Interoperable Dialog Event Object Specification Version 1.0.1
 
-The Open Voice Network\
-Open Voice Interoperability Initiative - LF AI & Data Foundation\
+The Open Voice Interoperability Initiative - LF AI & Data Foundation\
 Architecture Work Group
 
 NOT YET RELEASED \
@@ -39,7 +38,7 @@ Draft Version 1.0.2
 ### 0.1 Document Scope
 
 
-##### This document specifies the format for Open Voice Network (OVON) interoperable dialog events. The requirements for this specification are given in [Interoperable Dialog Packet Requirements [10]](https://openvoicenetwork.org/docs/2832-2/). This specification is generic. As described in the requirements there are many different potential uses of a dialog event. #####
+##### This document specifies the format for Open-Floor interoperable dialog events developed under the Open Voice Interoperability Initiative of the LF AI & Data Foundation. The requirements for this specification are given in [Interoperable Dialog Packet Requirements [10]](https://openvoicenetwork.org/docs/2832-2/). This specification is generic. As described in the requirements there are many different potential uses of a dialog event. #####
 
 
 ### 0.2 Dialog Events
@@ -72,7 +71,7 @@ Draft Version 1.0.2
 ##### For example, dialog events could be used to carry prompt and response information for a dialog system, annotate spoken dialog between two human speakers, or be used as part of an interface to a natural language component in a text processing solution. ##### 
 
 
-##### We are anticipating that a future OVON standard for representing utterances in a dialog system or dialog history will be developed as one example of a derived specification. #####
+##### !!!!  **Reference the conversational envelope   is one example of representing utterances in a dialog system or dialog history will be developed as one example of a derived specification.** !!!!  #####
 
 
 ## Chapter 1. Specification

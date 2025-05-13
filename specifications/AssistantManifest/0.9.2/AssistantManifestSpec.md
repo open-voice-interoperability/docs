@@ -39,7 +39,7 @@ Draft Version 0.9.2
 *****
 ### CHAPTER 0. SCOPE AND INTRODUCTION
 #### 0.1 Document Scope
-This document specifies the object format for the Open Voice Interoperability Initiative  - LF AI & Data Foundation (OVON) Assistant Manifest.  
+This document specifies the object format for the Open Voice Interoperability Initiative  - LF AI & Data Foundation (Open-Floor) Assistant Manifest.  
 
 #### 0.2 Assistant Manifest Purpose
 The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceUrl.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used, for example, by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard, it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
@@ -63,7 +63,7 @@ The Assistant Manifest will be represented as a JSON [[1]](https://www.ecma-inte
 
 #### 1.2 Protocol
 
-JSON was chosen for the OVON conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.
+JSON was chosen for the Open-Floor conversation envelope as it is an Open and Human Readable Standard format for Data Exchange that is independent of any particular protocol.
 
 #### 1.3 AAA & Security
 
@@ -79,7 +79,7 @@ This specification uses `camelCase` (i.e., no spaces with new words capitalized)
         "identification":
         {
             "speakerUri" : "tag:dev.buerokratt.ee,2025:0001",
-            "serviceUrl": "https://dev.buerokratt.ee/ovonr/conversation",
+            "serviceUrl": "https://dev.buerokratt.ee/conversation",
             "organization": "Government of Estonia",
             "conversationalName": "Buerokratt",
             "department": "Passport Office",
@@ -126,7 +126,7 @@ The primary key of this data model is the _serviceUrl_ which should be a unique 
 |Key|Type|Description|Example|Mandatory|
 |--|--|--|--|--|
 |`speakerUri`|URI|The unique URI of the agent.  This represents the unique 'identify' of the agent. This is the primary key for an agent identity|"tag:dev.buerokratt.ee,2025:0001"|Mandatory|
-|`serviceUrl`|URL|The endpoint of the conversational assistant.  This endpoint will be capable of sending and receiving OVON Conversation Envelopes. Changing the URI does not change the identity of the agent.|"https://dev.buerokratt.ee/ovonr/conversation"|Mandatory|
+|`serviceUrl`|URL|The endpoint of the conversational assistant.  This endpoint will be capable of sending and receiving Open-Floor Conversation Envelopes. Changing the URI does not change the identity of the agent.|"https://dev.buerokratt.ee/conversation"|Mandatory|
 |`organization`|string|The name of the organization administering this assistant. If relevant, this is the organization that the agent will introduce itself as acting on behalf of. This will be searchable and vocalizable.|"Government of Estonia"|Mandatory|
 |`conversationalName`|string|The 'given name' of the conversational agent. This will be the name by which the agent will introduce themselves to other conversants and the name that it will respond to when addressed. This will be searchable and vocalizable.|"Buerokratt"|Mandatory|
 |`synopsis`|string|A sentence summarizing who the assistant is and their area of expertise. This sentence is intended to be spoken to the user and should take less than five seconds to verbalize. In English this would typically be less than 75 characters. This is a natural language synopsis of the contents of the whole manifest and should not contain new information that is not present in the specific fields of the manifest.|"Immigration specialist as part of the Buerokratt system."|Mandatory|
@@ -183,14 +183,14 @@ The structure of a JSON conversation envelope is defined as a JSON Schema locate
 |focal agent|The agent that is currently tasked with responding to agent input.
 |JSON path |An unambiguous reference to part of a JSON object.|
 |language code|A code representing the language (e.g., American English, British English, New Norsk, etc.)
-mandatory elements|The mandatory elements that are required in the various elements of the envelope in order to be OVON compliant.  These elements are enough to allow basic no-frills interoperation between agents.|
+mandatory elements|The mandatory elements that are required in the various elements of the envelope in order to be Open-Floor compliant.  These elements are enough to allow basic no-frills interoperation between agents.|
 |mediation|A conversational assistant acting as a user, has a conversation with another conversational assistant behind the scenes using dialog – semantic or linguistic – interfaces to achieve a goal and return to the user.|
 |stand-off-annotation |A method of feature layering and cross-referencing that permits the different features of an utterance or linguistic event to be kept separate but also linked logically and temporally with each other. |
 |token encoding|The specific encoding used to represent text in a token.|
 |token link|A link from one token in a feature to part or all of another token in a feature used to implement stand-off annotation.|
 |token object|A JSON object representing a feature token that defines the value of the feature and other associated information, such as its span and how it links to other feature tokens.|
 |token span|Identifies the span of time for an individual token object|
-|user proxy agent|A component that implements converts between a human user interacting via certain media into OVON-compliant dialog envelopes and renders utterances from other conversants back to the human user in the appropriate media.|
+|user proxy agent|A component that implements converts between a human user interacting via certain media into Open-Floor compliant dialog envelopes and renders utterances from other conversants back to the human user in the appropriate media.|
 
 ### Chapter 5. Decision Log
 
