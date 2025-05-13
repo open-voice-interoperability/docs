@@ -1,0 +1,36 @@
+ {
+    "identification":
+    {
+        "speakerUri": "https://dev.buerokratt.ee/ovonr/conversation",
+        "serviceUrl": "https://dev.buerokratt.ee/ovonr/conversation",
+        "organization": "Government of Estonia",
+        "conversationalName": "Buerokratt",
+        "department": "Passport Office",
+        "role": "Immigration Specialist",
+        "synopsis" : "Immigration specialist as part of the Buerokratt system."
+    },               
+    "capabilities": [
+        {
+            "keyphrases": [
+                "visa",
+                "immigration",
+                "passport",
+                "permanent resident"
+            ],
+            "languages": [
+                "en-us"
+            ],
+            "descriptions": [
+                "international travel to and from Estonia"
+            ],
+            "supportedLayers": {
+                "input" : [ 
+                    "text"
+                ],
+                "output" : [
+                    "text"
+                ]
+            }
+        }
+    ]
+}

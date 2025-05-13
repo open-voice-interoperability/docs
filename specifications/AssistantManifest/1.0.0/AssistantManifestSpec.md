@@ -1,12 +1,12 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# Open Floor Assistant Manifest Specification Version 0.9.2
+# Open Floor Assistant Manifest Specification Version 1.0.0
 
 **The Open Floor Project**\
 **Open Voice Interoperability Initiative - LF AI & Data Foundation**
 
 **RELEASED** \
-**Version 0.9.2**
+**Version 1.0.0**
 
 *_Editor-in-Chief: David Attwater_*\
 *_Contributors: Emmett Coin, Deborah Dahl, Leah Barnes, Allan Wylie and Diego Gosmar_*
@@ -139,17 +139,17 @@ The features of each capability object are shown below.
 |`keyphrases`|string array|A list of searchable key phrases, in no particular order, that represent the key features of the service provided or topics about which questions can be answered by the assistant.  These can be words or phrases and will typically be simple noun or verb phrases, suitable, for example, for use in simple text searches.  There is no limit to the length of the list or the length of the phrases.|["visa",  "immigration", "passport","permanent resident" ],|Mandatory|
 |`languages`|string array|A list of the languages supported by this capability according to [IETF BCP 47 Language Tag [4]](https://www.rfc-editor.org/rfc/rfc5646.txt).|["en-us"]|*Default:* *Undefined*|
 `descriptions`|string array|A set of searchable texts, in no particular order, describing the services and capabilities of the assistant. These are expressed in natural language suitable, for example, for inclusion in queries or searches using natural language technologies. There is no limit to the length of the list or the length of the phrases.|["international travel to and from Estonia","permanent and temporary visa requirements when visiting Estonia"]|Mandatory|
-`supportedLayers`|dict of string arrays|A dictionary containing lists of the dialogEvent layers supported as the input and the output of this capability. See [[2] Interoperable Dialog Event Specification](https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0) and [[3] Interoperable Conversation Envelope Specification Version 0.9.3](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/0.9.3/InteroperableConvEnvSpec.md ) |{ "input" : ["text","pronun","voice"], "output" : ["text","ssml","pronun","voice","html"] }|*Default:* *{"input":["text"], "output":["text"]}*|
+`supportedLayers`|dict of string arrays|A dictionary containing lists of the dialogEvent layers supported as the input and the output of this capability. See [[2] Open Floor Dialog Event Object Specification Version 1.0.2](https://github.com/open-voice-interoperability/docs/blob/main/specifications/DialogEvents/1.0.2/InteropDialogEventSpecs.md) and [[3] Open Floor Inter-Agent Message Specification Version 0.9.4](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/1.0.0/InteroperableConvEnvSpec.md ) |{ "input" : ["text","pronun","voice"], "output" : ["text","ssml","pronun","voice","html"] }|*Default:* *{"input":["text"], "output":["text"]}*|
 
 ### 2. Schema
 
-The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/0.9.2/assistant-manifest-schema.json]
+The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/1.0.0/assistant-manifest-schema.json]
 
 ### 3. References
 
 * [1] https://www.ecma-international.org/publications-and-standards/standards/ecma-404/ ECMA-404 The JSON data interchange syntax
-* [2] https://docs.google.com/document/d/1ld0tbGhQEOcZ4toCi0R4AEIWlIET8PgF1b-xKhtwsm0 Interoperable Dialog Event Specification (version 1.0.1)
-* [3] https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/1.0.0/InteroperableConvEnvSpec.md Interoperable Conversation Envelope Specification Version 1.0.0
+* [2] https://github.com/open-voice-interoperability/docs/blob/main/specifications/DialogEvents/1.0.2/InteropDialogEventSpecs.md Open Floor Dialog Event Object Specification Version 1.0.2
+* [3] https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/1.0.0/InteroperableConvEnvSpec.md Open Floor Inter-Agent Message Specification Version 1.0.0
 * [4] https://www.rfc-editor.org/rfc/rfc5646.txt RFC 5646. BCP 47. Tags for Identifying Languages.
 * [5] https://www.ietf.org/rfc/rfc4646.txt RFC 4646 Regarding Best Practice for Tags for Identifying Languages
 
