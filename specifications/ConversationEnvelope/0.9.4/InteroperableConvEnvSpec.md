@@ -2,61 +2,59 @@
 
 # Open Floor Inter-Agent Message Specification Version 0.9.4
 
-The Open Floor Project\
-Open Voice Interoperability Initiative - LF AI & Data Foundation
+**The Open Floor Project**\
+**Open Voice Interoperability Initiative - LF AI & Data Foundation**
 
-May 6th 2025
-Version 0.9.4
-Status: Issued
+**RELEASED** \
+**Version 0.9.4**
 
 *_Editor-in-Chief: David Attwater_*\
 *_Contributors: Leah Barnes, Emmett Coin,  Deborah Dahl, Diego Gosmar, Jim Larson, Rainer Türner, Dirk Schnelle-Walka, Allan Wylie_*
 
 ## TABLE OF CONTENTS
-### CHAPTER 0. SCOPE AND INTRODUCTION
-#### &nbsp; 0.1 Document Scope
-#### &nbsp; 0.2 Open-Floor Message Envelopes
-#### &nbsp; 0.3 Delegation, Channeling and Mediation
-#### &nbsp; 0.4 Multi-Party Conversations
-#### &nbsp; 0.5 Discovery
-#### &nbsp; 0.5 Agent Identity
-### CHAPTER 1. SPECIFICATION
-#### &nbsp; 1.1 Syntax and Protocol
-#### &nbsp; 1.2 AAA & Security
-#### &nbsp; 1.3 Nomenclature
-#### &nbsp; 1.4 Message Envelope Structure
-#### &nbsp; 1.5 Schema Object
-#### &nbsp; 1.6 Conversation Object
-#### &nbsp; 1.7 Sender Object
-#### &nbsp; 1.8 Events Object
-#### &nbsp; 1.9 Event-Types
-#### &nbsp; 1.10 Utterance Events
-##### &nbsp; &nbsp; &nbsp;  1.10.1 Utterance Text Feature
-#### 1.11 Extensible Dialog Event Features (Informative)
-#### 1.12 context Event
-#### 1.13 invite Event
-#### 1.14 uninvite Event
-#### 1.15 declineInvite Event
-#### 1.16 bye Event
-#### 1.17 getManifests Event
-#### 1.18 publishManifests Event
-#### 1.19 requestFloor Event
-#### 1.20 grantFloor Event
-#### 1.21 revokeFloor Event
-#### 1.22 yieldFloor Event
-
-### CHAPTER 2. MINIMAL BEHAVIORS
-#### &nbsp; 2.1 Minimal Assistant Behavior
-#### &nbsp; 2.2 Minimal Conversation Floor Manager Behaviors
-#### &nbsp; 2.3 Ignoring events with protocols such as HTTP POST
-### CHAPTER 3. JSON Envelope SCHEMA
-### CHAPTER 4. REFERENCES
-### CHAPTER 5. GLOSSARY OF TERMS
-### CHAPTER 6. DECISION LOG
-### CHAPTER 7. DOCUMENT CHANGE LOG
+- [0 SCOPE AND INTRODUCTION](#0-SCOPE-AND-INTRODUCTION)
+  - [0.1 Document Scope](#01-Document-Scope)
+  - [0.2 Open-Floor Message Envelopes](#02-Open-Floor-Message-Envelopes)
+  - [0.3 Delegation, Channeling and Mediation](#03-Delegation-Channeling-and-Mediation)
+  - [0.4 Multi-Party Conversations](#04-Multi-Party-Conversations)
+  - [0.5 Discovery](#05-Discovery)
+  - [0.6 Agent Identity](#06-Agent-Identity)
+- [1 SPECIFICATION](#1-SPECIFICATION)
+  - [1.1 Syntax and Protocol](#11-Syntax-and-Protocol)
+  - [1.2 AAA & Security](#12-AAA--Security)
+  - [1.3 Nomenclature](#13-Nomenclature)
+  - [1.4 Message Envelope Structure](#14-Message-Envelope-Structure)
+  - [1.5 Schema Object](#15-Schema-Object)
+  - [1.6 Conversation Object](#16-Conversation-Object)
+  - [1.7 Sender Object](#17-Sender-Object)
+  - [1.8 Events Object](#18-Events-Object)
+  - [1.9 Event-Types](#19-Event-Types)
+  - [1.10 Utterance Events](#110-Utterance-Events)
+  - [1.10.1 Utterance Text Feature](#1101-dialogEvent-Text-Feature)
+  - [1.11 Extensible Dialog Event Features (Informative)](#111-Extensible-Dialog-Event-Features-Informative)
+  - [1.12 context Event](#112-context-Event)
+  - [1.13 invite Event](#113-invite-Event)
+  - [1.14 uninvite Event](#114-uninvite-Event)
+  - [1.15 declineInvite Event](#115-declineInvite-Event)
+  - [1.16 bye Event](#116-bye-Event)
+  - [1.17 getManifests Event](#117-getManifests-Event)
+  - [1.18 publishManifests Event](#118-publishManifests-Event)
+  - [1.19 requestFloor Event](#119-requestFloor-Event-INFORMATIVE)
+  - [1.20 grantFloor Event](#120-grantFloor-Event-INFORMATIVE)
+  - [1.21 revokeFloor Event](#121-revokeFloor-Event)
+  - [1.22 yieldFloor Event](#122-yieldFloor-Event)
+- [2 MINIMAL BEHAVIORS](#2-MINIMAL-BEHAVIORS)
+  - [2.1 Minimal Assistant Behavior](#21-Minimal-Servicing-Assistant-Behaviors-on-Receipt-of-Events-INFORMATIVE)
+  - [2.2 Minimal Conversation Floor Manager Behaviors](#22-Minimal-Conversation-Floor-Manager-Behaviors-on-Receipt-of-Events-INFORMATIVE)
+  - [2.3 Ignoring events with protocols such as HTTP POST](#23-Ignoring-events-with-protocols-that-require-a-response)
+- [3 JSON Envelope SCHEMA](#3-JSON-Envelope-SCHEMA)
+- [4 REFERENCES](#4-REFERENCES)
+- [5 GLOSSARY OF TERMS](#5-GLOSSARY-OF-TERMS)
+- [6 DECISION LOG](#6-DECISION-LOG)
+- [7 DOCUMENT CHANGE LOG](#7-DOCUMENT-CHANGE-LOG)
 
 *****
-### CHAPTER 0. SCOPE AND INTRODUCTION
+### 0 SCOPE AND INTRODUCTION
 #### 0.1 Document Scope
 This document specifies the "Open-Floor" Inter-Agent Message Specification, developed by the Open Voice Interoperability Initiative operating within the Linux Foundation AI & Data Foundation.  The purpose of this open messaging standard is to enable human and autonomous agents to work together by gathering around a shared conversational 'floor' and engage in conversation to solve a shared problem or goal.
 
@@ -154,7 +152,7 @@ Examples of valid speakerURI are given below.
 
 NOTE: This standard is currently agnostic regarding the URI scheme used for an agent. Options for standardizing further might include the regisstration of a specific URN namespace identifier, for example, 'urn:openFloor' [5].  In the short term Tag URIs [6] represent a pragmatic way to generate a unique idenfifier for an agent.  In this document we use Tag URIs in all examples.
 
-### CHAPTER 1. SPECIFICATION
+### 1 SPECIFICATION
 
 #### 1.1 Syntax and Protocol
 
@@ -254,7 +252,7 @@ The _schema_ object specifies the format of the message in this Open-Floor envel
         ..
         "schema": {
           "version": "0.9.4",   
-          "serviceUrl": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json"
+          "url": "https://github.com/open-voice-interoperability/docs/blob/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json"
         }
         ..
       }
@@ -262,7 +260,7 @@ The _schema_ object specifies the format of the message in this Open-Floor envel
 
 ##### Figure 5. Other optional elements in the _schema_ object.
 
-The schema for the version of the envelope specification can be found in **Chapter 3. Schema**.  Figure 5 shows an optional _serviceUrl_ that may also be included which should point to the correct version of that JSON schema.
+The schema for the version of the envelope specification can be found in [https://github.com/open-voice-interoperability/docs/blob/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json](https://github.com/open-voice-interoperability/docs/blob/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json).  Figure 5 shows an optional _serviceUrl_ that may also be included which should point to the correct version of that JSON schema.
 
 #### 1.6 Conversation Object
 
@@ -1290,7 +1288,7 @@ The following special _reason_ tokens are supported by this event type:
 |@error|The agent is yielding the floor because it has encountered an error from which it cannot recover|
 
 
-## Chapter 2. Minimal Behaviors
+## 2 Minimal Behaviors
 
 #### 2.1 Minimal Servicing Assistant Behaviors (on Receipt of Events) [INFORMATIVE]
 
@@ -1352,11 +1350,11 @@ A minimal floor manager will therefore exhibit the following behaviours.
 
 If the messaging protocol that sent the envelope requires a response (e.g. HTTP POST) and your agent has no need to respond to any of the events in the envelope (i.e. the agent is ignoring it) then return an envelope with an _event_ object containing an empty array.(i.e. an array with no events in it).
 
-## Chapter 3. JSON Envelope Schema
+## 3 JSON Envelope Schema
 
 The structure of a JSON conversation envelope is defined as a JSON Schema located at [https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json]
 
-## Chapter 4. References
+## 4 References
 
 [1] **Interoperability of Conversational Assistants** [https://openvoicenetwork.org/docs/interoperability-of-conversational-assistants/] \
 [2] **Interoperable Dialog Event Object Specification Version 1.0.1** [https://github.com/open-voice-interoperability/docs/blob/main/specifications/DialogEvents/1.0.1/InteropDialogEventSpecs.md] \
@@ -1366,7 +1364,7 @@ The structure of a JSON conversation envelope is defined as a JSON Schema locate
 [6] **IETF RFC 4151 The Tag URL Scheme**[https://www.rfc-editor.org/rfc/rfc4151] \
 [7] **AI Multi-Agent Interoperability Extension for Managing Multiparty Conversations.** [https://arxiv.org/abs/2411.05828]
 
-## Chapter 5. Glossary of Terms
+## 5 Glossary of Terms
 
 |Term|Definition|
 |-|-|
@@ -1396,7 +1394,7 @@ The structure of a JSON conversation envelope is defined as a JSON Schema locate
 |token span|Identifies the span of time for an individual token object
 |user proxy agent|A component that implements converts between a human user interacting via certain media into Open-Floor-compliant dialog envelopes and renders utterances from other conversants back to the human user in the appropriate media.
 
-## Chapter 6. Decision Log
+## 6 Decision Log
 
 This section documents some of the key design decisions that were made by the team during the development of this specification.  It is informative, not normative.
 
@@ -1436,7 +1434,7 @@ This section documents some of the key design decisions that were made by the te
 
 
 
-### Chapter 7. Document Change Log
+### 7 Document Change Log
 
 |Version|Release Date|Description|
 |-|-|-|
@@ -1445,10 +1443,3 @@ This section documents some of the key design decisions that were made by the te
 |0.9.2|2024.07.03|- Added getManifests event</br> - Added publishManifests event</br> - Added requestManifest event</br> - Added publishManifests event </br>- Deprecated responseCode</br>- Made "to" optional on all events</br>- Removed inline schema and kept a link instead.</br>- Removed reply_to</br>|  
 |0.9.3|2024.11.26|- Added private to event objects</br>- Added context parameter to whisper</br>|
 |0.9.4|TBD|- Changed speakerId to be speakerUri <br>- Make "to" a dictionary containing "serviceUrl" and "speakerUri" in all events</br> - Added section on identity and speakerUri</br>- Add 'floorYield" to mirror "floorRevoke"<br> - Added conversants section<br>- Added the requirement for speakerUri to be unique and persistent for each agent<br>- Removed the need for url to uniquely identify an agent<br>- Refactored requestManifest into a unified findAgent<br>- Added recommendScope to findAgent<br>- Changed publishManifests to return full array of manifests not just the synopsis<br>- Move private into 'to' of the event<br>- Added 'speakerUri' into the 'sender'<br>- Rename serviceEndpoint to serviceUrl and also rename 'url' as 'serviceUrl' in sender and to objects.<br> - Add optional "dialogHistory" section to _Invite_ and _getManifests_ events.<br>- Limit conversants to identification section only.<br>- Move persistent state into the conversant section<br>- Added section on multi-party conversations.<br>- Added description for _requestFloor_ and make it informative not normative.<br>- Added description for _grantFloor_ and make it informative not normative.<br> - Added a description for _revokeFloor_ and normative reason labels <br>- Change the score on _proposeAgent_ to be between 0 and 1.  <br>- uninvite : add description for the uninvite. <br>- Add categories for the _uninvite_ reason.<br> - remove _whisper_ in favor or private _utterance_ and embedded _dialog_events_ </br>- created a top-level context event containing a dialogHistory parameter and leaving it open for other random data to be in there. </br>- removed dialogEvent from all sub-events apart from dialogHistory and utterance </br> - re-instated getManifests, publishManifests, describeAssistant (and publishManifests)</br>- retired context in dialogEvent</br>- make it clear in the spec that utterances can be private or not and that private utterances are whispers. </br>- retire requestManifest  </br>- renamed findAssistant to be getManifests. return publishManifests.</br>- made recommendScope default to internal </br>- made -servicingManifests and discoveryManifests optional in publishManifests. </br>- made reason an optional key in all events</br>- defined special reserved key words in the _reason_ key.</br>- specified which reserved _reason_ keywords applied in which events.- Introduced a separate bare event 'declineInvite' </br> - renamed the spec as Open-floor Inter-Agent Message Specification with the key: "openFloor"
-
-# To Do
-Issue 0.9.4
-Update the schema and examples
-Update issues table with issues.
-
-Then issue v 1.0.0
