@@ -416,13 +416,12 @@ The following are valid values for _eventTypes_.
 * **joining or leaving conversations**
   * _invite_ - A conversant is invited to join the conversation.
   * _uninvite_ - A conversant is removed from the conversation.
+  * _declineInvite -  A conversant is declining an invitiation to join a conversation.
   * _bye_ -  A conversant is leaving the conversation
 
 * **discovering other agents and establishing their capabilities**
-  * _describeAssistant_ - Ask an agent to return a list of manifests of their own capabilities.
-  * _publishManifests_ - Return a list of manifests for the current assistant.
   * _getManifests_ - Ask an agent to recommend themself or another agent for a task.
-  * _publishManifests_ - Return a list of recommended agents for a task.
+  * _publishManifests_ - Return a list of manifests for the current assistant.
 
 * **managing who has the conversational floor** (support for multi-party conversations and floor passing between agents)
   * _requestFloor_ - Used by a conversant to request the floor.
