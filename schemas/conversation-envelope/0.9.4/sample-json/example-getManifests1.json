@@ -1,0 +1,22 @@
+{
+    "openFloor": {
+      "schema": {
+        "version": "1.0.0"      
+      },
+      "conversation": {
+        "id": "31050879662407560061859425913208"
+      },
+      "sender": {
+        "serviceUrl": "https://someBot.com",
+        "speakerUri": "tag:someBot.com,2025:4567"
+      },
+      "events": [
+        {
+          "eventType": "getManifests",
+          "to": { 
+            "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation"
+          }
+        }
+      ]
+    }
+}

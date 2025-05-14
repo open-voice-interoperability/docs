@@ -1,0 +1,22 @@
+{
+    "openFloor": {
+      "schema": {
+        "version": "1.0.0"
+      },
+      "conversation": {
+        "id": "someUniqueIdForTheConversation"
+      },
+      "sender": {
+        "speakerUri": "tag:agentBeingUninvited,2025:1234"
+      },
+      "events": [
+        {
+          "eventType": "declineInvite",
+          "to": {
+            "speakerUri": "tag:some_Convener.com,2025:"
+          },
+          "reason": "@unavailable to support this request due to lack of resources"
+        }
+      ]
+    }
+}

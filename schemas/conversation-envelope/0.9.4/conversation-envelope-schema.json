@@ -1,11 +1,11 @@
 {
-  "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.2/conversation-envelope-schema.json",
+  "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/conversation-envelope/0.9.4/conversation-envelope-schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A representation of a 'dialogue envelope’ - the universal data exchange format for an OVON compliant interoperable agent.",
+  "description": "A representation of a 'dialogue envelope' - the universal data exchange format for an Open-Floor compliant interoperable agent.",
   "type": "object",
-  "required":  [ "ovon" ],
+  "required":  [ "openFloor" ],
   "properties": {
-    "ovon": {
+    "openFloor": {
       "required":  ["schema" , "conversation", "sender", "events" ],
       "properties": {
 
@@ -24,29 +24,76 @@
         },
 
         "conversation": {
-          "required":  ["id" ],
+          "required":  [ "id" ],
           "properties": {
-              "id": {
-                "type": "string",
-                "description": "Unique identifier for the current conversation with the user."
-              },
-              "persistent_state": {
-                  "type": "object",
-                  "description": "Container for an arbitrary set of key value pairs to be persisted.",
-                  "additionalProperties" : {
-                      "type" : "object"
-                  }
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the current conversation with the user."
+            },
+            "conversants" : {
+              "type": "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "identification": {
+                    "required":  ["speakerUri", "serviceUrl" , "organization", "conversationalName", "synopsis" ],
+                    "properties": {
+                      "speakerUri": {
+                        "$ref": "#/$defs/uri",
+                        "description": "The unique identity of the agent."
+                      },
+                      "serviceUrl": {
+                        "$ref": "#/$defs/url",
+                        "description": "The endpoint of the conversational assistant."
+                      },
+                      "organization": {
+                        "type": "string",
+                        "description": "The name of the organization administering this assistant."
+                      },
+                      "conversationalName": {
+                        "type": "string",
+                        "description": "The 'given name' of the conversational agent."
+                      },
+                      "department": {
+                        "type": "string",
+                        "description": "The department within the organization."
+                      },
+                      "role": {
+                        "type": "string",
+                        "description": "The 'job title', or 'role' of the assistant."
+                      },
+                      "synopsis": {
+                        "type": "string",
+                        "description": "A sentence signposting the who the assistant is and their area of expertise."
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "persistent_state": {
+                    "type": "object",
+                    "description": "Container for an arbitrary set of key value pairs to be persisted.",
+                    "additionalProperties" : {
+                        "type" : "object"
+                    }
+                  },
+                  "additionalProperties": false
+                }
               }
+            }
           }
         },
 
         "sender": {
           "type": "object",
-          "required":  ["from"],
+          "required":  ["speakerUri"],
           "properties" : {
-            "from": {
+            "speakerUri": {
               "$ref": "#/$defs/uri",
               "description": "The URI of the sender of the envelope."
+            },
+            "serviceUrl": {
+              "$ref": "#/$defs/url",
+              "description": "The endpoint of the conversational assistant."
             }
           }
 
@@ -60,23 +107,42 @@
               "eventType": {
                 "type" : "string",
                 "enum": [
-                  "utterance", 
-                  "whisper", 
                   "invite", 
+                  "uninvite",
+                  "declineInvite",
+                  "utterance", 
                   "bye", 
-                  "requestManifest", 
+                  "context",
+                  "getManifests", 
                   "publishManifest", 
                   "findAssistant", 
-                  "proposeAssistant"
+                  "proposeAssistant",
+                  "requestFloor",
+                  "grantFloor",
+                  "revokeFloor",
+                  "yieldFloor"
               ]
               },
-              "to" : {
-                "$ref": "#/$defs/uri",
-                "description": "The URI of the target of the event."
+              "to"  : {
+                "type" : "object",
+                "properties": {
+                  "speakerUri" : {
+                    "$ref": "#/$defs/uri",
+                    "description": "The URI of the agent to be invited."
+                  },
+                  "serviceUrl" : {
+                    "$ref": "#/$defs/url",
+                    "description": "The URL of the agent to be invited."
+                  },
+                  "private" : {
+                    "type" : "boolean",
+                    "description" : "Set to true if the event is intended for the 'to' particpant only."
+                  }
+                }
               },
-              "private" : {
-                "type" : "boolean",
-                "description" : "Set to true if the event is intended for the 'to' particpant only."
+              "reason": {
+                "type": "string",
+                "description": "Optional reason for the event."
               }
             },
             "allOf": [
@@ -94,7 +160,7 @@
                       "type" : "object",
                       "properties" : {
                         "dialogEvent": {
-                          "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.1/dialog-event-schema.json"
+                          "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.2/dialog-event-schema.json"
                         }
                       },  
                       "additionalProperties": false
@@ -102,30 +168,32 @@
                   }
                 }
               },
-
               {
                 "if": {
                   "properties": {
-                    "eventType": { "const": "whisper" }
+                    "eventType": { "const": "context" }
                   },
                   "required": ["eventType"]
                 },
                 "then" : {
                   "properties": {
                     "parameters": {
-                      "description": "Parameters for the whisper event.",
+                      "description": "Parameters for the context event.",
                       "type" : "object",
                       "properties" : {
-                        "dialogEvent": {
-                          "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.1/dialog-event-schema.json"
+                        "dialogHistory": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "ref": "https://github.com/open-voice-interoperability/lib-interop/tree/main/schemas/dialog-event/1.0.2/dialog-event-schema.json"
+                          }
                         }
-                      },
-                      "additionalProperties": false
+                      },  
+                      "additionalProperties": true
                     }
                   }
                 }
               },
-
               {
                 "if": {
                   "properties": {
@@ -138,24 +206,48 @@
                     "parameters" : {
                       "description": "Parameters for the invite event.",
                       "type": "object",
-                      "properties": {      
-                        "to"  : {
-                          "type" : "object",
-                          "properties": {
-                            "url" : {
-                              "$ref": "#/$defs/url",
-                              "description": "The URL of the agent to be invited."
-                            }
-                          },
-                          "additionalProperties": false
-                        }        
-                      },
+                      "maxProperties": 0,
                       "additionalProperties": false
                     } 
                   }
                 }
               },
-
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "uninvite" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the uninvite event.",
+                      "type": "object",
+                      "maxProperties": 0,
+                      "additionalProperties": false
+                    } 
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "declineInvite" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the declineInvite event.",
+                      "type": "object",
+                      "maxProperties": 0,
+                      "additionalProperties": false
+                    } 
+                  }
+                }
+              },
               {
                 "if": {
                   "properties": {
@@ -168,7 +260,7 @@
                     "parameters" : {
                       "description": "Parameters for the bye event.",
                       "type": "object",
-                      "properties": { },
+                      "maxProperties": 0,
                       "additionalProperties": false
                     }
                   }
@@ -178,7 +270,7 @@
               {
                 "if": {
                   "properties": {
-                    "eventType": { "const": "requestManifest" }
+                    "eventType": { "const": "getManifests" }
                   },
                   "required": ["eventType"]
                 },
@@ -187,13 +279,17 @@
                     "parameters" : {
                       "description": "Parameters for the requestManifest event.",
                       "type": "object",
-                      "properties": { },
+                      "properties": { 
+                        "recommendScope": { 
+                          "type": "string",
+                          "description": "The scope of the recommendation."
+                        }
+                      },
                       "additionalProperties": false
                     }
                   }
                 }
               },
-
               {
                 "if": {
                   "properties": {
@@ -207,99 +303,87 @@
                       "description": "Parameters for the publishManifest event.",
                       "type": "object",
                       "properties" : {
-                        "manifest": {
-                          "ref": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/0.9.0/assistant-manifest-schema.json"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                }
-              },
-
-              {
-                "if": {
-                  "properties": {
-                    "eventType": { "const": "findAssistant" }
-                  },
-                  "required": ["eventType"]
-                },
-                "then" : {
-                  "properties": { 
-                    "parameters" : {
-                      "description": "Parameters for the findAssistant event.",
-                      "type": "object",
-                      "properties" : { },
-                      "additionalProperties": false
-                    }
-                  }
-                }
-              },
-
-              {
-                "if": {
-                  "properties": {
-                    "eventType": { "const": "proposeAssistant" }
-                  },
-                  "required": ["eventType"]
-                },
-                "then" : {
-                  "properties": { 
-                    "parameters" : {
-                      "description": "Parameters for the proposeAssistant event.",
-                      "type": "object",
-                      "properties" : {
-                        "discoveryManifests": {
-                          "type" : "array",
-                          "items" : {
-                            "type" : "object",
-                            "properties" : {
-                              "identification": {
-                                "type": "object",
-                                "properties" : {
-                                  "serviceEndpoint" : {
-                                    "$ref": "#/$defs/url",
-                                    "description": "The endpoint URL of the assistant."
-                                  },
-                                  "synopsis" : {
-                                    "type" : "string",
-                                    "description": "A synopsis of the capabilities of the assistant."
-                                  }
-                                }
-                              },
-                              "score" : {
-                                "type" : "integer",
-                                "description": "A score for the recommendation."
-                              }
-                            }
-                          }
-                        },
                         "servicingManifests": {
-                          "type" : "array",
-                          "items" : {
-                            "type" : "object",
-                            "properties" : {
-                              "identification": {
-                                "type": "object",
-                                "properties" : {
-                                  "serviceEndpoint" : {
-                                    "$ref": "#/$defs/url",
-                                    "description": "The endpoint URL of the assistant."
-                                  },
-                                  "synopsis" : {
-                                    "type" : "string",
-                                    "description": "A synopsis of the capabilities of the assistant."
-                                  }
-                                }
-                              },
-                              "score" : {
-                                "type" : "integer",
-                                "description": "A score for the recommendation."
-                              }
-                            }
-                          }
+                          "ref": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/1.0.0/assistant-manifest-schema.json"
+                        },
+                        "discoveryManifests": {
+                          "ref": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/1.0.0/assistant-manifest-schema.json"
                         }
                       },
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "requestFloor" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the requestFloor event.",
+                      "type": "object",
+                      "maxProperties": 0,
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "grantFloor" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the grantFloor event.",
+                      "type": "object",
+                      "maxProperties": 0,
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "yieldFloor" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the yieldFloor event.",
+                      "type": "object",
+                      "maxProperties": 0,
+                      "additionalProperties": false
+                    }
+                  }
+                }
+              },
+
+              {
+                "if": {
+                  "properties": {
+                    "eventType": { "const": "revokeFloor" }
+                  },
+                  "required": ["eventType"]
+                },
+                "then" : {
+                  "properties": { 
+                    "parameters" : {
+                      "description": "Parameters for the revokeFloor event.",
+                      "type": "object",
+                      "maxProperties": 0,
                       "additionalProperties": false
                     }
                   }

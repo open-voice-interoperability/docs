@@ -1,0 +1,92 @@
+{
+    "openFloor": {
+      "schema": {
+        "version": "1.0.0"      
+      },
+      "conversation": {
+        "id": "31050879662407560061859425913208"
+      },
+      "sender": {
+        "serviceUrl": "https://someConvener.com",
+        "speakerUri": "tag:someuser.com,2025:4567"
+      },
+      "events": [
+        {
+            "eventType": "context",
+            "parameters": {
+                "dialogHistory": [
+                {
+                    "id": "event-1",
+                    "speakerUri": "tag:userproxy.com,2025:abc123",
+                    "span": {
+                    "startTime": "2025-05-09T17:33:47.897906"
+                    },
+                    "features": {
+                    "text": {
+                        "mimeType": "text/plain",
+                        "tokens": [
+                        {
+                            "value": "hello"
+                        }
+                        ]
+                    }
+                    }
+                },
+                {
+                    "id": "event-2",
+                    "speakerUri": "tag:dev.travelbot,2025:0001",
+                    "span": {
+                    "startTime": "2025-05-09T17:33:47.897964"
+                    },
+                    "features": {
+                    "text": {
+                        "mimeType": "text/plain",
+                        "tokens": [
+                        {
+                            "value": "hello, how can i help you?"
+                        }
+                        ]
+                    }
+                    }
+                },
+                {
+                    "id": "event-3",
+                    "speakerUri": "tag:userproxy.com,2025:abc123",
+                    "span": {
+                    "startTime": "2025-05-09T17:33:47.898001"
+                    },
+                    "features": {
+                    "text": {
+                        "mimeType": "text/plain",
+                        "tokens": [
+                        {
+                            "value": "i need to book a flight"
+                        }
+                        ]
+                    }
+                    }
+                },
+                {
+                    "id": "event-4",
+                    "speakerUri": "tag:dev.travelbot,2025:0001",
+                    "span": {
+                    "startTime": "2025-05-09T17:33:47.898033"
+                    },
+                    "features": {
+                    "text": {
+                        "mimeType": "text/plain",
+                        "tokens": [
+                        {
+                            "value": "i can help you with that"
+                        }
+                        ]
+                    }
+                    }
+                }
+                ],
+                "arbitrary_key": "arbitrary_value"
+            }
+        }
+      ]
+    }
+  }
