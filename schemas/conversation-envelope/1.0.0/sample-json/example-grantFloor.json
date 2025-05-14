@@ -1,0 +1,43 @@
+{
+    "openFloor": {
+      "schema": {
+        "version": "1.0.0"
+      },
+      "conversation": {
+        "id": "someUniqueIdForTheConversation"
+      },
+      "sender": {
+        "speakerUri": "tag:some_Convener.com,2025:1234"
+      },
+      "events": [
+        {
+          "eventType": "grantFloor",
+          "to": {
+            "speakerUri": "tag:agentBeingInvitedToTakeTheFloor.com,2025:1234"
+          }
+        },
+        {
+          "eventType": "utterance",
+          "to": {
+            "speakerUri": "tag:agentBeingInvitedToTakeTheFloor.com,2025:1234",
+            "private": true
+          },
+          "reason": "new request",
+          "parameters": {
+            "dialogEvent": {
+              "speakerUri": "tag:someConvener.com,2025:1234",
+              "span": { "startTime": "2025-01-31T10:05:00Z" },
+              "features": {
+                "text": {
+                  "mimeType": "text/plain",
+                  "tokens": [
+                    { "value": "Go ahead an book a meeting at six o'clock for the user." }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }

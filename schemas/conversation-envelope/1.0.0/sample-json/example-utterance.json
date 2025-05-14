@@ -1,0 +1,64 @@
+{
+    "openFloor": {
+        "schema": {
+            "version": "1.0.0"
+        },
+        "conversation": {
+            "id": "conv:ffe67361-b072-40e7-ab70-9c83ab90509f",
+            "conversants": [
+                {
+                    "identification": {
+                        "speakerUri": "tag:userproxy.com,2025:abc123",
+                        "serviceUrl": "https://userproxy.com",
+                        "conversationalName": "John Doe",
+                        "role": "User",
+                        "synopsis": "",
+                        "organization": ""
+                    }
+                },
+                {
+                    "identification": {
+                        "speakerUri": "tag:dev.travelbot,2025:0001",
+                        "serviceUrl": "https://dev.travelbot.ee/openfloor/conversation",
+                        "organization": "Travelbot Inc.",
+                        "conversationalName": "travelbot",
+                        "department": "Reservations and Customer Service",
+                        "role": "Reservation Specialist",
+                        "synopsis": "Reservation specialist as part of the Travelbot system."
+                    }
+                }
+            ]
+        },
+        "sender": {
+            "speakerUri": "tag:userproxy.com,2025:abc123"
+        },
+        "events": [
+            {
+                "eventType": "utterance",
+                "to": {
+                    "speakerUri": "tag:dev.travelbot,2025:0001",
+                    "private": true
+                },
+                "parameters": {
+                    "dialogEvent": {
+                        "id": "de:0d5bc7da-2d72-48a0-9d50-73ebdb433278",
+                        "speakerUri": "tag:userproxy.com,2025:abc123",
+                        "span": {
+                            "startTime": "2025-05-09T17:33:47.884788"
+                        },
+                        "features": {
+                            "text": {
+                                "mimeType": "text/plain",
+                                "tokens": [
+                                    {
+                                        "value": "Give me the times to Vancouver!"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

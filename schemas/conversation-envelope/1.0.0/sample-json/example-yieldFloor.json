@@ -1,0 +1,20 @@
+{
+    "openFloor": {
+      "schema": {
+        "version": "1.0.0"
+      },
+      "conversation": {
+        "id": "someUniqueIdForTheConversation"
+      },
+      "sender": {
+        "speakerUri": "tag:som_agent_that_has_floor.com,2025:1234",
+        "serviceUrl": "https://som_agent_that_has_floor.com"
+      },
+      "events": [
+        {
+          "eventType": "yieldFloor",
+          "reason": "@complete"
+        }
+      ]
+    }
+  }

@@ -1,0 +1,44 @@
+{
+    "openFloor": {
+      "schema": {
+        "version": "1.0.0"      
+      },
+      "conversation": {
+        "id": "31050879662407560061859425913208"
+      },
+      "sender": {
+        "serviceUrl": "https://someConvener.com",
+        "speakerUri": "tag:someuser.com,2025:4567"
+      },
+      "events": [
+        {
+          "eventType": "getManifests",
+          "to": { 
+            "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation"
+          },
+          "parameters": {
+            "recommendScope": "internal"
+          }
+        },
+        {
+          "eventType": "utterance",
+          "to": { 
+            "serviceUrl": "https://dev.buerokratt.ee/openfloor/conversation",
+            "private": true
+          },
+          "parameters": {
+            "dialogEvent": {
+              "speakerUri": "tag:someuser.com,2025:4567",
+              "span": { "startTime": "2023-06-14 02:06:07+00:00" },
+              "features": {
+                "text": {
+                  "mimeType": "text/plain",
+                  "tokens": [ { "value": "Do I need a visa to enter Estonia from Spain?" } ] 
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
