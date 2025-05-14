@@ -1,4 +1,4 @@
-<img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
+<img src="../../../artwork/horizontal/color/Interoperability_Logo_color.png" width="200">
 
 # Open Floor Inter-Agent Message Specification Version 0.9.4
 
@@ -1429,10 +1429,6 @@ This section documents some of the key design decisions that were made by the te
 |Arbitrary text in "reasons"|_Question:_ Should we let "reasons"  contain arbitrary text?</br>_Answer_: Yes. We will make reason an optional key in all events and allow it to be open text with special reserved words in the form '@timed-out'. Include a list of supported reserve words and also indicate in individual events how these reserved words might apply in that context.|
 |Are manifest accretive?|_Question_:  When reading section 1.16 of the Conversational Envelope I was wondering. Who are the participants that should receive a publishManifest message In case you have a sequence: Agent A - Agent B - Agent C. So A invites B and B invites C. Hence, A may not know about C but only B. How is this to be reflected in the manifest as the capabilities of C will add to those of B?<br>_Answer:_ No we are not anticipating that manifests will be cumulative. The envelope contains a 'conversants' section in the 'conversation' area. For each conversants we keep partial manifests containing the 'identity' information for each agent. Thus any party to the conversation can request full manifest information from any conversant at any time. So if tasks are delegated round-table to other agents then it is clear that the other agent is providing this service and you can use their manifest directly in this case. If an agent is using the services of other agents behind the scenes then this is their private affair. We expect an agent to include in its manifest the range of services that it offers regardless of how it provides this. So if an agent is general purpose and is 'rebadging' the services of other agents then the their manifest should explain that they are a general purpose agent. We are not currently anticipating that manifests will be dynamic in nature depending context. We are expecting that manifests might be updated as capabilities change.|
 |Declining invites|_Question_:Section 1.13 of the Conversational Envelope specification describes the invite event. Can an invite be rejected? If yes, how can this be done? I remember a busy-out method in the times of IVRs. The purpose was to complete ongoing calls and not to accept new calls, e.g., if the system should go down for maintenance. Is there something comparable?<br>_Answer:_ Added a bare event 'declineInvite'|
-
-
-
-
 
 ### 7 Document Change Log
 
