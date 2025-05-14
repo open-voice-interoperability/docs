@@ -1,4 +1,4 @@
-<img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
+<img src="../../../artwork/horizontal/color/Interoperability_Logo_color.png" width="200">
 
 # Open Floor Dialog Event Object Specification Version 1.0.2
 
@@ -59,7 +59,7 @@ It does not define which formats (mime types) should be present, how features sh
 
 For example, dialog events could be used to carry prompt and response information for a dialog system, annotate spoken dialog between two human speakers, or be used as part of an interface to a natural language component in a text processing solution.
 
-The Open-Floor specification include [[13] Open Floor Inter-Agent Message Specification Version 1.0.0](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/1.0.0/InteroperableConvEnvSpec.md). This is one-such example of a specification which uses dialog events and further specifies exactly how the the specification should be used in that context.
+The Open-Floor specifications include [[13] Open Floor Inter-Agent Message Specification Version 1.0.0](https://github.com/open-voice-interoperability/docs/blob/main/specifications/ConversationEnvelope/1.0.0/InteroperableConvEnvSpec.md). This is one-such example of a specification which uses dialog events and further specifies exactly how the the specification should be used in that context.
 
 ## 1 Specification
 ### 1.1 Representation
