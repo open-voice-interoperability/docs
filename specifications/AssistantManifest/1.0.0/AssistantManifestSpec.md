@@ -1,4 +1,4 @@
-<img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
+<img src="../../../artwork/horizontal/color/Interoperability_Logo_color.png" width="200">
 
 # Open Floor Assistant Manifest Specification Version 1.0.0
 
@@ -9,7 +9,7 @@
 **Version 1.0.0**
 
 *_Editor-in-Chief: David Attwater_*\
-*_Contributors: Emmett Coin, Deborah Dahl, Leah Barnes, Allan Wylie and Diego Gosmar_*
+*_Contributors: Leah Barnes, Emmett Coin,  Deborah Dahl, Diego Gosmar, Jim Larson, Rainer Türner, Dirk Schnelle-Walka, Allan Wylie_*
 
 ## TABLE OF CONTENTS
 
@@ -34,7 +34,7 @@
 *****
 ### 0. SCOPE AND INTRODUCTION
 #### 0.1 Document Scope
-This document specifies the object format for the Open Voice Interoperability Initiative  - LF AI & Data Foundation (Open-Floor) Assistant Manifest.  
+This document specifies the Open-Floor Assistant Manifest object format. It was developed as part of the Open Floor project within the Open Voice Interoperability Initiative  - LF AI & Data Foundation (Open-Floor) Assistant Manifest.  
 
 #### 0.2 Assistant Manifest Purpose
 The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceUrl.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used, for example, by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard, it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
@@ -201,6 +201,7 @@ mandatory elements|The mandatory elements that are required in the various eleme
 
 |Version|Release Date|Description|
 |-|-|-|
-|0.9.0|23 April 2024|Draft for comments to the community|
-|0.9.1|26 November 2024|-Rename 'serviceName' as 'department'<br>-Added note onto 'synpopsis'<br>-Add an 'Approach and Potential Uses' section.<br>-Added 'Authentication' in the Decision log.<br>-separated 'input' and 'ouput' supported layers.<br> -Clarified that URL is the unique key for an agent's identity.<br>-Removed inline schema and added reference instead. |
-|0.9.2|13 May 2025|-Rename _serviceEndpoint_ to _serviceUrl_<br>-Add _SpeakerUri_ to the _identification_ section<br> |
+|0.9.0|2024.4.23|-Draft for comments to the community|
+|0.9.1|2024.11.26|-Rename 'serviceName' as 'department'<br>-Added note onto 'synpopsis'<br>-Add an 'Approach and Potential Uses' section.<br>-Added 'Authentication' in the Decision log.<br>-separated 'input' and 'ouput' supported layers.<br> -Clarified that URL is the unique key for an agent's identity.<br>-Removed inline schema and added reference instead. |
+|0.9.2|2025.05.13|-Rename _serviceEndpoint_ to _serviceUrl_<br>-Add _SpeakerUri_ to the _identification_ section<br> |
+|1.0.0|2025.05.14|-Release 0.9.2 as version 1.0.0|
