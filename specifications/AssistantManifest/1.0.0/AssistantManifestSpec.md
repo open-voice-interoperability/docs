@@ -23,8 +23,8 @@
     - [1.3 AAA & Security](#13-AAA-Security)
     - [1.4 Nomenclature](#14-Nomenclature)
     - [1.5 Assistant Manifest Object Structure](#15-Assistant-Manifest-Object-Structure)
-    - [1.6 The `identification` object](#16-The-identification-object)
-    - [1.7 The `capabilities` object](#17-The-capabilities-object)
+    - [1.6 The _identification_ object](#16-The-identification-object)
+    - [1.7 The _capabilities_ object](#17-The-capabilities-object)
 - [2 Schema](#2-Schema)
 - [3 References](#3-References)
 - [4 Glossary of Terms](#4-Glossary-of-Terms)
@@ -37,7 +37,7 @@
 This document specifies the Open-Floor Assistant Manifest object format. It was developed as part of the Open Floor project within the Open Voice Interoperability Initiative  - LF AI & Data Foundation (Open-Floor) Assistant Manifest.  
 
 #### 0.2 Assistant Manifest Purpose
-The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique serviceUrl.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used, for example, by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard, it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
+The Assistant Manifest is a structured description of the key characteristics and capabilities of a conversational assistant that is associated with a unique _speakerUri_.  The manifest can be thought of as the curriculum vitae of the conversational agent and a public record of the services that it offers.  It can be used, for example, by other agents or users to decide whether to invite a particular agent to join a conversation.  In this regard, it is particularly relevant to discovery agents who provide services to other agents to help them find assistants to achieve certain tasks for them.
 
 #### 0.3 Approach and Potential Uses
 The Assistant Manifest intentionally avoids the use of any domain-specific schemas or ontologies.  This follows the philosophy of the Open Voice Interoperability Initiative regarding a dependence on natural language to give the loosest possible linkage between components.
@@ -66,7 +66,7 @@ Authorization, Authentication, Accounting, and Security specifications are outsi
 
 #### 1.4 Nomenclature
 
-This specification uses `camelCase` (i.e., no spaces with new words capitalized) for all nominal property names, such as `serviceUrl` and `supportedLayers`.  
+This specification uses _camelCase_ (i.e., no spaces with new words capitalized) for all nominal property names, such as _serviceUrl_ and _supportedLayers_.  
 
 #### 1.5 Assistant Manifest Object Structure
 
@@ -116,7 +116,7 @@ Figure 1 shows an example of an assistant manifest object.  It has two mandatory
 
 The `identification` object publishes key aspects of the conversational assistant's role and identity.  It should not contain specific information about specific services or capabilities that are offered.  This section allows others to know how the agent refers to itself, the organization that it represents, and its role in serving its users.
 
-The primary key of this data model is the _serviceUrl_ which should be a unique identifier of the agent - i.e. it can be thought of as the *identity* of the agent.
+The primary key of this data model is the _speakerUri_ which should be a unique identifier of the agent - i.e. it can be thought of as the *identity* of the agent.
 
 |Key|Type|Description|Example|Mandatory|
 |--|--|--|--|--|
@@ -130,7 +130,9 @@ The primary key of this data model is the _serviceUrl_ which should be a unique 
 
 #### 1.7 The `capabilities` object
 
-The `capabilities` object describes the capabilities offered by the agent. The manifest is keyed to a specific endpoint which in a large organization may support a large number of federated capabilities.  For this reason, the capabilities object is expressed as an array of capability objects.  Each capability object stands alone from the others.  It represents a set of characteristics that work together independently of the other capability objects. For example, if one capability supports the Welsh language for banking functions and another supports the Inuit language for sports information, this does not mean that the endpoint can provide banking services in the Inuit language.  
+The `capabilities` object describes the capabilities offered by the agent. The manifest is keyed to a _speakerUri_ which is the unique identity of the agent being described.  This agent may provide a large number of different services and have many different capabilities.   For this reason, the capabilities object is expressed as an array of capability objects.  Each capability object stands alone from the others.  It represents a set of characteristics that work together independently of the other capability objects. For example, if one capability supports the Welsh language for banking functions and another supports the Inuit language for sports information, this does not mean that the agent can provide banking services in the Inuit language.  
+
+The capability object can be left empty, for example when a manifest is being used to represent a user and it is not neccessary to enumerate the capabilities of the user.
 
 The features of each capability object are shown below.
 
