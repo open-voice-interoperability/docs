@@ -1,4 +1,4 @@
-<img src="../../../artwork/horizontal/color/Interoperability_Logo_color.png" width="200">
+<img src="/artwork/horizontal/color/Interoperability_Logo_color.png" width="200">
 
 # Open Floor Dialog Event Object Specification Version 1.0.2
 
