@@ -79,7 +79,7 @@ The conversation **Envelope** contains the following:
 * **joining or leaving conversations**
   * _invite_ - A conversant is invited to join the conversation.
   * _uninvite_ - A conversant is removed from the conversation.
-  * _declineInvite -  A conversant is declining an invitiation to join a conversation.
+  * _declineInvite_ -  A conversant is declining an invitiation to join a conversation.
   * _bye_ -  A conversant is leaving the conversation
 
 * **discovering other agents and establishing their capabilities**
