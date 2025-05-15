@@ -1,4 +1,4 @@
-<img src="../../../artwork/horizontal/color/Interoperability_Logo_color.png" width="200">
+<img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
 # Open Floor Inter-Agent Message Specification Version 1.0.0
 
