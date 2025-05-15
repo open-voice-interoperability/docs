@@ -1,7 +1,7 @@
 {
   "$id": "https://github.com/open-voice-interoperability/docs/tree/main/schemas/assistant-manifest/1.0.0/assistant-manifest-schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A representation of an 'assistant manifest’ - a standard format for publishing the identity and capability of an OVON agent.",
+  "description": "A representation of an 'assistant manifest’ - a standard format for publishing the identity and capability of an Open-Floor agent.",
   "type": "object",
   "required":  [ "identification","capabilities" ],
   "properties": {
