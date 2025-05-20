@@ -1,6 +1,6 @@
 <img src="https://github.com/open-voice-interoperability/artwork/blob/main/horizontal/color/Interoperability_Logo_color.png" width="200">
 
-# open-voice-interoperability/docs
+# open-voice-interoperability/openfloor-docs
 
 ## Introduction
 
